@@ -91,11 +91,11 @@
 #### Features
 
 This [**Ethernet_Generic library**](https://github.com/khoih-prog/Ethernet_Generic) is a port and modification to merge, as many as possible, the features of the following libraries
-1. [Ethernet](https://github.com/arduino-libraries/Ethernet)
-2. [EthernetLarge](https://github.com/OPEnSLab-OSU/EthernetLarge)
-3. [Ethernet2](https://github.com/adafruit/Ethernet2)
-4. [Ethernet3](https://github.com/sstaub/Ethernet3)
-5. 
+1. [**Ethernet**](https://github.com/arduino-libraries/Ethernet)
+2. [**EthernetLarge**](https://github.com/OPEnSLab-OSU/EthernetLarge)
+3. [**Ethernet2**](https://github.com/adafruit/Ethernet2)
+4. [**Ethernet3**](https://github.com/sstaub/Ethernet3)
+
 for **AVR, Portenta_H7, Teensy, SAM DUE, Arduino SAMD21, Adafruit SAMD21/SAMD51, Adafruit nRF52, ESP32/ESP8266, STM32, RP2040-based, etc.** boards using Ethernet W5x00 shields. 
 
 The `h-only` library now supports `SPI2`, most of `EthernetLarge`, `Ethernet2` and `Ethernet3` features by simply changing definitions in the sketch.
