@@ -1376,7 +1376,7 @@ Many thanks for everyone for bug reporting, new feature suggesting, testing and 
 4. [Adafruit](https://github.com/adafruit) for [Ethernet2](https://github.com/adafruit/Ethernet2) library
 5. [Stefan Staub](https://github.com/sstaub) for [Ethernet3](https://github.com/sstaub/Ethernet3) library
 
-Many thanks to so many authors as listed in [AUTHORS](AUTHORS.md)
+Many thanks to so many authors as listed in [AUTHORS](AUTHORS)
 
 <table>
   <tr>
