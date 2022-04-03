@@ -1,0 +1,251 @@
+#######################################
+# Syntax Coloring Map For Ethernet
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Ethernet	KEYWORD1
+EthernetUDP	KEYWORD1
+EthernetClient	KEYWORD1
+EthernetServer	KEYWORD1
+DhcpClass	KEYWORD1
+DNSClient	KEYWORD1
+
+EthernetChip_t	KEYWORD1
+phyMode_t	KEYWORD1
+EthernetLinkStatus	KEYWORD1
+EthernetHardwareStatus	KEYWORD1
+
+RIP_MSG_FIXED	KEYWORD1
+
+socketstate_t	KEYWORD1
+
+W5100Class	KEYWORD1
+W5100Linkstatus	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+######################
+# class EthernetClass
+######################
+
+setRstPin	KEYWORD2
+setCsPin	KEYWORD2
+initMaxSockNum	KEYWORD2
+softreset	KEYWORD2
+hardreset	KEYWORD2
+begin	KEYWORD2
+maintain	KEYWORD2
+getChip	KEYWORD2
+WoL	KEYWORD2
+phyMode	KEYWORD2
+phyState	KEYWORD2
+link	KEYWORD2
+linkReport	KEYWORD2
+speed	KEYWORD2
+speedReport	KEYWORD2
+duplex	KEYWORD2
+duplexReport	KEYWORD2
+linkStatus	KEYWORD2
+hardwareStatus	KEYWORD2
+init	KEYWORD2
+MACAddress	KEYWORD2
+localIP	KEYWORD2
+subnetMask	KEYWORD2
+gatewayIP	KEYWORD2
+dnsServerIP	KEYWORD2
+dnsDomainName	KEYWORD2
+hostName	KEYWORD2
+setMACAddress	KEYWORD2
+setLocalIP	KEYWORD2
+setSubnetMask	KEYWORD2
+setGatewayIP	KEYWORD2
+setDnsServerIP	KEYWORD2
+setRetransmissionTimeout	KEYWORD2
+setRetransmissionCount	KEYWORD2
+
+######################
+# class EthernetUDP
+######################
+
+begin	KEYWORD2
+beginMulticast	KEYWORD2
+stop	KEYWORD2
+beginPacket	KEYWORD2
+endPacket	KEYWORD2
+write	KEYWORD2
+parsePacket	KEYWORD2
+available	KEYWORD2
+read	KEYWORD2
+peek	KEYWORD2
+flush	KEYWORD2
+remoteIP	KEYWORD2
+remotePort	KEYWORD2
+localPort	KEYWORD2
+
+########################
+# class EthernetClient
+########################
+
+status	KEYWORD2
+connect	KEYWORD2
+availableForWrite	KEYWORD2
+write	KEYWORD2
+available	KEYWORD2
+read	KEYWORD2
+peek	KEYWORD2
+flush	KEYWORD2
+stop	KEYWORD2
+connected	KEYWORD2
+getSocketNumber	KEYWORD2
+localPort	KEYWORD2
+remoteIP	KEYWORD2
+remotePort	KEYWORD2
+setConnectionTimeout	KEYWORD2
+
+########################
+# class EthernetServer
+########################
+
+available	KEYWORD2
+accept	KEYWORD2
+begin	KEYWORD2
+write	KEYWORD2
+statusreport	KEYWORD2
+
+########################
+# class DhcpClass
+########################
+
+getLocalIp	KEYWORD2
+getSubnetMask	KEYWORD2
+getGatewayIp	KEYWORD2
+getDhcpServerIp	KEYWORD2
+getDnsServerIp	KEYWORD2
+getDnsDomainName	KEYWORD2
+getHostName	KEYWORD2
+beginWithDHCP	KEYWORD2
+checkLease	KEYWORD2
+
+########################
+# class DNSClient
+########################
+
+begin	KEYWORD2
+inet_aton	KEYWORD2
+getHostByName	KEYWORD2
+
+########################
+# class W5100Class
+########################
+
+init	KEYWORD2
+setGatewayIp	KEYWORD2
+getGatewayIp	KEYWORD2
+setSubnetMask	KEYWORD2
+getSubnetMask	KEYWORD2
+setMACAddress	KEYWORD2
+getMACAddress	KEYWORD2
+setIPAddress	KEYWORD2
+getIPAddress	KEYWORD2
+setRetransmissionTime	KEYWORD2
+setRetransmissionCount
+execCmdSn	KEYWORD2
+write	KEYWORD2
+read	KEYWORD2
+setPHYCFGR	KEYWORD2
+getPHYCFGR	KEYWORD2
+WoL	KEYWORD2
+phyMode	KEYWORD2
+link	KEYWORD2
+speed	KEYWORD2
+duplex	KEYWORD2
+linkReport	KEYWORD2
+speedReport	KEYWORD2
+duplexReport	KEYWORD2
+beginSPITransaction	KEYWORD2
+endSPITransaction	KEYWORD2
+softReset	KEYWORD2
+getChip	KEYWORD2
+SBASE	KEYWORD2
+RBASE	KEYWORD2
+hasOffsetAddressMapping	KEYWORD2
+setSS	KEYWORD2
+initSS	KEYWORD2
+resetSS	KEYWORD2
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+ETHERNET_GENERIC_VERSION  LITERAL1
+ESP_DOUBLERESETDETECTOR_VERSION LITERAL1
+
+ETHERNET_GENERIC_VERSION_MAJOR  LITERAL1
+ETHERNET_GENERIC_VERSION_MINOR  LITERAL1
+ETHERNET_GENERIC_VERSION_PATCH  LITERAL1
+ETHERNET_GENERIC_VERSION_INT  LITERAL1
+
+###############
+# Debug
+###############
+
+DEBUG_ETHERNET_GENERIC_PORT	LITERAL1
+_ETG_LOGLEVEL_	LITERAL1
+ETG_DEBUG_OUTPUT	LITERAL1
+ETG_MARK	LITERAL1
+ETG_SPACE	LITERAL1
+ETG_LINE	LITERAL1
+
+#################
+# EthernetChip_t
+#################
+
+noChip	LITERAL1
+w5100	LITERAL1
+w5200	LITERAL1
+w5500	LITERAL1
+UnknownChip	LITERAL1
+
+#################
+# phyMode_t
+#################
+
+HALF_DUPLEX_10	LITERAL1
+FULL_DUPLEX_10	LITERAL1
+HALF_DUPLEX_100	LITERAL1
+FULL_DUPLEX_100	LITERAL1
+FULL_DUPLEX_100_AUTONEG	LITERAL1
+POWER_DOWN	LITERAL1
+ALL_AUTONEG	LITERAL1
+
+######################
+# EthernetLinkStatus
+######################
+
+Unknown	LITERAL1
+LinkON	LITERAL1
+LinkOFF	LITERAL1
+
+##########################
+# EthernetHardwareStatus
+##########################
+
+EthernetNoHardware	LITERAL1
+EthernetW5100	LITERAL1
+EthernetW5200	LITERAL1
+EthernetW5500	LITERAL1
+
+##########################
+# General
+##########################
+
+ETHERNET_LARGE_BUFFERS	LITERAL1
+MAX_SOCK_NUM	LITERAL1
+
+
