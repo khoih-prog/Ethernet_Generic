@@ -79,7 +79,6 @@
 * [DONE](#done)
 * [Contributions and Thanks](#contributions-and-thanks)
 * [Contributing](#contributing)
-* [License](#license)
 * [Copyright](#copyright)
 
 
@@ -573,14 +572,14 @@ These pins are tested OK with ESP8266 and W5x00
 
 #### 1. File [WebClientRepeating.ino](examples/WebClientRepeating/WebClientRepeating.ino)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/e49b06a27bdb668de4936bed3c8063e3e0a725b4/examples/AdvancedWebServer/AdvancedWebServer.ino#L44-L454
+https://github.com/khoih-prog/Ethernet_Generic/blob/38fe9700ce1d2148fee4c6a411fe9e30378b8fcf/examples/WebClientRepeating/WebClientRepeating.ino#L15-L209
 
 
 ---
 
 #### 2. File [defines.h](examples/WebClientRepeating/defines.h)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/e49b06a27bdb668de4936bed3c8063e3e0a725b4/examples/AdvancedWebServer/defines.h#L10-L451
+https://github.com/khoih-prog/Ethernet_Generic/blob/38fe9700ce1d2148fee4c6a411fe9e30378b8fcf/examples/WebClientRepeating/defines.h#L10-L351
 
 
 ---
