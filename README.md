@@ -41,6 +41,7 @@
   * [9. For Portenta_H7 boards using Arduino IDE in Linux](#9-for-portenta_h7-boards-using-arduino-ide-in-linux)
   * [10. For RTL8720DN boards using AmebaD core](#10-for-rtl8720dn-boards-using-amebad-core)
   * [11. For SAMD21 and SAMD51 boards using ArduinoCore-fab-sam core](#11-For-SAMD21-and-SAMD51-boards-using-ArduinoCore-fab-sam-core)
+  * [12. For Seeeduino RP2040 boards](#12-For-Seeeduino-RP2040-boards)
 * [Libraries' Patches](#libraries-patches)
   * [1. For application requiring 2K+ HTML page](#1-for-application-requiring-2k-html-page)
   * [2. How to use EthernetLarge feature](#2-How-to-use-EthernetLarge-feature)
@@ -72,6 +73,7 @@
   * [ 8. UdpNTPClient on AVR Mega](#8-UdpNTPClient-on-AVR-Mega)
   * [ 9. WebClient on MBED RASPBERRY_PI_PICO with Large Buffer](#9-WebClient-on-MBED-RASPBERRY_PI_PICO-with-Large-Buffer)
   * [10. WebClient on RASPBERRY_PI_PICO with Large Buffer](#10-WebClient-on-RASPBERRY_PI_PICO-with-Large-Buffer)
+  * [11. WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with Large Buffer](#11-WebClientRepeating_RP2040_SPI1-on-RASPBERRY_PI_PICO-with-Large-Buffer)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -98,7 +100,7 @@ This [**Ethernet_Generic library**](https://github.com/khoih-prog/Ethernet_Gener
 
 for **AVR, Portenta_H7, Teensy, SAM DUE, Arduino SAMD21, Adafruit SAMD21/SAMD51, Adafruit nRF52, ESP32/ESP8266, STM32, RP2040-based, etc.** boards using Ethernet W5x00 shields. 
 
-The `h-only` library now supports `SPI2`, most of `EthernetLarge`, `Ethernet2` and `Ethernet3` features by simply changing definitions in the sketch.
+The `h-only` library now supports `SPI1/SPI2`, most of `EthernetLarge`, `Ethernet2` and `Ethernet3` features by simply changing definitions in the sketch.
 
 
 #### Currently supported Boards
@@ -121,11 +123,11 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
  7. ESP32, using **SPI or SPI2**
  8. ESP8266
  
- 9. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed) or [**Earle Philhower's arduino-pico** core](https://github.com/earlephilhower/arduino-pico).
+ 9. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed) with SPI
+10. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Earle Philhower's arduino-pico** core](https://github.com/earlephilhower/arduino-pico) with SPI or SPI1. **New**
+11. **Portenta_H7**
  
- 10. **Portenta_H7**
- 
- 11. **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
+12. **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
  
 
 #### Currently supported Ethernet shields/modules
@@ -143,7 +145,7 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
  3. [`Teensy core v1.56+`](https://www.pjrc.com/teensy/td_download.html) for Teensy (4.1, 4.0, 3.6, 3.5, 3,2, 3.1, 3.0) boards.
  4. [`Arduino SAM DUE core v1.6.12+`](https://github.com/arduino/ArduinoCore-sam) for SAM DUE ARM Cortex-M3 boards.
  5. [`Arduino SAMD core 1.8.13+`](https://github.com/arduino/ArduinoCore-samd) for SAMD ARM Cortex-M0+ boards. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-samd.svg)](https://github.com/arduino/ArduinoCore-samd/releases/latest)
- 6. [`Adafruit SAMD core 1.7.9+`](https://github.com/adafruit/ArduinoCore-samd) for SAMD ARM Cortex-M0+ and M4 boards (Nano 33 IoT, etc.). [![GitHub release](https://img.shields.io/github/release/adafruit/ArduinoCore-samd.svg)](https://github.com/adafruit/ArduinoCore-samd/releases/latest)
+ 6. [`Adafruit SAMD core 1.7.10+`](https://github.com/adafruit/ArduinoCore-samd) for SAMD ARM Cortex-M0+ and M4 boards (Nano 33 IoT, etc.). [![GitHub release](https://img.shields.io/github/release/adafruit/ArduinoCore-samd.svg)](https://github.com/adafruit/ArduinoCore-samd/releases/latest)
  7. [`Seeeduino SAMD core 1.8.2+`](https://github.com/Seeed-Studio/ArduinoCore-samd) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.). [![Latest release](https://img.shields.io/github/release/Seeed-Studio/ArduinoCore-samd.svg)](https://github.com/Seeed-Studio/ArduinoCore-samd/releases/latest/)
  8. [`Adafruit nRF52 v1.3.0+`](https://github.com/adafruit/Adafruit_nRF52_Arduino) for nRF52 boards such as Adafruit NRF52840_FEATHER, NRF52832_FEATHER, NRF52840_FEATHER_SENSE, NRF52840_ITSYBITSY, NRF52840_CIRCUITPLAY, NRF52840_CLUE, NRF52840_METRO, NRF52840_PCA10056, PARTICLE_XENON, **NINA_B302_ublox**, etc. [![GitHub release](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino/releases/latest)
  9. [`ESP32 Core 2.0.2+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
@@ -392,12 +394,12 @@ With core after v1.5.0, this step is not necessary anymore thanks to the PR [Add
 
 #### 9. For Portenta_H7 boards using Arduino IDE in Linux
 
-  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/2.7.2/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/2.7.2/portenta_post_install.sh). 
+  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/3.0.0/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.0/portenta_post_install.sh). 
   
   Then run the following command using `sudo`
   
 ```
-$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/2.7.2
+$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.0
 $ chmod 755 portenta_post_install.sh
 $ sudo ./portenta_post_install.sh
 ```
@@ -410,9 +412,9 @@ This will create the file `/etc/udev/rules.d/49-portenta_h7.rules` as follows:
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="035b", GROUP="plugdev", MODE="0666"
 ```
 
-Supposing the ArduinoCore-mbed core version is 2.7.2. Now only one file must be copied into the directory:
+Supposing the ArduinoCore-mbed core version is 3.0.0. Now only one file must be copied into the directory:
 
-- `~/.arduino15/packages/arduino/hardware/mbed_portenta/2.7.2/portenta_post_install.sh`
+- `~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.0/portenta_post_install.sh`
 
 Whenever a new version is installed, remember to copy this files into the new version directory. For example, new version is x.yy.zz
 
@@ -447,6 +449,22 @@ Whenever a new version is installed, remember to copy this file into the new ver
 This file must be copied into the directory:
 
 - `~/.arduino15/packages/Fab_SAM_Arduino/hardware/samd/x.yy.zz/boards.txt`
+
+
+#### 12. For Seeeduino RP2040 boards
+ 
+ ***To be able to compile, run and automatically detect and display BOARD_NAME on Seeeduino RP2040 (XIAO RP2040, Wio RP2040 Mini) boards***, you have to copy the whole [Seeeduino RP2040 Packages_Patches](Packages_Patches/Seeeduino/hardware/rp2040/2.7.2) directory into Seeeduino samd directory (~/.arduino15/packages/Seeeduino/hardware/rp2040/2.7.2). 
+
+Supposing the Seeeduino SAMD core version is 2.7.2. This file must be copied into the directory:
+
+- `~/.arduino15/packages/Seeeduino/hardware/rp2040/2.7.2/boards.txt`
+- `~/.arduino15/packages/Seeeduino/hardware/rp2040/2.7.2/variants/Seeed_XIAO_RP2040/pins_arduino.h`
+
+Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
+This file must be copied into the directory:
+
+- `~/.arduino15/packages/Seeeduino/hardware/samd/x.yy.zz/boards.txt`
+- `~/.arduino15/packages/Seeeduino/hardware/samd/x.yy.zz/variants/Seeed_XIAO_RP2040/pins_arduino.h`
 
 
 ---
@@ -486,7 +504,7 @@ just rename the following file in ./arduino-1.8.19/hardware/esp8266com/esp8266/l
 
 #### 1. How to select which SPI to use
 
-To use standard SPI, check if 
+To use standard SPI (or `SPI0` for `arduino-pico` core), check if 
 
 ```cpp
 #define USING_SPI2              false
@@ -497,6 +515,13 @@ of comment out the following line, if exists
 
 ```cpp
 //#define USING_SPI2              true
+```
+
+To use SPI2 (or `SPI1` for `arduino-pico` core)
+
+
+```cpp
+#define USING_SPI2              true
 ```
 
 Check and compare the examples [WebClient_ESP](examples/WebClient_ESP) and [WebClient_ESP_SPI2](examples/WebClient_ESP_SPI2)
@@ -563,6 +588,7 @@ These pins are tested OK with ESP8266 and W5x00
  9. [WebClientRepeating_ESP](examples/WebClientRepeating_ESP)
 10. [WebClientRepeating_ESP_SPI2](examples/WebClientRepeating_ESP_SPI2)
 11. [WebServer](examples/WebServer)
+12. [WebClientRepeating_RP2040_SPI1](examples/WebClientRepeating_RP2040_SPI1) **New**
  
 ---
 ---
@@ -571,15 +597,14 @@ These pins are tested OK with ESP8266 and W5x00
 
 #### 1. File [WebClientRepeating.ino](examples/WebClientRepeating/WebClientRepeating.ino)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/38fe9700ce1d2148fee4c6a411fe9e30378b8fcf/examples/WebClientRepeating/WebClientRepeating.ino#L15-L209
+https://github.com/khoih-prog/Ethernet_Generic/blob/1af8e9267678cf579fd4139bfa786e90bf9ca237/examples/WebClientRepeating/WebClientRepeating.ino#L15-L224
 
 
 ---
 
 #### 2. File [defines.h](examples/WebClientRepeating/defines.h)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/38fe9700ce1d2148fee4c6a411fe9e30378b8fcf/examples/WebClientRepeating/defines.h#L10-L351
-
+https://github.com/khoih-prog/Ethernet_Generic/blob/1af8e9267678cf579fd4139bfa786e90bf9ca237/examples/WebClientRepeating/defines.h#L10-L358
 
 ---
 ---
@@ -592,7 +617,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.0.0
+Ethernet_Generic v2.0.1
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -669,7 +694,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.0.0
+Ethernet_Generic v2.0.1
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -747,7 +772,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.0
+Ethernet_Generic v2.0.1
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -821,7 +846,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.0
+Ethernet_Generic v2.0.1
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -897,7 +922,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.0
+Ethernet_Generic v2.0.1
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -973,7 +998,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.0
+Ethernet_Generic v2.0.1
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1049,7 +1074,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.0
+Ethernet_Generic v2.0.1
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1126,7 +1151,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.0
+Ethernet_Generic v2.0.1
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1300,6 +1325,92 @@ Disconnecting from server...
 ```
 
 ---
+
+
+#### 11. WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with Large Buffer
+
+The following are debug terminal output when running example [WebClientRepeating_RP2040_SPI1](examples/WebClientRepeating_RP2040_SPI1) on RASPBERRY_PI_PICO with `W5500` using Ethernet_Generic Library and [`Earle Philhower's arduino-pico core`](https://github.com/earlephilhower/arduino-pico) on SPI1
+
+
+```
+Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
+Ethernet_Generic v2.0.1
+[ETG] Default SPI pinout:
+[ETG] MOSI: 15
+[ETG] MISO: 12
+[ETG] SCK: 14
+[ETG] SS: 13
+[ETG] =========================
+[ETG] RPIPICO setCsPin: 13
+[ETG] W5100 init, using SS_PIN_DEFAULT = 13 , new ss_pin =  10 , W5100Class::ss_pin =  13
+[ETG] Chip is W5500
+[ETG] W5100::init: W5500, SSIZE = 8192
+[ETG] Currently Used SPI pinout:
+[ETG] MOSI: 15
+[ETG] MISO: 12
+[ETG] SCK: 14
+[ETG] SS: 13
+[ETG] =========================
+Using mac index = 3
+Connected! IP address: 192.168.2.131
+Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+
+Connecting...
+HTTP/1.1 200 OK
+Server: nginx/1.4.2
+Date: Fri, 08 Apr 2022 19:19:57 GMT
+Content-Type: text/plain
+Content-Length: 2318
+Last-Modified: Thu, 24 Feb 2022 11:33:35 GMT
+Connection: close
+Vary: Accept-Encoding
+ETag: "62176d0f-90e"
+Accept-Ranges: bytes
+
+Please use http://arduino.tips/asciilogo.txt via HTTP
+
+           `:;;;,`                      .:;;:.           
+        .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
+      `;;;;;;;;;;;;;;;`            :;;;;;;;;;;;;;;;      
+     :;;;;;;;;;;;;;;;;;;         `;;;;;;;;;;;;;;;;;;     
+    ;;;;;;;;;;;;;;;;;;;;;       .;;;;;;;;;;;;;;;;;;;;    
+   ;;;;;;;;:`   `;;;;;;;;;     ,;;;;;;;;.`   .;;;;;;;;   
+  .;;;;;;,         :;;;;;;;   .;;;;;;;          ;;;;;;;  
+  ;;;;;;             ;;;;;;;  ;;;;;;,            ;;;;;;. 
+ ,;;;;;               ;;;;;;.;;;;;;`              ;;;;;; 
+ ;;;;;.                ;;;;;;;;;;;`      ```       ;;;;;`
+ ;;;;;                  ;;;;;;;;;,       ;;;       .;;;;;
+`;;;;:                  `;;;;;;;;        ;;;        ;;;;;
+,;;;;`    `,,,,,,,,      ;;;;;;;      .,,;;;,,,     ;;;;;
+:;;;;`    .;;;;;;;;       ;;;;;,      :;;;;;;;;     ;;;;;
+:;;;;`    .;;;;;;;;      `;;;;;;      :;;;;;;;;     ;;;;;
+.;;;;.                   ;;;;;;;.        ;;;        ;;;;;
+ ;;;;;                  ;;;;;;;;;        ;;;        ;;;;;
+ ;;;;;                 .;;;;;;;;;;       ;;;       ;;;;;,
+ ;;;;;;               `;;;;;;;;;;;;                ;;;;; 
+ `;;;;;,             .;;;;;; ;;;;;;;              ;;;;;; 
+  ;;;;;;:           :;;;;;;.  ;;;;;;;            ;;;;;;  
+   ;;;;;;;`       .;;;;;;;,    ;;;;;;;;        ;;;;;;;:  
+    ;;;;;;;;;:,:;;;;;;;;;:      ;;;;;;;;;;:,;;;;;;;;;;   
+    `;;;;;;;;;;;;;;;;;;;.        ;;;;;;;;;;;;;;;;;;;;    
+      ;;;;;;;;;;;;;;;;;           :;;;;;;;;;;;;;;;;:     
+       ,;;;;;;;;;;;;;,              ;;;;;;;;;;;;;;       
+         .;;;;;;;;;`                  ,;;;;;;;;:         
+                                                         
+                                                         
+                                                         
+                                                         
+    ;;;   ;;;;;`  ;;;;:  .;;  ;; ,;;;;;, ;;. `;,  ;;;;   
+    ;;;   ;;:;;;  ;;;;;; .;;  ;; ,;;;;;: ;;; `;, ;;;:;;  
+   ,;:;   ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;,`;, ;;  ;;  
+   ;; ;:  ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;;`;, ;;  ;;. 
+   ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
+  ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
+  ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+```
+
+---
 ---
 
 ### Debug
@@ -1357,6 +1468,7 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 13. Add SPI2 support for ESP32
 14. Optimize library code to reduce size
 15. Add many more functions
+16. Add support to `SPI1` for RP2040-based boards using [**Earle Philhower's arduino-pico** core](https://github.com/earlephilhower/arduino-pico)
 
 ---
 ---

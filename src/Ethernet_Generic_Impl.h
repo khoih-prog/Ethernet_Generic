@@ -12,7 +12,6 @@
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  Version: 2.0.0
   
   Copyright 2018 Paul Stoffregen
   
@@ -33,9 +32,12 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
+  Version: 2.0.1
+    
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
+  2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
  *****************************************************************************************************************************/
  
 #pragma once

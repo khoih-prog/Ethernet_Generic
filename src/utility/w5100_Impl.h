@@ -12,11 +12,12 @@
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  Version: 2.0.0
+  Version: 2.0.1
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
+  2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
  *****************************************************************************************************************************/
 
 #pragma once
@@ -192,13 +193,25 @@ W5100Class W5100;
 
 /////////////////////////////////////////////////////////
 
-#if (defined(ESP32) && ETHERNET_GENERIC_USING_SPI2)
+#if (ETHERNET_GENERIC_USING_SPI2)
+
   #if(_ETG_LOGLEVEL_> 2)
     #warning ETHERNET_GENERIC_USING_SPI2 in w5100_Impl.h
   #endif
-	
-  SPIClass SPI2(HSPI);
-  SPIClass* pCUR_SPI = &SPI2;
+
+  #if defined(ESP32)		
+    SPIClass SPI2(HSPI);
+    SPIClass* pCUR_SPI = &SPI2;
+  #elif (ETHERNET_USE_RPIPICO && !defined(ARDUINO_ARCH_MBED))
+    // For arduino-pico core
+    // SPIClassRP2040(spi_inst_t *spi, pin_size_t rx, pin_size_t cs, pin_size_t sck, pin_size_t tx);
+    SPIClass* pCUR_SPI = (SPIClass*) &SPI1;
+    
+    #define CUR_PIN_MISO			PIN_SPI1_MISO
+    #define CUR_PIN_MOSI			PIN_SPI1_MOSI
+    #define CUR_PIN_SCK 			PIN_SPI1_SCK
+    #define CUR_PIN_SS			  PIN_SPI1_SS
+	#endif  
       
 #else
   #if(_ETG_LOGLEVEL_> 2)
@@ -409,7 +422,7 @@ uint8_t W5100Class::softReset()
 {
   uint16_t count = 0;
 
-  ETG_LOGWARN("W5x00::softReset");
+  ETG_LOGINFO("W5x00::softReset");
 
   // write to reset bit
   writeMR(0x80);

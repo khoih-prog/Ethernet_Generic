@@ -12,12 +12,19 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.0.1](#releases-v201)
 	* [Releases v2.0.0](#releases-v200)
 
 ---
 ---
 
 ## Changelog
+
+### Releases v2.0.1
+
+1. Add support to `SPI1` for `RP2040` using [`Earle Philhower's arduino-pico` core](https://github.com/earlephilhower/arduino-pico)
+2. Add example [WebClientRepeating_RP2040_SPI1](examples/WebClientRepeating_RP2040_SPI1) to demo the new feature
+3. Update `Packages' Patches`
 
 ### Releases v2.0.0
 
