@@ -1,5 +1,5 @@
 /****************************************************************************************************************************
-  WebServer.ino
+  WebClientRepeating_RP2040_SPI1.ino
   
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
@@ -14,19 +14,55 @@
 
 #include "defines.h"
 
-int reqCount = 0;                // number of requests received
+char server[] = "arduino.cc";
 
-EthernetServer server(80);
+unsigned long lastConnectionTime = 0;         // last time you connected to the server, in milliseconds
+const unsigned long postingInterval = 10000L; // delay between updates, in milliseconds
+
+// Initialize the Web client object
+EthernetClient client;
+
+// this method makes a HTTP connection to the server
+void httpRequest()
+{
+  Serial.println();
+
+  // close any connection before send a new request
+  // this will free the socket on the WiFi shield
+  client.stop();
+
+  // if there's a successful connection
+  if (client.connect(server, 80))
+  {
+    Serial.println(F("Connecting..."));
+
+    // send the HTTP PUT request
+    client.println(F("GET /asciilogo.txt HTTP/1.1"));
+    client.println(F("Host: arduino.cc"));
+    client.println(F("Connection: close"));
+    client.println();
+
+    // note the time that the connection was made
+    lastConnectionTime = millis();
+  }
+  else
+  {
+    // if you couldn't make a connection
+    Serial.println(F("Connection failed"));
+  }
+}
 
 void setup()
 {
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.print("\nStarting WebServer on "); Serial.print(BOARD_NAME);
-  Serial.print(F(" with ")); Serial.println(SHIELD_TYPE); 
+  delay(500);
+
+  Serial.print("\nStarting WebClientRepeating_RP2040_SPI1 on "); Serial.print(BOARD_NAME);
+  Serial.print(F(" with ")); Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_GENERIC_VERSION);
-  
+
 #if (USING_SPI2)
   #if defined(CUR_PIN_MISO)
     ETG_LOGWARN(F("Default SPI pinout:"));
@@ -166,75 +202,23 @@ void setup()
     Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
     Serial.print(F(", Link status: ")); Serial.println(Ethernet.linkReport());
   }
-
-  // start the web server on port 80
-  server.begin();
 }
 
 void loop()
 {
-  // listen for incoming clients
-  EthernetClient client = server.available();
-
-  if (client)
+  // if there's incoming data from the net connection send it out the serial port
+  // this is for debugging purposes only
+  while (client.available())
   {
-    Serial.println(F("New client"));
-    // an http request ends with a blank line
-    bool currentLineIsBlank = true;
+    char c = client.read();
+    Serial.write(c);
+    Serial.flush();
+  }
 
-    while (client.connected())
-    {
-      if (client.available())
-      {
-        char c = client.read();
-        Serial.write(c);
-        // if you've gotten to the end of the line (received a newline
-        // character) and the line is blank, the http request has ended,
-        // so you can send a reply
-        if (c == '\n' && currentLineIsBlank)
-        {
-          Serial.println(F("Sending response"));
-
-          // send a standard http response header
-          // use \r\n instead of many println statements to speedup data send
-          client.print(
-            "HTTP/1.1 200 OK\r\n"
-            "Content-Type: text/html\r\n"
-            "Connection: close\r\n"  // the connection will be closed after completion of the response
-            "Refresh: 20\r\n"        // refresh the page automatically every 20 sec
-            "\r\n");
-          client.print("<!DOCTYPE HTML>\r\n");
-          client.print("<html>\r\n");
-          client.print("<h2>Hello World from ");
-          client.print(BOARD_NAME);
-          client.print("!</h2>\r\n");
-          client.print("Requests received: ");
-          client.print(++reqCount);
-          client.print("<br>\r\n");
-          client.print("Analog input A0: ");
-          client.print(analogRead(0));
-          client.print("<br>\r\n");
-          client.print("</html>\r\n");
-          break;
-        }
-
-        if (c == '\n')
-        {
-          // you're starting a new line
-          currentLineIsBlank = true;
-        }
-        else if (c != '\r')
-        {
-          // you've gotten a character on the current line
-          currentLineIsBlank = false;
-        }
-      }
-    }
-    // give the web browser time to receive the data
-    delay(10);
-
-    // close the connection:
-    client.stop();
-    Serial.println(F("Client disconnected"));
+  // if 10 seconds have passed since your last connection,
+  // then connect again and send data
+  if (millis() - lastConnectionTime > postingInterval)
+  {
+    httpRequest();
   }
 }

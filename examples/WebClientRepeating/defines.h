@@ -13,7 +13,9 @@
 #define DEBUG_ETHERNET_GENERIC_PORT         Serial
 
 // Debug Level from 0 to 4
-#define _ETG_LOGLEVEL_                      1
+#define _ETG_LOGLEVEL_                      2
+
+#define USING_SPI2                          false   //true
 
 #if    ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
       || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) || defined(ARDUINO_SAMD_MKRWAN1310) \
@@ -270,8 +272,13 @@
     
   #else
     // For RPI Pico using E. Philhower RP2040 core
-  // SCK: GPIO18,  MOSI: GPIO19, MISO: GPIO16, SS/CS: GPIO17
-    #define USE_THIS_SS_PIN       17
+    #if (USING_SPI2)
+      // SCK: GPIO14,  MOSI: GPIO15, MISO: GPIO12, SS/CS: GPIO13 for SPI1
+      #define USE_THIS_SS_PIN       13
+    #else
+      // SCK: GPIO18,  MOSI: GPIO19, MISO: GPIO16, SS/CS: GPIO17 for SPI0
+      #define USE_THIS_SS_PIN       17
+    #endif
 
   #endif
    
@@ -305,7 +312,7 @@
 
 //////////////////////////////////////////////////////////
    
-#define USING_SPI2              false   //true
+
 
 #include "Ethernet_Generic.h"
 

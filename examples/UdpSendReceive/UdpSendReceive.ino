@@ -31,12 +31,23 @@ void setup()
   Serial.print(F(" with ")); Serial.println(SHIELD_TYPE); 
   Serial.println(ETHERNET_GENERIC_VERSION);
   
+#if (USING_SPI2)
+  #if defined(CUR_PIN_MISO)
+    ETG_LOGWARN(F("Default SPI pinout:"));
+    ETG_LOGWARN1(F("MOSI:"), CUR_PIN_MOSI);
+    ETG_LOGWARN1(F("MISO:"), CUR_PIN_MISO);
+    ETG_LOGWARN1(F("SCK:"),  CUR_PIN_SCK);
+    ETG_LOGWARN1(F("SS:"),   CUR_PIN_SS);
+    ETG_LOGWARN(F("========================="));
+  #endif
+#else
   ETG_LOGWARN(F("Default SPI pinout:"));
   ETG_LOGWARN1(F("MOSI:"), MOSI);
   ETG_LOGWARN1(F("MISO:"), MISO);
   ETG_LOGWARN1(F("SCK:"),  SCK);
   ETG_LOGWARN1(F("SS:"),   SS);
   ETG_LOGWARN(F("========================="));
+#endif
 
 #if defined(ESP8266)
   // For ESP8266, change for other boards if necessary
@@ -131,17 +142,21 @@ void setup()
 
   // Just info to know how to connect correctly
   // To change for other SPI
-  Serial.println("=========================");
-  Serial.println("Currently Used SPI pinout:");
-  Serial.print("MOSI:");
-  Serial.println(MOSI);
-  Serial.print("MISO:");
-  Serial.println(MISO);
-  Serial.print("SCK:");
-  Serial.println(SCK);
-  Serial.print("SS:");
-  Serial.println(SS);
-  Serial.println(F("========================="));
+#if defined(CUR_PIN_MISO)
+  ETG_LOGWARN(F("Currently Used SPI pinout:"));
+  ETG_LOGWARN1(F("MOSI:"), CUR_PIN_MOSI);
+  ETG_LOGWARN1(F("MISO:"), CUR_PIN_MISO);
+  ETG_LOGWARN1(F("SCK:"),  CUR_PIN_SCK);
+  ETG_LOGWARN1(F("SS:"),   CUR_PIN_SS);
+  ETG_LOGWARN(F("========================="));
+#else
+  ETG_LOGWARN(F("Currently Used SPI pinout:"));
+  ETG_LOGWARN1(F("MOSI:"), MOSI);
+  ETG_LOGWARN1(F("MISO:"), MISO);
+  ETG_LOGWARN1(F("SCK:"),  SCK);
+  ETG_LOGWARN1(F("SS:"),   SS);
+  ETG_LOGWARN(F("========================="));
+#endif
 
   Serial.print(F("Using mac index = "));
   Serial.println(index);
