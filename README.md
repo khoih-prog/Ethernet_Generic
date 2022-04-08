@@ -59,6 +59,7 @@
   * [ 9. WebClientRepeating_ESP](examples/WebClientRepeating_ESP)
   * [10. WebClientRepeating_ESP_SPI2](examples/WebClientRepeating_ESP_SPI2)
   * [11. WebServer](examples/WebServer)
+  * [12. WebClientRepeating_RP2040_SPI1](examples/WebClientRepeating_RP2040_SPI1) **New**
 * [Example WebClientRepeating](#example-WebClientRepeating)
   * [1. File WebClientRepeating.ino](#1-file-WebClientRepeatingino)
   * [2. File defines.h](#2-file-definesh) 
@@ -124,7 +125,7 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
  8. ESP8266
  
  9. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed) with SPI
-10. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Earle Philhower's arduino-pico** core](https://github.com/earlephilhower/arduino-pico) with SPI or SPI1. **New**
+10. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Earle Philhower's arduino-pico** core](https://github.com/earlephilhower/arduino-pico) with SPI0 or SPI1. **New**
 11. **Portenta_H7**
  
 12. **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
