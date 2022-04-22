@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.1.0](#releases-v210)
 	* [Releases v2.0.1](#releases-v201)
 	* [Releases v2.0.0](#releases-v200)
 
@@ -19,6 +20,11 @@
 ---
 
 ## Changelog
+
+### Releases v2.1.0
+
+1. Add support to WIZNet W5100S. Check [Wiznet W5100S #56](https://github.com/khoih-prog/EthernetWebServer/discussions/56)
+
 
 ### Releases v2.0.1
 

@@ -32,12 +32,13 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.0.1
+  Version: 2.1.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
   2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
+  2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
  *****************************************************************************************************************************/
 
 #pragma once
@@ -53,7 +54,7 @@
 // was removed to avoid possible conflict with the C library header files.
 
 
-// Configure the maximum number of sockets to support.  W5100 chips can have
+// Configure the maximum number of sockets to support.  W5100/W5100S chips can have
 // up to 4 sockets.  W5200 & W5500 can have up to 8 sockets.  Several bytes
 // of RAM are used for each socket.  Reducing the maximum can save RAM, but
 // you are limited to fewer simultaneous connections.
@@ -105,8 +106,14 @@ enum EthernetChip_t
 {
   noChip       = 0,
   w5100        = 51,
+  
+  // KH
+  w5100s       = 53,
+  //////
+  
   w5200        = 52,
   w5500        = 55,
+
   UnknownChip  = 255
 };
 
@@ -135,7 +142,8 @@ enum EthernetHardwareStatus
   EthernetNoHardware,
   EthernetW5100,
   EthernetW5200,
-  EthernetW5500
+  EthernetW5500,
+  EthernetW5100S,
 };
 
 class EthernetUDP;
@@ -189,6 +197,8 @@ class EthernetClass
     int maintain();
     
     inline EthernetChip_t getChip();
+    
+    inline EthernetChip_t getAltChip();
     
     // From Ethernet3   
     // set Wake on LAN

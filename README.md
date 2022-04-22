@@ -75,6 +75,7 @@
   * [ 9. WebClient on MBED RASPBERRY_PI_PICO with Large Buffer](#9-WebClient-on-MBED-RASPBERRY_PI_PICO-with-Large-Buffer)
   * [10. WebClient on RASPBERRY_PI_PICO with Large Buffer](#10-WebClient-on-RASPBERRY_PI_PICO-with-Large-Buffer)
   * [11. WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with Large Buffer](#11-WebClientRepeating_RP2040_SPI1-on-RASPBERRY_PI_PICO-with-Large-Buffer)
+  * [12. WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with Large Buffer](#12-WebClient-on-MBED-RASPBERRY_PI_PICO-with-W5100S-using-Ethernet_Generic-Library-with-Large-Buffer)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -133,7 +134,9 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
 
 #### Currently supported Ethernet shields/modules
 
-1. W5x00 shield /module
+1. W5x00 shield /module such as W5100, W5200, W5500 and W5100S
+2. W5100S shield /module, such as [**WIZnet Ethernet HAT**](https://docs.wiznet.io/Product/Open-Source-Hardware/wiznet_ethernet_hat) and [**W5100S-EVB-Pico**](https://docs.wiznet.io/Product/iEthernet/W5100S/w5100s-evb-pico)
+
 
 ---
 ---
@@ -152,7 +155,7 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
  9. [`ESP32 Core 2.0.2+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
 10. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
 11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 3.0.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
-12. [`Earle Philhower's arduino-pico core v1.13.1+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
+12. [`Earle Philhower's arduino-pico core v1.13.2+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
 13. [`Arduino megaAVR core 1.8.7+`](https://github.com/arduino/ArduinoCore-megaavr/releases) for Arduino megaAVR boards such as **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
 
 
@@ -287,13 +290,13 @@ Whenever the above-mentioned compiler error issue is fixed with the new Arduino 
 
 #### 5. For Adafruit SAMD boards
  
- ***To be able to compile, run and automatically detect and display BOARD_NAME on Adafruit SAMD (Itsy-Bitsy M4, etc) boards***, you have to copy the whole [Adafruit SAMD Packages_Patches](Packages_Patches/adafruit/hardware/samd/1.7.9) directory into Adafruit samd directory (~/.arduino15/packages/adafruit/hardware/samd/1.7.9). 
+ ***To be able to compile, run and automatically detect and display BOARD_NAME on Adafruit SAMD (Itsy-Bitsy M4, etc) boards***, you have to copy the whole [Adafruit SAMD Packages_Patches](Packages_Patches/adafruit/hardware/samd/1.7.10) directory into Adafruit samd directory (~/.arduino15/packages/adafruit/hardware/samd/1.7.10). 
 
-Supposing the Adafruit SAMD core version is 1.7.9. This file must be copied into the directory:
+Supposing the Adafruit SAMD core version is 1.7.10. This file must be copied into the directory:
 
-- `~/.arduino15/packages/adafruit/hardware/samd/1.7.9/platform.txt`
-- `~/.arduino15/packages/adafruit/hardware/samd/1.7.9/cores/arduino/Print.h`
-- `~/.arduino15/packages/adafruit/hardware/samd/1.7.9/cores/arduino/Print.cpp`
+- `~/.arduino15/packages/adafruit/hardware/samd/1.7.10/platform.txt`
+- `~/.arduino15/packages/adafruit/hardware/samd/1.7.10/cores/arduino/Print.h`
+- `~/.arduino15/packages/adafruit/hardware/samd/1.7.10/cores/arduino/Print.cpp`
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
 This file must be copied into the directory:
@@ -395,12 +398,12 @@ With core after v1.5.0, this step is not necessary anymore thanks to the PR [Add
 
 #### 9. For Portenta_H7 boards using Arduino IDE in Linux
 
-  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/3.0.0/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.0/portenta_post_install.sh). 
+  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/3.0.1/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.1/portenta_post_install.sh). 
   
   Then run the following command using `sudo`
   
 ```
-$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.0
+$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.1
 $ chmod 755 portenta_post_install.sh
 $ sudo ./portenta_post_install.sh
 ```
@@ -413,9 +416,9 @@ This will create the file `/etc/udev/rules.d/49-portenta_h7.rules` as follows:
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="035b", GROUP="plugdev", MODE="0666"
 ```
 
-Supposing the ArduinoCore-mbed core version is 3.0.0. Now only one file must be copied into the directory:
+Supposing the ArduinoCore-mbed core version is 3.0.1. Now only one file must be copied into the directory:
 
-- `~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.0/portenta_post_install.sh`
+- `~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.1/portenta_post_install.sh`
 
 Whenever a new version is installed, remember to copy this files into the new version directory. For example, new version is x.yy.zz
 
@@ -618,7 +621,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.0.1
+Ethernet_Generic v2.1.0
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -634,17 +637,21 @@ Starting connection to server...
 
 Connecting...
 HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Fri, 01 Apr 2022 19:07:47 GMT
+Date: Fri, 22 Apr 2022 04:37:41 GMT
 Content-Type: text/plain
-Content-Length: 2317
-Last-Modified: Thu, 24 Feb 2022 11:33:32 GMT
+Content-Length: 2263
 Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0c-90d"
-Accept-Ranges: bytes
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 
-Please use http://arduino.tips/asciilogo.txt via HTTP
 
            `:;;;,`                      .:;;:.           
         .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
@@ -684,7 +691,7 @@ Please use http://arduino.tips/asciilogo.txt via HTTP
    ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
   ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
   ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
-  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;; 
 ```
 
 ---
@@ -695,7 +702,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.0.1
+Ethernet_Generic v2.1.0
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -711,17 +718,21 @@ Starting connection to server...
 
 Connecting...
 HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Fri, 01 Apr 2022 19:00:28 GMT
+Date: Fri, 22 Apr 2022 04:37:41 GMT
 Content-Type: text/plain
-Content-Length: 2318
-Last-Modified: Thu, 24 Feb 2022 11:33:35 GMT
+Content-Length: 2263
 Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0f-90e"
-Accept-Ranges: bytes
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 
-Please use http://arduino.tips/asciilogo.txt via HTTP
 
            `:;;;,`                      .:;;:.           
         .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
@@ -761,7 +772,7 @@ Please use http://arduino.tips/asciilogo.txt via HTTP
    ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
   ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
   ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
-  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;; 
 ```
 
 
@@ -773,7 +784,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.1
+Ethernet_Generic v2.1.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -786,17 +797,21 @@ Connected! IP address: 192.168.2.85
 
 Connecting...
 HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Fri, 01 Apr 2022 19:18:11 GMT
+Date: Fri, 22 Apr 2022 04:37:41 GMT
 Content-Type: text/plain
-Content-Length: 2317
-Last-Modified: Thu, 24 Feb 2022 11:33:32 GMT
+Content-Length: 2263
 Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0c-90d"
-Accept-Ranges: bytes
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 
-Please use http://arduino.tips/asciilogo.txt via HTTP
 
            `:;;;,`                      .:;;:.           
         .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
@@ -836,7 +851,7 @@ Please use http://arduino.tips/asciilogo.txt via HTTP
    ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
   ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
   ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
-  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;; 
 ```
 
 ---
@@ -847,7 +862,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.1
+Ethernet_Generic v2.1.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -861,17 +876,21 @@ Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Fri, 01 Apr 2022 19:20:20 GMT
+Date: Fri, 22 Apr 2022 04:37:41 GMT
 Content-Type: text/plain
-Content-Length: 2317
-Last-Modified: Thu, 24 Feb 2022 11:33:32 GMT
+Content-Length: 2263
 Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0c-90d"
-Accept-Ranges: bytes
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 
-Please use http://arduino.tips/asciilogo.txt via HTTP
 
            `:;;;,`                      .:;;:.           
         .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
@@ -911,7 +930,7 @@ Please use http://arduino.tips/asciilogo.txt via HTTP
    ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
   ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
   ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
-  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;; 
 ```
 
 ---
@@ -923,7 +942,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.1
+Ethernet_Generic v2.1.0
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -936,17 +955,21 @@ Connected! IP address: 192.168.2.85
 
 Connecting...
 HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Fri, 01 Apr 2022 19:14:09 GMT
+Date: Fri, 22 Apr 2022 04:37:41 GMT
 Content-Type: text/plain
-Content-Length: 2317
-Last-Modified: Thu, 24 Feb 2022 11:33:32 GMT
+Content-Length: 2263
 Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0c-90d"
-Accept-Ranges: bytes
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 
-Please use http://arduino.tips/asciilogo.txt via HTTP
 
            `:;;;,`                      .:;;:.           
         .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
@@ -986,7 +1009,7 @@ Please use http://arduino.tips/asciilogo.txt via HTTP
    ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
   ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
   ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
-  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;; 
 
 ```
 
@@ -999,7 +1022,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.1
+Ethernet_Generic v2.1.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1013,17 +1036,21 @@ Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Fri, 01 Apr 2022 19:42:17 GMT
+Date: Fri, 22 Apr 2022 04:37:41 GMT
 Content-Type: text/plain
-Content-Length: 2317
-Last-Modified: Thu, 24 Feb 2022 11:33:32 GMT
+Content-Length: 2263
 Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0c-90d"
-Accept-Ranges: bytes
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 
-Please use http://arduino.tips/asciilogo.txt via HTTP
 
            `:;;;,`                      .:;;:.           
         .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
@@ -1063,7 +1090,7 @@ Please use http://arduino.tips/asciilogo.txt via HTTP
    ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
   ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
   ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
-  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;  
 ```
 
 
@@ -1075,7 +1102,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.1
+Ethernet_Generic v2.1.0
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1089,17 +1116,21 @@ Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Fri, 01 Apr 2022 19:11:53 GMT
+Date: Fri, 22 Apr 2022 04:37:41 GMT
 Content-Type: text/plain
-Content-Length: 2317
-Last-Modified: Thu, 24 Feb 2022 11:33:32 GMT
+Content-Length: 2263
 Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0c-90d"
-Accept-Ranges: bytes
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 
-Please use http://arduino.tips/asciilogo.txt via HTTP
 
            `:;;;,`                      .:;;:.           
         .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
@@ -1139,7 +1170,7 @@ Please use http://arduino.tips/asciilogo.txt via HTTP
    ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
   ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
   ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
-  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;; 
 ```
 
 ---
@@ -1152,7 +1183,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.0.1
+Ethernet_Generic v2.1.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1161,12 +1192,24 @@ SCK:52
 SS:53
 =========================
 Using mac index = 2
-Connected! IP address: 192.168.2.85
+Connected! IP address: 192.168.2.103
+Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 UDP Packet received, size 48
-From 132.163.96.2, port 123
-Seconds since Jan 1 1900 = 3857829418
-Unix time = 1648840618
-The UTC time is 19:16:58
+From 132.163.97.2, port 123
+Seconds since Jan 1 1900 = 3859592315
+Unix time = 1650603515
+The UTC time is 4:58:35
+UDP Packet received, size 48
+From 132.163.97.2, port 123
+Seconds since Jan 1 1900 = 3859592327
+Unix time = 1650603527
+The UTC time is 4:58:47
+UDP Packet received, size 48
+From 132.163.97.2, port 123
+Seconds since Jan 1 1900 = 3859592339
+Unix time = 1650603539
+The UTC time is 4:58:59
+
 ```
 
 ---
@@ -1191,17 +1234,21 @@ Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 Starting connection to server...
 Connected to server
 HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Sun, 03 Apr 2022 02:19:29 GMT
+Date: Fri, 22 Apr 2022 04:37:41 GMT
 Content-Type: text/plain
-Content-Length: 2317
-Last-Modified: Thu, 24 Feb 2022 11:33:32 GMT
+Content-Length: 2263
 Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0c-90d"
-Accept-Ranges: bytes
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 
-Please use http://arduino.tips/asciilogo.txt via HTTP
 
            `:;;;,`                      .:;;:.           
         .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
@@ -1241,7 +1288,7 @@ Please use http://arduino.tips/asciilogo.txt via HTTP
    ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
   ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
   ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
-  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;; 
 
 Disconnecting from server...
 ```
@@ -1270,17 +1317,202 @@ Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 Starting connection to server...
 Connected to server
 HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Sun, 03 Apr 2022 02:21:06 GMT
+Date: Fri, 22 Apr 2022 04:37:41 GMT
 Content-Type: text/plain
-Content-Length: 2317
-Last-Modified: Thu, 24 Feb 2022 11:33:32 GMT
+Content-Length: 2263
 Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0c-90d"
-Accept-Ranges: bytes
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 
-Please use http://arduino.tips/asciilogo.txt via HTTP
+
+           `:;;;,`                      .:;;:.           
+        .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
+      `;;;;;;;;;;;;;;;`            :;;;;;;;;;;;;;;;      
+     :;;;;;;;;;;;;;;;;;;         `;;;;;;;;;;;;;;;;;;     
+    ;;;;;;;;;;;;;;;;;;;;;       .;;;;;;;;;;;;;;;;;;;;    
+   ;;;;;;;;:`   `;;;;;;;;;     ,;;;;;;;;.`   .;;;;;;;;   
+  .;;;;;;,         :;;;;;;;   .;;;;;;;          ;;;;;;;  
+  ;;;;;;             ;;;;;;;  ;;;;;;,            ;;;;;;. 
+ ,;;;;;               ;;;;;;.;;;;;;`              ;;;;;; 
+ ;;;;;.                ;;;;;;;;;;;`      ```       ;;;;;`
+ ;;;;;                  ;;;;;;;;;,       ;;;       .;;;;;
+`;;;;:                  `;;;;;;;;        ;;;        ;;;;;
+,;;;;`    `,,,,,,,,      ;;;;;;;      .,,;;;,,,     ;;;;;
+:;;;;`    .;;;;;;;;       ;;;;;,      :;;;;;;;;     ;;;;;
+:;;;;`    .;;;;;;;;      `;;;;;;      :;;;;;;;;     ;;;;;
+.;;;;.                   ;;;;;;;.        ;;;        ;;;;;
+ ;;;;;                  ;;;;;;;;;        ;;;        ;;;;;
+ ;;;;;                 .;;;;;;;;;;       ;;;       ;;;;;,
+ ;;;;;;               `;;;;;;;;;;;;                ;;;;; 
+ `;;;;;,             .;;;;;; ;;;;;;;              ;;;;;; 
+  ;;;;;;:           :;;;;;;.  ;;;;;;;            ;;;;;;  
+   ;;;;;;;`       .;;;;;;;,    ;;;;;;;;        ;;;;;;;:  
+    ;;;;;;;;;:,:;;;;;;;;;:      ;;;;;;;;;;:,;;;;;;;;;;   
+    `;;;;;;;;;;;;;;;;;;;.        ;;;;;;;;;;;;;;;;;;;;    
+      ;;;;;;;;;;;;;;;;;           :;;;;;;;;;;;;;;;;:     
+       ,;;;;;;;;;;;;;,              ;;;;;;;;;;;;;;       
+         .;;;;;;;;;`                  ,;;;;;;;;:         
+                                                         
+                                                         
+                                                         
+                                                         
+    ;;;   ;;;;;`  ;;;;:  .;;  ;; ,;;;;;, ;;. `;,  ;;;;   
+    ;;;   ;;:;;;  ;;;;;; .;;  ;; ,;;;;;: ;;; `;, ;;;:;;  
+   ,;:;   ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;,`;, ;;  ;;  
+   ;; ;:  ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;;`;, ;;  ;;. 
+   ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
+  ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
+  ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;; 
+
+Disconnecting from server...
+```
+
+---
+
+
+#### 11. WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with Large Buffer
+
+The following are debug terminal output when running example [WebClientRepeating_RP2040_SPI1](examples/WebClientRepeating_RP2040_SPI1) on RASPBERRY_PI_PICO with `W5500` using Ethernet_Generic Library and [`Earle Philhower's arduino-pico core`](https://github.com/earlephilhower/arduino-pico) on SPI1
+
+
+```
+Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
+Ethernet_Generic v2.1.0
+[ETG] Default SPI pinout:
+[ETG] MOSI: 15
+[ETG] MISO: 12
+[ETG] SCK: 14
+[ETG] SS: 13
+[ETG] =========================
+[ETG] RPIPICO setCsPin: 13
+[ETG] W5100 init, using SS_PIN_DEFAULT = 13 , new ss_pin =  10 , W5100Class::ss_pin =  13
+[ETG] Chip is W5500
+[ETG] W5100::init: W5500, SSIZE = 8192
+[ETG] Currently Used SPI pinout:
+[ETG] MOSI: 15
+[ETG] MISO: 12
+[ETG] SCK: 14
+[ETG] SS: 13
+[ETG] =========================
+Using mac index = 3
+Connected! IP address: 192.168.2.131
+Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+
+Connecting...
+HTTP/1.1 200 OK
+Date: Fri, 22 Apr 2022 04:37:41 GMT
+Content-Type: text/plain
+Content-Length: 2263
+Connection: close
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
+
+
+           `:;;;,`                      .:;;:.           
+        .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
+      `;;;;;;;;;;;;;;;`            :;;;;;;;;;;;;;;;      
+     :;;;;;;;;;;;;;;;;;;         `;;;;;;;;;;;;;;;;;;     
+    ;;;;;;;;;;;;;;;;;;;;;       .;;;;;;;;;;;;;;;;;;;;    
+   ;;;;;;;;:`   `;;;;;;;;;     ,;;;;;;;;.`   .;;;;;;;;   
+  .;;;;;;,         :;;;;;;;   .;;;;;;;          ;;;;;;;  
+  ;;;;;;             ;;;;;;;  ;;;;;;,            ;;;;;;. 
+ ,;;;;;               ;;;;;;.;;;;;;`              ;;;;;; 
+ ;;;;;.                ;;;;;;;;;;;`      ```       ;;;;;`
+ ;;;;;                  ;;;;;;;;;,       ;;;       .;;;;;
+`;;;;:                  `;;;;;;;;        ;;;        ;;;;;
+,;;;;`    `,,,,,,,,      ;;;;;;;      .,,;;;,,,     ;;;;;
+:;;;;`    .;;;;;;;;       ;;;;;,      :;;;;;;;;     ;;;;;
+:;;;;`    .;;;;;;;;      `;;;;;;      :;;;;;;;;     ;;;;;
+.;;;;.                   ;;;;;;;.        ;;;        ;;;;;
+ ;;;;;                  ;;;;;;;;;        ;;;        ;;;;;
+ ;;;;;                 .;;;;;;;;;;       ;;;       ;;;;;,
+ ;;;;;;               `;;;;;;;;;;;;                ;;;;; 
+ `;;;;;,             .;;;;;; ;;;;;;;              ;;;;;; 
+  ;;;;;;:           :;;;;;;.  ;;;;;;;            ;;;;;;  
+   ;;;;;;;`       .;;;;;;;,    ;;;;;;;;        ;;;;;;;:  
+    ;;;;;;;;;:,:;;;;;;;;;:      ;;;;;;;;;;:,;;;;;;;;;;   
+    `;;;;;;;;;;;;;;;;;;;.        ;;;;;;;;;;;;;;;;;;;;    
+      ;;;;;;;;;;;;;;;;;           :;;;;;;;;;;;;;;;;:     
+       ,;;;;;;;;;;;;;,              ;;;;;;;;;;;;;;       
+         .;;;;;;;;;`                  ,;;;;;;;;:         
+                                                         
+                                                         
+                                                         
+                                                         
+    ;;;   ;;;;;`  ;;;;:  .;;  ;; ,;;;;;, ;;. `;,  ;;;;   
+    ;;;   ;;:;;;  ;;;;;; .;;  ;; ,;;;;;: ;;; `;, ;;;:;;  
+   ,;:;   ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;,`;, ;;  ;;  
+   ;; ;:  ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;;`;, ;;  ;;. 
+   ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
+  ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
+  ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;; 
+```
+
+---
+
+#### 12. WebClient on MBED RASPBERRY_PI_PICO with W5100S using Ethernet_Generic Library with Large Buffer
+
+The following are debug terminal output when running example [WebClient](examples/WebClient) on MBED RASPBERRY_PI_PICO with `W5100S` using Ethernet_Generic Library and [`ArduinoCore-mbed mbed_rp2040` core](https://github.com/arduino/ArduinoCore-mbed)
+
+
+```
+Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
+[ETG] Default SPI pinout:
+[ETG] MOSI: 19
+[ETG] MISO: 16
+[ETG] SCK: 18
+[ETG] SS: 17
+[ETG] =========================
+[ETG] RPIPICO setCsPin: 17
+[ETG] W5100 init, using SS_PIN_DEFAULT = 17 , new ss_pin =  10 , W5100Class::ss_pin =  17
+[ETG] Chip is W5100S
+[ETG] W5100::init: W5100S, SSIZE = 4096
+[ETG] Currently Used SPI pinout:
+[ETG] MOSI: 19
+[ETG] MISO: 16
+[ETG] SCK: 18
+[ETG] SS: 17
+[ETG] =========================
+Using mac index = 17
+Connected! IP address: 192.168.2.88
+Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+
+Starting connection to server...
+Connected to server
+HTTP/1.1 200 OK
+Date: Fri, 22 Apr 2022 04:37:41 GMT
+Content-Type: text/plain
+Content-Length: 2263
+Connection: close
+x-amz-id-2: eyzCHdMGO11oeA4A8jYZfiE5/zVEIlz5SuzB0BSTmsUOjQOUFLa6lLPADcCDm2MWQ7BbsMLKea8=
+x-amz-request-id: 15FHQXHJTE3MEDVP
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=lhmJUs%2BVz3Zq1TMuCZTZkuD3wJ1dmhMj6tmnJ95tFD0uo987KgvfB2FPAPnGfxkAgBhaTiof5icCjHVgfrTyqjU%2B5ItAVB5DOsFwKC5e9e9napQPbZ1hEZ4pMgfVNSs%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 6ffbaa64387ba235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
+
 
            `:;;;,`                      .:;;:.           
         .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
@@ -1323,93 +1555,9 @@ Please use http://arduino.tips/asciilogo.txt via HTTP
   ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
 
 Disconnecting from server...
-```
-
----
-
-
-#### 11. WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with Large Buffer
-
-The following are debug terminal output when running example [WebClientRepeating_RP2040_SPI1](examples/WebClientRepeating_RP2040_SPI1) on RASPBERRY_PI_PICO with `W5500` using Ethernet_Generic Library and [`Earle Philhower's arduino-pico core`](https://github.com/earlephilhower/arduino-pico) on SPI1
-
 
 ```
-Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.0.1
-[ETG] Default SPI pinout:
-[ETG] MOSI: 15
-[ETG] MISO: 12
-[ETG] SCK: 14
-[ETG] SS: 13
-[ETG] =========================
-[ETG] RPIPICO setCsPin: 13
-[ETG] W5100 init, using SS_PIN_DEFAULT = 13 , new ss_pin =  10 , W5100Class::ss_pin =  13
-[ETG] Chip is W5500
-[ETG] W5100::init: W5500, SSIZE = 8192
-[ETG] Currently Used SPI pinout:
-[ETG] MOSI: 15
-[ETG] MISO: 12
-[ETG] SCK: 14
-[ETG] SS: 13
-[ETG] =========================
-Using mac index = 3
-Connected! IP address: 192.168.2.131
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
-Connecting...
-HTTP/1.1 200 OK
-Server: nginx/1.4.2
-Date: Fri, 08 Apr 2022 19:19:57 GMT
-Content-Type: text/plain
-Content-Length: 2318
-Last-Modified: Thu, 24 Feb 2022 11:33:35 GMT
-Connection: close
-Vary: Accept-Encoding
-ETag: "62176d0f-90e"
-Accept-Ranges: bytes
-
-Please use http://arduino.tips/asciilogo.txt via HTTP
-
-           `:;;;,`                      .:;;:.           
-        .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
-      `;;;;;;;;;;;;;;;`            :;;;;;;;;;;;;;;;      
-     :;;;;;;;;;;;;;;;;;;         `;;;;;;;;;;;;;;;;;;     
-    ;;;;;;;;;;;;;;;;;;;;;       .;;;;;;;;;;;;;;;;;;;;    
-   ;;;;;;;;:`   `;;;;;;;;;     ,;;;;;;;;.`   .;;;;;;;;   
-  .;;;;;;,         :;;;;;;;   .;;;;;;;          ;;;;;;;  
-  ;;;;;;             ;;;;;;;  ;;;;;;,            ;;;;;;. 
- ,;;;;;               ;;;;;;.;;;;;;`              ;;;;;; 
- ;;;;;.                ;;;;;;;;;;;`      ```       ;;;;;`
- ;;;;;                  ;;;;;;;;;,       ;;;       .;;;;;
-`;;;;:                  `;;;;;;;;        ;;;        ;;;;;
-,;;;;`    `,,,,,,,,      ;;;;;;;      .,,;;;,,,     ;;;;;
-:;;;;`    .;;;;;;;;       ;;;;;,      :;;;;;;;;     ;;;;;
-:;;;;`    .;;;;;;;;      `;;;;;;      :;;;;;;;;     ;;;;;
-.;;;;.                   ;;;;;;;.        ;;;        ;;;;;
- ;;;;;                  ;;;;;;;;;        ;;;        ;;;;;
- ;;;;;                 .;;;;;;;;;;       ;;;       ;;;;;,
- ;;;;;;               `;;;;;;;;;;;;                ;;;;; 
- `;;;;;,             .;;;;;; ;;;;;;;              ;;;;;; 
-  ;;;;;;:           :;;;;;;.  ;;;;;;;            ;;;;;;  
-   ;;;;;;;`       .;;;;;;;,    ;;;;;;;;        ;;;;;;;:  
-    ;;;;;;;;;:,:;;;;;;;;;:      ;;;;;;;;;;:,;;;;;;;;;;   
-    `;;;;;;;;;;;;;;;;;;;.        ;;;;;;;;;;;;;;;;;;;;    
-      ;;;;;;;;;;;;;;;;;           :;;;;;;;;;;;;;;;;:     
-       ,;;;;;;;;;;;;;,              ;;;;;;;;;;;;;;       
-         .;;;;;;;;;`                  ,;;;;;;;;:         
-                                                         
-                                                         
-                                                         
-                                                         
-    ;;;   ;;;;;`  ;;;;:  .;;  ;; ,;;;;;, ;;. `;,  ;;;;   
-    ;;;   ;;:;;;  ;;;;;; .;;  ;; ,;;;;;: ;;; `;, ;;;:;;  
-   ,;:;   ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;,`;, ;;  ;;  
-   ;; ;:  ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;;`;, ;;  ;;. 
-   ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
-  ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
-  ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
-  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
-```
 
 ---
 ---
@@ -1470,6 +1618,8 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 14. Optimize library code to reduce size
 15. Add many more functions
 16. Add support to `SPI1` for RP2040-based boards using [**Earle Philhower's arduino-pico** core](https://github.com/earlephilhower/arduino-pico)
+17. Add support to WIZNet W5100S, including [**WIZnet Ethernet HAT**](https://docs.wiznet.io/Product/Open-Source-Hardware/wiznet_ethernet_hat) and [**W5100S-EVB-Pico**](https://docs.wiznet.io/Product/iEthernet/W5100S/w5100s-evb-pico)
+
 
 ---
 ---

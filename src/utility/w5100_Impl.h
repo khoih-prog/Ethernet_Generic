@@ -12,17 +12,18 @@
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  Version: 2.0.1
+  Version: 2.1.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
   2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
+  2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
  *****************************************************************************************************************************/
 
 #pragma once
 
-#ifndef  W5100_IMPL_H_
+#ifndef W5100_IMPL_H_
 #define W5100_IMPL_H_
 
 #include <Arduino.h>
@@ -51,7 +52,6 @@
   #endif
   
   #if (_ETG_LOGLEVEL_ > 3)
-    //KH
     #warning w5100.cpp Use PIN_SPI_SS_ETHERNET_LIB defined, change SS_PIN_DEFAULT to PIN_SPI_SS_ETHERNET_LIB
   #endif
 
@@ -66,7 +66,6 @@
   #endif
   
   #if (_ETG_LOGLEVEL_ > 3)
-    //KH
     #warning w5100.cpp Use MKR, change SS_PIN_DEFAULT to 5
   #endif
 
@@ -83,7 +82,6 @@
   #endif
   
   #if (_ETG_LOGLEVEL_ > 3)
-    //KH
     #warning w5100.cpp Use __AVR__, change SS_PIN_DEFAULT to 10
   #endif
 
@@ -111,7 +109,6 @@
     #endif
   
     #if (_ETG_LOGLEVEL_ > 3)
-      //KH
       #warning w5100.cpp Use PIN_SPI_SS defined, change SS_PIN_DEFAULT to PIN_SPI_SS
     #endif
   
@@ -126,7 +123,6 @@
   #endif
   
   #if (_ETG_LOGLEVEL_ > 3)
-    //KH
     #warning w5100.cpp Use CORE_SS0_PIN defined, change SS_PIN_DEFAULT to CORE_SS0_PIN
   #endif
 
@@ -178,7 +174,12 @@
 /////////////////////////////////////////////////////////
 
 // W5100 controller instance
-EthernetChip_t  W5100Class::chip = noChip;
+EthernetChip_t  W5100Class::chip    = noChip;
+
+//KH
+EthernetChip_t  W5100Class::altChip = noChip;
+//////
+
 uint8_t         W5100Class::CH_BASE_MSB;
 uint8_t         W5100Class::ss_pin = SS_PIN_DEFAULT;
 
@@ -255,7 +256,6 @@ W5100Class W5100;
 
 ////////////////////////////////////////////////////////////
 
-// KH
 uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
 {
   (void) socketNumbers;
@@ -275,7 +275,6 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
   // reset time, this can be edited or removed.
   delay(560);
 
-  //KH
   ETG_LOGWARN5("W5100 init, using SS_PIN_DEFAULT =", SS_PIN_DEFAULT, ", new ss_pin = ", new_ss_pin, 
                 ", W5100Class::ss_pin = ", W5100Class::ss_pin);
 
@@ -295,6 +294,7 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
   // reset its SPI state when CS goes high (inactive).  Communication
   // from detecting the other chips can leave the W5200 in a state
   // where it won't recover, unless given a reset pulse.
+
   if (isW5200())
   {
     CH_BASE_MSB = 0x40;
@@ -310,7 +310,7 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
       SSIZE = 2048;
   #endif
       SMASK = SSIZE - 1;
-  #endif
+#endif
   
     for (i = 0; i < MAX_SOCK_NUM; i++)
     {
@@ -329,7 +329,7 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
     // Try W5500 next.  Wiznet finally seems to have implemented
     // SPI well with this chip.  It appears to be very resilient,
     // so try it after the fragile W5200
-  } 
+  }  
   else if (isW5500())
   {
     CH_BASE_MSB = 0x10;
@@ -385,7 +385,7 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
   #endif
   
       SMASK = SSIZE - 1;
-  #else
+#else
 
     writeTMSR(0x55);
     writeRMSR(0x55);
@@ -397,6 +397,35 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
     // that's heard other SPI communication if its chip select
     // pin wasn't high when a SD card or other SPI chip was used.
   }
+  else if (isW5100S())
+  {
+    CH_BASE_MSB = 0x04;
+
+#ifdef ETHERNET_LARGE_BUFFERS
+
+  #if MAX_SOCK_NUM <= 1
+      SSIZE = 8192;
+      writeTMSR(0x03);
+      writeRMSR(0x03);
+  #else
+      SSIZE = 4096;
+      writeTMSR(0x0A);
+      writeRMSR(0x0A);
+  #endif
+  
+      SMASK = SSIZE - 1;
+#else
+
+    writeTMSR(0x55);
+    writeRMSR(0x55);
+#endif
+
+    ETG_LOGWARN1("W5100::init: W5100S, SSIZE =", SSIZE);
+
+    // Try W5500 next.  Wiznet finally seems to have implemented
+    // SPI well with this chip.  It appears to be very resilient,
+    // so try it after the fragile W5200
+  }  
   else
   {
     ETG_LOGERROR("W5100::init: no chip :-(");
@@ -422,7 +451,7 @@ uint8_t W5100Class::softReset()
 {
   uint16_t count = 0;
 
-  ETG_LOGINFO("W5x00::softReset");
+  ETG_LOGDEBUG("W5x00::softReset");
 
   // write to reset bit
   writeMR(0x80);
@@ -449,7 +478,7 @@ uint8_t W5100Class::isW5100()
 {
   chip = w5100;
 
-  ETG_LOGINFO("isW5100: detect W5100 chip");
+  ETG_LOGDEBUG("isW5100: detect W5100 chip");
 
   if (!softReset())
     return 0;
@@ -475,11 +504,63 @@ uint8_t W5100Class::isW5100()
 
 ////////////////////////////////////////////////////////////
 
+uint8_t W5100Class::isW5100S()
+{
+  chip = w5100s;  // Must use w5100s before softReset()
+  
+  // For other functions specific to W5100S, such as LinkStatus. etc
+  altChip = w5100s;
+
+  ETG_LOGDEBUG("isW5100S: detect W5100S chip");
+
+  if (!softReset())
+    return 0;
+    
+  chip = w5100;   // using w5100 after softReset() => read correct registers
+    
+  writeMR(0x13);
+  
+  if (readMR() != 0x13)
+  {
+    ETG_LOGDEBUG1("readMR (19) =", readMR()); 
+    return 0;
+  }
+
+  writeMR(0x1B);
+  
+  if (readMR() != 0x1B)
+  {
+    ETG_LOGDEBUG1("readMR (27) =", readMR()); 
+    return 0;
+  }
+
+  writeMR(0x03);
+  
+  if (readMR() != 0x03)
+  {
+    ETG_LOGDEBUG1("readMR (03) =", readMR()); 
+    return 0;
+  }
+    
+  int ver = readVERSIONR_W5100S();
+
+  ETG_LOGDEBUG1("Version =", ver);
+  
+  if (ver != 81)
+    return 0; 
+
+  ETG_LOGWARN("Chip is W5100S");
+  
+  return 1;
+}
+
+////////////////////////////////////////////////////////////
+
 uint8_t W5100Class::isW5200()
 {
   chip = w5200;
 
-  ETG_LOGINFO("isW5200: detect W5200 chip");
+  ETG_LOGDEBUG("isW5200: detect W5200 chip");
 
   if (!softReset())
     return 0;
@@ -501,7 +582,7 @@ uint8_t W5100Class::isW5200()
 
   int ver = readVERSIONR_W5200();
 
-  ETG_LOGINFO1("Version =", ver);
+  ETG_LOGDEBUG1("Version =", ver);
 
   if (ver != 3)
     return 0;
@@ -517,7 +598,7 @@ uint8_t W5100Class::isW5500()
 {
   chip = w5500;
 
-  ETG_LOGINFO("isW5500: detect W5500 chip");
+  ETG_LOGDEBUG("isW5500: detect W5500 chip");
 
   if (!softReset())
     return 0;
@@ -539,7 +620,7 @@ uint8_t W5100Class::isW5500()
 
   int ver = readVERSIONR_W5500();
 
-  ETG_LOGINFO1("Version =", ver);
+  ETG_LOGDEBUG1("Version =", ver);
 
   if (ver != 4)
     return 0;
@@ -555,7 +636,6 @@ W5100Linkstatus W5100Class::getLinkStatus()
 {
   uint8_t phystatus;
 
-  // KH
   if (!initialized) 
     return UNKNOWN;
 
@@ -605,6 +685,26 @@ uint16_t W5100Class::write(uint16_t addr, const uint8_t *buf, uint16_t len)
       resetSS();
     }
   }
+  else if ( (chip == w5100s) )
+  {
+    setSS();
+    cmd[0] = addr >> 8;
+    cmd[1] = addr & 0xFF;
+    cmd[2] = ((len >> 8) & 0x7F) | 0x80;
+    cmd[3] = len & 0xFF;
+    pCUR_SPI->transfer(cmd, 4);
+
+#ifdef SPI_HAS_TRANSFER_BUF
+    pCUR_SPI->transfer(buf, NULL, len);
+#else
+    // TODO: copy 8 bytes at a time to cmd[] and block transfer
+    for (uint16_t i = 0; i < len; i++)
+    {
+      pCUR_SPI->transfer(buf[i]);
+    }
+#endif
+    resetSS();
+  }  
   else if (chip == w5200)
   {
     setSS();
@@ -712,31 +812,33 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
 {
   uint8_t cmd[4];
 
-  if (chip == w5100)
+  if ( (chip == w5100))
   {
     for (uint16_t i = 0; i < len; i++)
     {
       setSS();
       
-#if 1
       pCUR_SPI->transfer(0x0F);
       pCUR_SPI->transfer(addr >> 8);
       pCUR_SPI->transfer(addr & 0xFF);
       addr++;
       buf[i] = pCUR_SPI->transfer(0);
-#else
-      cmd[0] = 0x0F;
-      cmd[1] = addr >> 8;
-      cmd[2] = addr & 0xFF;
-      cmd[3] = 0;
-      pCUR_SPI->transfer(cmd, 4); // TODO: why doesn't this work?
-      buf[i] = cmd[3];
-      addr++;
-#endif
 
       resetSS();
     }
   }
+  else if ( (chip == w5100s) )
+  {
+    setSS();
+    cmd[0] = addr >> 8;
+    cmd[1] = addr & 0xFF;
+    cmd[2] = (len >> 8) & 0x7F;
+    cmd[3] = len & 0xFF;
+    pCUR_SPI->transfer(cmd, 4);
+    memset(buf, 0, len);
+    pCUR_SPI->transfer(buf, len);
+    resetSS();  
+  }  
   else if (chip == w5200)
   {
     setSS();
@@ -883,51 +985,87 @@ void W5100Class::phyMode(phyMode_t mode)
 
 const char* W5100Class::linkReport()
 {
-  if (chip != w5500)
-    return "NOT SUPPORTED";
-    
-  if (bitRead(getPHYCFGR(), 0) == 1)
-    return "LINK";
-  else
-    return "NO LINK";
+  if (altChip == w5100s)
+  {
+    if (bitRead(readPSTATUS_W5100S(), 0) == 1)
+		  return "LINK";
+		else
+		  return "NO LINK";
+  }
+  else if (chip == w5500)
+  {
+		if (bitRead(readPHYCFGR_W5500(), 0) == 1)
+		  return "LINK";
+		else
+		  return "NO LINK";
+	}	  
+  
+  return "NOT SUPPORTED";  
 }
 
 ////////////////////////////////////////////////////////////
 
 const char* W5100Class::speedReport()
 {
-  if (chip != w5500)
-    return 0;
-    
-  if (bitRead(getPHYCFGR(), 0) == 1)
+  if (altChip == w5100s)
   {
-    if (bitRead(getPHYCFGR(), 1) == 1)
-      return "100 MB";
-
-    if (bitRead(getPHYCFGR(), 1) == 0)
-      return "10 MB";
+    if (bitRead(readPSTATUS_W5100S(), 0) == 1)
+    {
+		  if (bitRead(readPSTATUS_W5100S(), 1) == 1)
+				return "10 MB";
+			else
+				return "100 MB";		  
+		}
+		
+		return "NO LINK";
   }
-
-  return "NO LINK";
+  else if (chip == w5500)
+  {
+    if (bitRead(readPHYCFGR_W5500(), 0) == 1)
+		{
+			if (bitRead(readPHYCFGR_W5500(), 1) == 1)
+				return "100 MB";
+			else
+				return "10 MB";
+		}
+		
+		return "NO LINK";
+	}	  
+  
+  return "NOT SUPPORTED"; 
 }
 
 ////////////////////////////////////////////////////////////
 
 const char* W5100Class::duplexReport()
 {
-  if (chip != w5500)
-    return "NOT SUPPORTED";
-    
-  if (bitRead(getPHYCFGR(), 0) == 1)
+  if (altChip == w5100s)
   {
-    if (bitRead(getPHYCFGR(), 2) == 1)
-      return "FULL DUPLEX";
-
-    if (bitRead(getPHYCFGR(), 2) == 0)
-      return "HALF DUPLEX";
+    if (bitRead(readPSTATUS_W5100S(), 0) == 1)
+    {
+		  if (bitRead(readPSTATUS_W5100S(), 2) == 1)
+				return "HALF DUPLEX";
+			else
+				return "FULL DUPLEX";
+		}
+		
+		return "NO LINK";
   }
+  else if (chip == w5500)
+  {
+		if (bitRead(readPHYCFGR_W5500(), 0) == 1)
+		{
+		  if (bitRead(readPHYCFGR_W5500(), 2) == 1)
+		    return "FULL DUPLEX";
 
-  return "NO LINK";
+		  if (bitRead(getPHYCFGR(), 2) == 0)
+		    return "HALF DUPLEX";
+		}
+
+  	return "NO LINK";
+	}	  
+  
+  return "NOT SUPPORTED";
 }
 
 ////////////////////////////////////////////////////////////

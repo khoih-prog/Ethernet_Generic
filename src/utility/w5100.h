@@ -12,12 +12,13 @@
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  Version: 2.0.1
+  Version: 2.1.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
   2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
+  2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
  *****************************************************************************************************************************/
 
 // w5100.h contains private W5x00 hardware "driver" level definitions
@@ -324,6 +325,12 @@ class W5100Class
     __GP_REGISTER16(UPORT,  0x002E);              // Unreachable Port address in UDP mode (W5100 only)
     __GP_REGISTER8 (VERSIONR_W5200, 0x001F);      // Chip Version Register (W5200 only)
     __GP_REGISTER8 (VERSIONR_W5500, 0x0039);      // Chip Version Register (W5500 only)
+    
+    // KH
+    __GP_REGISTER8 (VERSIONR_W5100S, 0x0080);     // Chip Version Register (W5100S only)
+    __GP_REGISTER8 (PSTATUS_W5100S,  0x003C);     // PHY Status (W5100S only)
+    //////
+    
     __GP_REGISTER8 (PSTATUS_W5200,     0x0035);   // PHY Status
     __GP_REGISTER8 (PHYCFGR_W5500,     0x002E);   // PHY Configuration register, default: 10111xxx
 
@@ -424,11 +431,18 @@ class W5100Class
     // KH
     bool initialized = false;
     static EthernetChip_t chip;
+    
+    // KH, for W5100S only
+    static EthernetChip_t altChip;
+    //////
+    
     static uint8_t ss_pin;
 
     static uint8_t isW5100();
     static uint8_t isW5200();
     static uint8_t isW5500();
+
+    static uint8_t isW5100S();
 
   public:
    
@@ -538,6 +552,12 @@ class W5100Class
     {
       return chip;
     }
+    
+    // w5100S
+    static inline EthernetChip_t getAltChip()
+    {
+      return altChip;
+    }
 
 #ifdef ETHERNET_LARGE_BUFFERS
     static uint16_t SSIZE;
@@ -549,7 +569,7 @@ class W5100Class
 
     static inline uint16_t SBASE(uint8_t socknum)
     {
-      if (chip == w5100)
+      if ( (chip == w5100) || (chip == w5100s) )
       {
         return socknum * SSIZE + 0x4000;
       }
@@ -561,7 +581,7 @@ class W5100Class
 
     static inline uint16_t RBASE(uint8_t socknum)
     {
-      if (chip == w5100)
+      if ( (chip == w5100) )
       {
         return socknum * SSIZE + 0x6000;
       }
@@ -669,7 +689,9 @@ class W5100Class
       *(ss_pin_reg + 33) = ss_pin_mask;
 
       // Check https://forum.pjrc.com/threads/66758-Teensy-4-0-and-Ethernet-(WIZ5100-and-WIZ812)
-      if (chip == w5100)
+      // KH
+      //if ( (chip == w5100) || (chip == w5100s) )
+      if ( (chip == w5100) )
         delayNanoseconds(10); // <-- fixes W5100 on Teensy 4
     }
 

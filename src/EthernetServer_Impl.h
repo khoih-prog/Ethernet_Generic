@@ -32,12 +32,13 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.0.1
+  Version: 2.1.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
   2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
+  2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
  *****************************************************************************************************************************/
  
 #pragma once
@@ -86,8 +87,8 @@ EthernetClient EthernetServer::available()
     return EthernetClient(MAX_SOCK_NUM);
 
 #if MAX_SOCK_NUM > 4
-  if (chip == w5100)
-    maxindex = 4; // W5100 chip never supports more than 4 sockets
+  if ( (chip == w5100) || (chip == w5100s) )
+    maxindex = 4; // W5100/W5100S chip never supports more than 4 sockets
 #endif
 
   for (uint8_t i = 0; i < maxindex; i++)
@@ -144,7 +145,7 @@ EthernetClient EthernetServer::accept()
     return EthernetClient(MAX_SOCK_NUM);
 
 #if MAX_SOCK_NUM > 4
-  if (chip == w5100)
+  if ( (chip == w5100) || (chip == w5100s) )
     maxindex = 4; // W5100 chip never supports more than 4 sockets
 #endif
 
@@ -183,10 +184,14 @@ EthernetClient EthernetServer::accept()
 EthernetServer::operator bool()
 {
   uint8_t maxindex = MAX_SOCK_NUM;
-
+  
 #if MAX_SOCK_NUM > 4
-  if (W5100.getChip() == w5100)
-    maxindex = 4; // W5100 chip never supports more than 4 sockets
+  EthernetChip_t chip;
+
+  chip = W5100.getChip();
+  
+  if ( (chip == w5100) || (chip == w5100s) )
+    maxindex = 4; // W5100/W5100S chip never supports more than 4 sockets
 #endif
 
   for (uint8_t i = 0; i < maxindex; i++)
@@ -262,8 +267,8 @@ size_t EthernetServer::write(const uint8_t *buffer, size_t size)
     return 0;
 
 #if MAX_SOCK_NUM > 4
-  if (chip == w5100)
-    maxindex = 4; // W5100 chip never supports more than 4 sockets
+  if ( (chip == w5100) || (chip == w5100s) )
+    maxindex = 4; // W5100/W5100S chip never supports more than 4 sockets
 #endif
 
   available();

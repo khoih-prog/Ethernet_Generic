@@ -24,7 +24,7 @@ EthernetServer server(2323);
 void setup() 
 {
   Serial.begin(115200);
-  while (!Serial);
+  while (!Serial && millis() < 5000);
 
   Serial.print("\nStarting PagerServer on "); Serial.print(BOARD_NAME);
   Serial.print(F(" with ")); Serial.println(SHIELD_TYPE); 
@@ -163,7 +163,7 @@ void setup()
   Serial.print(F("Connected! IP address: "));
   Serial.println(Ethernet.localIP());
 
-  if (Ethernet.getChip() == w5500)
+  if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
     Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
     Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
@@ -173,6 +173,7 @@ void setup()
   server.begin();
 
   IPAddress ip = Ethernet.localIP();
+  
   Serial.println();
   Serial.print("To access the server, connect with Telnet client to ");
   Serial.print(ip);

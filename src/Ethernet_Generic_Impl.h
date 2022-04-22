@@ -32,12 +32,13 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.0.1
+  Version: 2.1.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
   2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
+  2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
  *****************************************************************************************************************************/
  
 #pragma once
@@ -258,9 +259,10 @@ EthernetHardwareStatus EthernetClass::hardwareStatus()
 {
   switch (W5100.getChip()) 
   {
-    case w5100: return EthernetW5500;
-    case w5200: return EthernetW5200;
-    case w5500: return EthernetW5500;
+    case w5100:  return EthernetW5100;
+    case w5200:  return EthernetW5200;
+    case w5500:  return EthernetW5500;
+    case w5100s: return EthernetW5100S;
     default: return EthernetNoHardware;
   }
 }
@@ -424,6 +426,14 @@ void EthernetClass::setRetransmissionCount(uint8_t num)
 EthernetChip_t EthernetClass::getChip()
 {
   return ( W5100.getChip() );
+}
+
+/////////////////////////////////////////////////////////
+
+// w5100S
+EthernetChip_t EthernetClass::getAltChip()
+{
+  return ( W5100.getAltChip() );
 }
 
 /////////////////////////////////////////

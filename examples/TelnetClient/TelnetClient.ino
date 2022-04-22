@@ -29,7 +29,7 @@ IPAddress server(192, 168, 2, 30);
 void setup() 
 {
   Serial.begin(115200);
-  while (!Serial);
+  while (!Serial && millis() < 5000);
 
   delay(500);
 
@@ -168,7 +168,8 @@ void setup()
 
   Serial.print(F("Connected! IP address: "));
   Serial.println(Ethernet.localIP());
-  if (Ethernet.getChip() == w5500)
+  
+  if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
     Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
     Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());

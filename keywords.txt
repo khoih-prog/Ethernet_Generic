@@ -41,6 +41,7 @@ hardreset	KEYWORD2
 begin	KEYWORD2
 maintain	KEYWORD2
 getChip	KEYWORD2
+getAltChip	KEYWORD2
 WoL	KEYWORD2
 phyMode	KEYWORD2
 phyState	KEYWORD2
@@ -171,6 +172,7 @@ beginSPITransaction	KEYWORD2
 endSPITransaction	KEYWORD2
 softReset	KEYWORD2
 getChip	KEYWORD2
+getAltChip	KEYWORD2
 SBASE	KEYWORD2
 RBASE	KEYWORD2
 hasOffsetAddressMapping	KEYWORD2

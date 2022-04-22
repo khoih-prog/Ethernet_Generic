@@ -15,7 +15,7 @@
 // Debug Level from 0 to 4
 #define _ETG_LOGLEVEL_                      2
 
-#define USING_SPI2                          true
+#define USING_SPI2                          false
 
 #if    ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
       || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) || defined(ARDUINO_SAMD_MKRWAN1310) \

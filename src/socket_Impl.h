@@ -32,12 +32,13 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.0.1
+  Version: 2.1.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
   2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
+  2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
  *****************************************************************************************************************************/
 
 #pragma once
@@ -111,11 +112,11 @@ uint8_t EthernetClass::socketBegin(uint8_t protocol, uint16_t port)
     return MAX_SOCK_NUM; // immediate error if no hardware detected
 
 #if MAX_SOCK_NUM > 4
-  if (chip == w5100)
-    maxindex = 4; // W5100 chip never supports more than 4 sockets
+  if ( (chip == w5100) || (chip == w5100s) )
+    maxindex = 4; // W5100/W5100S chip never supports more than 4 sockets
 #endif
 
-  ETG_LOGINFO3("socketBegin, protocol =", protocol, ", port =", port);
+  ETG_LOGDEBUG3("socketBegin, protocol =", protocol, ", port =", port);
 
   W5100.beginSPITransaction();
 
@@ -174,7 +175,7 @@ closemakesocket:
 
 makesocket:
 
-  ETG_LOGINFO1("socketBegin, socket index =", s);
+  ETG_LOGDEBUG1("socketBegin, socket index =", s);
 
   EthernetServer::server_port[s] = 0;
   delayMicroseconds(250); // TODO: is this needed??
@@ -200,7 +201,7 @@ makesocket:
   state[s].RX_inc = 0;
   state[s].TX_FSR = 0;
 
-  ETG_LOGINFO3("socketBegin, prot =", W5100.readSnMR(s), ", RX_RD =", state[s].RX_RD);
+  ETG_LOGDEBUG3("socketBegin, prot =", W5100.readSnMR(s), ", RX_RD =", state[s].RX_RD);
      
   W5100.endSPITransaction();
 
@@ -224,11 +225,11 @@ uint8_t EthernetClass::socketBeginMulticast(uint8_t protocol, IPAddress ip, uint
     return 0;
 
 #if MAX_SOCK_NUM > 4
-  if (chip == w5100)
-    maxindex = 4; // W5100 chip never supports more than 4 sockets
+  if ( (chip == w5100) || (chip == w5100s) )
+    maxindex = 4; // W5100/W5100S chip never supports more than 4 sockets
 #endif
 
-  ETG_LOGINFO3("socketBeginMulticast, protocol =", protocol, ", port =", port);
+  ETG_LOGDEBUG3("socketBeginMulticast, protocol =", protocol, ", port =", port);
 
   W5100.beginSPITransaction();
 
@@ -281,13 +282,13 @@ uint8_t EthernetClass::socketBeginMulticast(uint8_t protocol, IPAddress ip, uint
 
 closemakesocket:
 
-  ETG_LOGINFO("socketBeginMulticast: close");
+  ETG_LOGDEBUG("socketBeginMulticast: close");
 
   W5100.execCmdSn(s, Sock_CLOSE);
 
 makesocket:
 
-  ETG_LOGINFO1("socketBeginMulticast, socket index =", s);
+  ETG_LOGDEBUG1("socketBeginMulticast, socket index =", s);
 
   EthernetServer::server_port[s] = 0;
   delayMicroseconds(250); // TODO: is this needed??
@@ -321,7 +322,7 @@ makesocket:
   state[s].RX_inc = 0;
   state[s].TX_FSR = 0;
 
-  ETG_LOGINFO3("socketBeginMulticast, prot =", W5100.readSnMR(s), ", RX_RD =", state[s].RX_RD);
+  ETG_LOGDEBUG3("socketBeginMulticast, prot =", W5100.readSnMR(s), ", RX_RD =", state[s].RX_RD);
      
   W5100.endSPITransaction();
 
@@ -474,7 +475,7 @@ int EthernetClass::socketRecv(uint8_t s, uint8_t *buf, int16_t len)
     ret = rsr - state[s].RX_inc;
     state[s].RX_RSR = ret;
 
-    ETG_LOGINFO3("socketRecv, RX_RSR =", ret, ", RX_inc =", state[s].RX_inc);
+    ETG_LOGDEBUG3("socketRecv, RX_RSR =", ret, ", RX_inc =", state[s].RX_inc);
   }
 
   if (ret == 0)
@@ -515,7 +516,7 @@ int EthernetClass::socketRecv(uint8_t s, uint8_t *buf, int16_t len)
       W5100.writeSnRX_RD(s, ptr);
       W5100.execCmdSn(s, Sock_RECV);
 
-      ETG_LOGINFO3("socketRecv, cmd RX_RD received =", state[s].RX_RD, ", RX_RSR remaining =", state[s].RX_RSR);
+      ETG_LOGDEBUG3("socketRecv, cmd RX_RD received =", state[s].RX_RD, ", RX_RSR remaining =", state[s].RX_RSR);
 
     }
     else
@@ -548,7 +549,7 @@ uint16_t EthernetClass::socketRecvAvailable(uint8_t s)
     ret = rsr - state[s].RX_inc;
     state[s].RX_RSR = ret;
 
-    ETG_LOGINFO3("socketRecvAvailable, socket =", s, ", RX_RSR =", ret);
+    ETG_LOGDEBUG3("socketRecvAvailable, socket =", s, ", RX_RSR =", ret);
   }
   
   return ret;
@@ -790,7 +791,7 @@ bool EthernetClass::socketSendUDP(uint8_t s)
   W5100.writeSnIR(s, SnIR::SEND_OK);
   W5100.endSPITransaction();
 
-  ETG_LOGINFO("socketSendUDP, OK");
+  ETG_LOGDEBUG("socketSendUDP, OK");
 
   /* Sent ok */
   return true;

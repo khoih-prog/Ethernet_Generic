@@ -12,7 +12,7 @@
 
 #include "defines.h"
 
-char server[] = "arduino.cc";
+char server[] = "arduino.tips";
 
 // Initialize the Ethernet client object
 EthernetClient client;
@@ -20,7 +20,7 @@ EthernetClient client;
 void setup()
 {
   Serial.begin(115200);
-  while (!Serial);
+  while (!Serial && millis() < 5000);
 
   delay(200);
 
@@ -78,7 +78,7 @@ void setup()
   Serial.print(F("Connected! IP address: "));
   Serial.println(Ethernet.localIP());
 
-  if (Ethernet.getChip() == w5500)
+  if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
     Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
     Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
@@ -94,7 +94,7 @@ void setup()
     Serial.println(F("Connected to server"));
     // Make a HTTP request
     client.println(F("GET /asciilogo.txt HTTP/1.1"));
-    client.println(F("Host: arduino.cc"));
+    client.println(F("Host: arduino.tips"));
     client.println(F("Connection: close"));
     client.println();
   }

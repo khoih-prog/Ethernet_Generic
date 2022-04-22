@@ -25,7 +25,7 @@ EthernetUDP Udp;
 void setup()
 {
   Serial.begin(115200);
-  while (!Serial);
+  while (!Serial && millis() < 5000);
 
   Serial.print("\nStart UDPSendReceive on "); Serial.print(BOARD_NAME);
   Serial.print(F(" with ")); Serial.println(SHIELD_TYPE); 
@@ -164,7 +164,7 @@ void setup()
   Serial.print(F("Connected! IP address: "));
   Serial.println(Ethernet.localIP());
 
-  if (Ethernet.getChip() == w5500)
+  if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
     Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
     Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
