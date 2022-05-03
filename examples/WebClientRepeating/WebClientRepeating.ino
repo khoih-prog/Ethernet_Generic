@@ -196,12 +196,14 @@ void setup()
   Serial.print(F("Connected! IP address: "));
   Serial.println(Ethernet.localIP());
 
+#if !(USING_CUSTOM_SPI)
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
     Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
     Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
     Serial.print(F(", Link status: ")); Serial.println(Ethernet.linkReport());
   }
+#endif  
 }
 
 void loop()

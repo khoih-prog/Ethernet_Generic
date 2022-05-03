@@ -12,13 +12,15 @@
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  Version: 2.1.0
+  
+  Version: 2.2.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
   2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
   2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
+  2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
  *****************************************************************************************************************************/
 
 #pragma once
@@ -47,7 +49,7 @@
 // default SS pin for ethernet, use it.
 #if defined(PIN_SPI_SS_ETHERNET_LIB)
 
-	#if !defined(SS_PIN_DEFAULT)
+  #if !defined(SS_PIN_DEFAULT)
     #define SS_PIN_DEFAULT  PIN_SPI_SS_ETHERNET_LIB
   #endif
   
@@ -212,6 +214,27 @@ W5100Class W5100;
     #define CUR_PIN_MOSI      PIN_SPI1_MOSI
     #define CUR_PIN_SCK       PIN_SPI1_SCK
     #define CUR_PIN_SS        PIN_SPI1_SS
+    
+  #elif (USING_CUSTOM_SPI)
+    #if ( defined(CUR_PIN_MOSI) && defined(CUR_PIN_MISO) && defined(CUR_PIN_SCK) && defined(CUR_PIN_SS) )
+      #if (SPI_NEW_INITIALIZED)
+        #if(_ETG_LOGLEVEL_> 2)
+          #warning ETHERNET_GENERIC_USING_SPI2 with SPI_NEW_INITIALIZED in w5100_Impl.h 
+        #endif    
+      #else
+        #if(_ETG_LOGLEVEL_> 2)    
+          #warning ETHERNET_GENERIC_USING_SPI2 without SPI_NEW_INITIALIZED in w5100_Impl.h
+        #endif
+        
+        // Don't create the instance with CUR_PIN_SS, or Ethernet not working
+        SPIClass SPI_New(CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK);
+      #endif
+      
+      SPIClass* pCUR_SPI = (SPIClass*) &SPI_New;
+    #else
+      #error You must define CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK and CUR_PIN_SS   
+    #endif  
+     
   #endif  
       
 #else
@@ -285,8 +308,8 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
   
   // New
   softReset();
-	//////
-	
+  //////
+  
   // From #define SPI_ETHERNET_SETTINGS SPISettings(14000000, MSBFIRST, SPI_MODE0)  
   beginSPITransaction();
 
@@ -988,17 +1011,17 @@ const char* W5100Class::linkReport()
   if (altChip == w5100s)
   {
     if (bitRead(readPSTATUS_W5100S(), 0) == 1)
-		  return "LINK";
-		else
-		  return "NO LINK";
+      return "LINK";
+    else
+      return "NO LINK";
   }
   else if (chip == w5500)
   {
-		if (bitRead(readPHYCFGR_W5500(), 0) == 1)
-		  return "LINK";
-		else
-		  return "NO LINK";
-	}	  
+    if (bitRead(readPHYCFGR_W5500(), 0) == 1)
+      return "LINK";
+    else
+      return "NO LINK";
+  }   
   
   return "NOT SUPPORTED";  
 }
@@ -1011,26 +1034,26 @@ const char* W5100Class::speedReport()
   {
     if (bitRead(readPSTATUS_W5100S(), 0) == 1)
     {
-		  if (bitRead(readPSTATUS_W5100S(), 1) == 1)
-				return "10 MB";
-			else
-				return "100 MB";		  
-		}
-		
-		return "NO LINK";
+      if (bitRead(readPSTATUS_W5100S(), 1) == 1)
+        return "10 MB";
+      else
+        return "100 MB";      
+    }
+    
+    return "NO LINK";
   }
   else if (chip == w5500)
   {
     if (bitRead(readPHYCFGR_W5500(), 0) == 1)
-		{
-			if (bitRead(readPHYCFGR_W5500(), 1) == 1)
-				return "100 MB";
-			else
-				return "10 MB";
-		}
-		
-		return "NO LINK";
-	}	  
+    {
+      if (bitRead(readPHYCFGR_W5500(), 1) == 1)
+        return "100 MB";
+      else
+        return "10 MB";
+    }
+    
+    return "NO LINK";
+  }   
   
   return "NOT SUPPORTED"; 
 }
@@ -1043,27 +1066,27 @@ const char* W5100Class::duplexReport()
   {
     if (bitRead(readPSTATUS_W5100S(), 0) == 1)
     {
-		  if (bitRead(readPSTATUS_W5100S(), 2) == 1)
-				return "HALF DUPLEX";
-			else
-				return "FULL DUPLEX";
-		}
-		
-		return "NO LINK";
+      if (bitRead(readPSTATUS_W5100S(), 2) == 1)
+        return "HALF DUPLEX";
+      else
+        return "FULL DUPLEX";
+    }
+    
+    return "NO LINK";
   }
   else if (chip == w5500)
   {
-		if (bitRead(readPHYCFGR_W5500(), 0) == 1)
-		{
-		  if (bitRead(readPHYCFGR_W5500(), 2) == 1)
-		    return "FULL DUPLEX";
+    if (bitRead(readPHYCFGR_W5500(), 0) == 1)
+    {
+      if (bitRead(readPHYCFGR_W5500(), 2) == 1)
+        return "FULL DUPLEX";
 
-		  if (bitRead(getPHYCFGR(), 2) == 0)
-		    return "HALF DUPLEX";
-		}
+      if (bitRead(getPHYCFGR(), 2) == 0)
+        return "HALF DUPLEX";
+    }
 
-  	return "NO LINK";
-	}	  
+    return "NO LINK";
+  }   
   
   return "NOT SUPPORTED";
 }

@@ -15,8 +15,6 @@
 // Debug Level from 0 to 4
 #define _ETG_LOGLEVEL_                      2
 
-#define USING_SPI2                          false
-
 #if    ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
       || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) || defined(ARDUINO_SAMD_MKRWAN1310) \
       || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) \
@@ -248,7 +246,7 @@
   #define W5500_RST_PORT   21
 
 #elif ETHERNET_USE_RPIPICO
-  
+ 
   // Default pin 5 (in Mbed) or 17 to SS/CS
   #if defined(ARDUINO_ARCH_MBED)
     // For RPI Pico using Arduino Mbed RP2040 core
@@ -311,8 +309,49 @@
 #define ETHERNET_LARGE_BUFFERS
 
 //////////////////////////////////////////////////////////
-   
 
+// For boards supporting multiple hardware / software SPI buses, such as STM32
+// Tested OK with Nucleo144 F767ZI and L552ZE_Q so far
+#if ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3)  ||defined(STM32F4) || defined(STM32F7) || \
+       defined(STM32L0) || defined(STM32L1) || defined(STM32L4) || defined(STM32H7)  ||defined(STM32G0) || defined(STM32G4) || \
+       defined(STM32WB) || defined(STM32MP1) || defined(STM32L5) )
+       
+  // Be sure to use true only if necessary for your board, or compile error
+  #define USING_CUSTOM_SPI            true
+
+  #if ( USING_CUSTOM_SPI )
+    // Currently test OK for F767ZI and L552ZE_Q
+    #define USING_SPI2                  true
+  
+    #if (USING_SPI2)
+      //#include <SPI.h>
+      // For L552ZE-Q, F767ZI, but you can change the pins for any other boards
+      // SCK: 23,  MOSI: 22, MISO: 25, SS/CS: 24 for SPI1
+      #define CUR_PIN_MISO              25
+      #define CUR_PIN_MOSI              22
+      #define CUR_PIN_SCK               23
+      #define CUR_PIN_SS                24
+  
+      #define SPI_NEW_INITIALIZED       true
+  
+      // Don't create the instance with CUR_PIN_SS, or Ethernet not working
+      // To change for other boards' SPI libraries
+      SPIClass SPI_New(CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK);
+      
+      //#warning Using USE_THIS_SS_PIN = CUR_PIN_SS = 24
+  
+      #if defined(USE_THIS_SS_PIN)
+        #undef USE_THIS_SS_PIN
+      #endif   
+      #define USE_THIS_SS_PIN       CUR_PIN_SS    //24
+      
+    #endif
+    
+  #endif
+
+#endif
+
+//////////////////////////////////////////////////////////
 
 #include "Ethernet_Generic.h"
 

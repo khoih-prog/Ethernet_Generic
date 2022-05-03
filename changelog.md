@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.2.0](#releases-v220)
 	* [Releases v2.1.0](#releases-v210)
 	* [Releases v2.0.1](#releases-v201)
 	* [Releases v2.0.0](#releases-v200)
@@ -20,6 +21,12 @@
 ---
 
 ## Changelog
+
+### Releases v2.2.0
+
+1. Add support to STM32 boards using [Arduino_Core_STM32](https://github.com/stm32duino/Arduino_Core_STM32)
+2. Add support to any board with core supporting custom hardware / software `SPI`, for example STM32.
+
 
 ### Releases v2.1.0
 
