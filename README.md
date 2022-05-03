@@ -139,7 +139,23 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
 11. **Portenta_H7**
  
 12. **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
- 
+  
+13. **STM32F/L/H/G/WB/MP1 boards (with 32+K Flash) running W5x00 shields)**
+
+- Nucleo-144
+- Nucleo-64
+- Discovery
+- Generic STM32F0, STM32F1, STM32F2, STM32F3, STM32F4, STM32F7 (with 64+K Flash): x8 and up
+- STM32L0, STM32L1, STM32L4
+- STM32G0, STM32G4
+- STM32H7
+- STM32WB
+- STM32MP1
+- LoRa boards
+- 3-D printer boards
+- Generic Flight Controllers
+- Midatronics boards
+
 
 #### Currently supported Ethernet shields/modules
 
