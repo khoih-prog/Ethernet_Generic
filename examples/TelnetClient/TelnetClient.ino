@@ -34,7 +34,8 @@ void setup()
   delay(500);
 
   Serial.print("\nStarting TelnetClient on "); Serial.print(BOARD_NAME);
-  Serial.print(F(" with ")); Serial.println(SHIELD_TYPE); 
+  Serial.print(F(" with ")); Serial.println(SHIELD_TYPE);
+  Serial.println(ETHERNET_GENERIC_VERSION);
   
 #if (USING_SPI2)
   #if defined(CUR_PIN_MISO)

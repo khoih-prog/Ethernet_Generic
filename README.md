@@ -663,14 +663,14 @@ These pins are tested OK with ESP8266 and W5x00
 
 #### 1. File [WebClientRepeating.ino](examples/WebClientRepeating/WebClientRepeating.ino)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/1af8e9267678cf579fd4139bfa786e90bf9ca237/examples/WebClientRepeating/WebClientRepeating.ino#L15-L224
+https://github.com/khoih-prog/Ethernet_Generic/blob/f76e3591e1f7680776f46a62b2367fbb229688a0/examples/WebClientRepeating/WebClientRepeating.ino#L9-L226
 
 
 ---
 
 #### 2. File [defines.h](examples/WebClientRepeating/defines.h)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/1af8e9267678cf579fd4139bfa786e90bf9ca237/examples/WebClientRepeating/defines.h#L10-L358
+https://github.com/khoih-prog/Ethernet_Generic/blob/f76e3591e1f7680776f46a62b2367fbb229688a0/examples/WebClientRepeating/defines.h#L10-L397
 
 ---
 ---
@@ -1282,6 +1282,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
+Ethernet_Generic v2.2.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1365,6 +1366,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
+Ethernet_Generic v2.2.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1537,6 +1539,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
+Ethernet_Generic v2.2.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16

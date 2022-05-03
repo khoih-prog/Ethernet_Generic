@@ -23,6 +23,7 @@ void setup()
 
   Serial.print("\nStarting WebClient on "); Serial.print(BOARD_NAME);
   Serial.print(F(" with ")); Serial.println(SHIELD_TYPE); 
+  Serial.println(ETHERNET_GENERIC_VERSION);
   
 #if (USING_SPI2)
   #if defined(CUR_PIN_MISO)
