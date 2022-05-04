@@ -17,31 +17,81 @@
 
 #define USING_SPI2                          true
 
-#if ( defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_GENERIC_RP2040) ) && \
-    !defined(ARDUINO_ARCH_MBED)
+#if ( defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_GENERIC_RP2040) ) 
   #if defined(ETHERNET_USE_RPIPICO)
     #undef ETHERNET_USE_RPIPICO
   #endif
   #define ETHERNET_USE_RPIPICO      true
 #else
-  #error Only RP2040 and not ARDUINO_ARCH_MBED supported  
+  #error Only RP2040 supported  
 #endif
- 
-// For RPI Pico using E. Philhower RP2040 core
-#if (USING_SPI2)
-  // SCK: GPIO14,  MOSI: GPIO15, MISO: GPIO12, SS/CS: GPIO13 for SPI1
-  #define USE_THIS_SS_PIN       13
+
+#include <SPI.h>
+
+#if defined(ARDUINO_ARCH_MBED)
+
+  #if defined(BOARD_NAME)
+    #undef BOARD_NAME
+  #endif
+
+  #if defined(ARDUINO_RASPBERRY_PI_PICO) 
+    #define BOARD_NAME      "MBED RASPBERRY_PI_PICO"
+  #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+    #define BOARD_NAME      "MBED ADAFRUIT_FEATHER_RP2040"
+  #elif defined(ARDUINO_GENERIC_RP2040)
+    #define BOARD_NAME      "MBED GENERIC_RP2040"
+  #else
+    #define BOARD_NAME      "MBED Unknown RP2040"
+  #endif
+
+  // For RPI Pico using Mbed RP2040 core
+  #if (USING_SPI2)
+    #define USING_CUSTOM_SPI          true
+    
+    // SCK: GPIO14,  MOSI: GPIO15, MISO: GPIO12, SS/CS: GPIO13 for SPI1
+    #define CUR_PIN_MISO              12
+    #define CUR_PIN_MOSI              15
+    #define CUR_PIN_SCK               14
+    #define CUR_PIN_SS                13
+
+    #define SPI_NEW_INITIALIZED       true
+
+    // Don't create the instance with CUR_PIN_SS, or Ethernet not working
+    // To change for other boards' SPI libraries
+    #define SPIClass      arduino::MbedSPI
+
+    // Be careful, Mbed SPI ctor is so weird, reversing the order => MISO, MOSI, SCK
+    //arduino::MbedSPI::MbedSPI(int miso, int mosi, int sck)
+    SPIClass SPI_New(CUR_PIN_MISO, CUR_PIN_MOSI, CUR_PIN_SCK);
+    
+    //#warning Using USE_THIS_SS_PIN = CUR_PIN_SS = 13
+
+    #if defined(USE_THIS_SS_PIN)
+      #undef USE_THIS_SS_PIN
+    #endif   
+    #define USE_THIS_SS_PIN       CUR_PIN_SS    //13
+     
+  #else
+    // SCK: GPIO18,  MOSI: GPIO19, MISO: GPIO16, SS/CS: GPIO17 for SPI0
+    #define USE_THIS_SS_PIN       17
+  #endif
+
 #else
-  // SCK: GPIO18,  MOSI: GPIO19, MISO: GPIO16, SS/CS: GPIO17 for SPI0
-  #define USE_THIS_SS_PIN       17
+  // For RPI Pico using E. Philhower RP2040 core
+  #if (USING_SPI2)
+    // SCK: GPIO14,  MOSI: GPIO15, MISO: GPIO12, SS/CS: GPIO13 for SPI1
+    #define USE_THIS_SS_PIN       13
+  #else
+    // SCK: GPIO18,  MOSI: GPIO19, MISO: GPIO16, SS/CS: GPIO17 for SPI0
+    #define USE_THIS_SS_PIN       17
+  #endif
+
 #endif
-   
+
 #define SS_PIN_DEFAULT        USE_THIS_SS_PIN
 
 // For RPI Pico
-#warning Use RPI-Pico RP2040 architecture with SPI1
-
-#include <SPI.h>
+#warning Use RPI-Pico RP2040 architecture with custom SPI or SPI1
 
 ///////////////////////////////////////////////////////////
 

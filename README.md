@@ -85,6 +85,7 @@
   * [12. WebClient on MBED RASPBERRY_PI_PICO with W5100S using Ethernet_Generic Library with Large Buffer](#12-WebClient-on-MBED-RASPBERRY_PI_PICO-with-W5100S-using-Ethernet_Generic-Library-with-Large-Buffer)
   * [13. WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer](#13-WebClientRepeating-on-NUCLEO_L552ZE_Q-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
   * [14. WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer](#14-WebClientRepeating-on-NUCLEO_F767ZI-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
+  * [15. WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer](#15-WebClientRepeating_RP2040_SPI1-on-MBED-RASPBERRY_PI_PICO-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -134,13 +135,13 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
  7. ESP32, using **SPI or SPI2**
  8. ESP8266
  
- 9. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed) with SPI
-10. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Earle Philhower's arduino-pico** core](https://github.com/earlephilhower/arduino-pico) with SPI0 or SPI1. **New**
-11. **Portenta_H7**
+ 9. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed) with SPI, SPI1, or custom SPI. **New**
+10. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Earle Philhower's arduino-pico** core](https://github.com/earlephilhower/arduino-pico) with SPI, SPI1 or custom SPI. **New**
+11. **Portenta_H7** with SPI0, SPI1 or custom SPI. **New**
  
 12. **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
   
-13. **STM32F/L/H/G/WB/MP1 boards (with 32+K Flash) running W5x00 shields)**
+13. **STM32F/L/H/G/WB/MP1 boards (with 32+K Flash) running W5x00 shields)** with SPI, SPI2 or custom SPI. **New**
 
 - Nucleo-144
 - Nucleo-64
@@ -549,15 +550,65 @@ of comment out the following line, if exists
 //#define USING_SPI2              true
 ```
 
-To use SPI2 (or `SPI1` for `arduino-pico` core)
+To use custom SPI (or `SPI1` for `arduino-pico` or `Arduino_mbed` core)
 
 
 ```cpp
-#define USING_SPI2              true
+#define USING_SPI2                          true
+
+#if defined(ARDUINO_ARCH_MBED)
+
+  // For RPI Pico using Mbed RP2040 core
+  #if (USING_SPI2)
+    #define USING_CUSTOM_SPI          true
+    
+    // SCK: GPIO14,  MOSI: GPIO15, MISO: GPIO12, SS/CS: GPIO13 for SPI1
+    #define CUR_PIN_MISO              12
+    #define CUR_PIN_MOSI              15
+    #define CUR_PIN_SCK               14
+    #define CUR_PIN_SS                13
+
+    #define SPI_NEW_INITIALIZED       true
+
+    // Don't create the instance with CUR_PIN_SS, or Ethernet not working
+    // To change for other boards' SPI libraries
+    #define SPIClass      arduino::MbedSPI
+
+    // Be careful, Mbed SPI ctor is so weird, reversing the order => MISO, MOSI, SCK
+    //arduino::MbedSPI::MbedSPI(int miso, int mosi, int sck)
+    SPIClass SPI_New(CUR_PIN_MISO, CUR_PIN_MOSI, CUR_PIN_SCK);
+    
+    #warning Using USE_THIS_SS_PIN = CUR_PIN_SS = 13
+
+    #if defined(USE_THIS_SS_PIN)
+      #undef USE_THIS_SS_PIN
+    #endif   
+    #define USE_THIS_SS_PIN       CUR_PIN_SS    //13
+     
+  #else
+    // SCK: GPIO18,  MOSI: GPIO19, MISO: GPIO16, SS/CS: GPIO17 for SPI0
+    #define USE_THIS_SS_PIN       17
+  #endif
+
+#else
+  // For RPI Pico using E. Philhower RP2040 core
+  #if (USING_SPI2)
+    // SCK: GPIO14,  MOSI: GPIO15, MISO: GPIO12, SS/CS: GPIO13 for SPI1
+    #define USE_THIS_SS_PIN       13
+  #else
+    // SCK: GPIO18,  MOSI: GPIO19, MISO: GPIO16, SS/CS: GPIO17 for SPI0
+    #define USE_THIS_SS_PIN       17
+  #endif
+
+#endif
 ```
 
-Check and compare the examples [WebClient_ESP](examples/WebClient_ESP) and [WebClient_ESP_SPI2](examples/WebClient_ESP_SPI2)
+Check and compare the examples 
 
+- [WebClient_ESP](examples/WebClient_ESP) and [WebClient_ESP_SPI2](examples/WebClient_ESP_SPI2)
+- [WebClientRepeating_RP2040_SPI1](examples/WebClientRepeating_RP2040_SPI1) and [WebClientRepeating](examples/WebClientRepeating)
+
+---
 
 #### 1.2 For STM32 boards
 
@@ -699,7 +750,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -780,7 +831,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -862,7 +913,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -940,7 +991,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1020,7 +1071,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -1100,7 +1151,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1180,7 +1231,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1261,7 +1312,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1298,7 +1349,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1382,7 +1433,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1466,7 +1517,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1555,7 +1606,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1647,7 +1698,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1734,7 +1785,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Start WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.2.0
+Ethernet_Generic v2.3.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1813,6 +1864,95 @@ alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 ```
 
 ---
+
+#### 15. WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
+
+The following are debug terminal output when running example [WebClientRepeating_RP2040_SPI1](examples/WebClientRepeating_RP2040_SPI1) on MBED RASPBERRY_PI_PICO with `W5500` using Ethernet_Generic Library and SPI2
+
+```
+Starting WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
+Ethernet_Generic v2.3.0
+[ETG] Default SPI pinout:
+[ETG] MOSI: 15
+[ETG] MISO: 12
+[ETG] SCK: 14
+[ETG] SS: 13
+[ETG] =========================
+[ETG] RPIPICO setCsPin: 13
+[ETG] W5100 init, using SS_PIN_DEFAULT = 13 , new ss_pin =  10 , W5100Class::ss_pin =  13
+[ETG] Chip is W5500
+[ETG] W5100::init: W5500, SSIZE = 8192
+[ETG] Currently Used SPI pinout:
+[ETG] MOSI: 15
+[ETG] MISO: 12
+[ETG] SCK: 14
+[ETG] SS: 13
+[ETG] =========================
+Using mac index = 18
+Connected! IP address: 192.168.2.85
+Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+
+Connecting...
+HTTP/1.1 200 OK
+Date: Wed, 04 May 2022 02:52:56 GMT
+Content-Type: text/plain
+Content-Length: 2263
+Connection: close
+x-amz-id-2: 8vpqIozCfHQtWmljz3zKcVb5oa2m61jwYMh4PaSUwllVqFPdlotFeMd8kbtXto0B1tOusMAUwRI=
+x-amz-request-id: 625R5E0MEMACW8E3
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=PtWJxKSeTy2pn3lC8%2FpwyFTn96Mj1T%2B%2FKoMsFHN4IUM4loCow6T01wiMe%2BJzJMIHZS2np%2F8CCNhjwRu%2FwSpDwtwl%2FoD7YPSnSCxjiAChJ7n%2FZq2yn1s5yBTBQf6op8M%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 705df1758fde3fde-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
+
+
+           `:;;;,`                      .:;;:.           
+        .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
+      `;;;;;;;;;;;;;;;`            :;;;;;;;;;;;;;;;      
+     :;;;;;;;;;;;;;;;;;;         `;;;;;;;;;;;;;;;;;;     
+    ;;;;;;;;;;;;;;;;;;;;;       .;;;;;;;;;;;;;;;;;;;;    
+   ;;;;;;;;:`   `;;;;;;;;;     ,;;;;;;;;.`   .;;;;;;;;   
+  .;;;;;;,         :;;;;;;;   .;;;;;;;          ;;;;;;;  
+  ;;;;;;             ;;;;;;;  ;;;;;;,            ;;;;;;. 
+ ,;;;;;               ;;;;;;.;;;;;;`              ;;;;;; 
+ ;;;;;.                ;;;;;;;;;;;`      ```       ;;;;;`
+ ;;;;;                  ;;;;;;;;;,       ;;;       .;;;;;
+`;;;;:                  `;;;;;;;;        ;;;        ;;;;;
+,;;;;`    `,,,,,,,,      ;;;;;;;      .,,;;;,,,     ;;;;;
+:;;;;`    .;;;;;;;;       ;;;;;,      :;;;;;;;;     ;;;;;
+:;;;;`    .;;;;;;;;      `;;;;;;      :;;;;;;;;     ;;;;;
+.;;;;.                   ;;;;;;;.        ;;;        ;;;;;
+ ;;;;;                  ;;;;;;;;;        ;;;        ;;;;;
+ ;;;;;                 .;;;;;;;;;;       ;;;       ;;;;;,
+ ;;;;;;               `;;;;;;;;;;;;                ;;;;; 
+ `;;;;;,             .;;;;;; ;;;;;;;              ;;;;;; 
+  ;;;;;;:           :;;;;;;.  ;;;;;;;            ;;;;;;  
+   ;;;;;;;`       .;;;;;;;,    ;;;;;;;;        ;;;;;;;:  
+    ;;;;;;;;;:,:;;;;;;;;;:      ;;;;;;;;;;:,;;;;;;;;;;   
+    `;;;;;;;;;;;;;;;;;;;.        ;;;;;;;;;;;;;;;;;;;;    
+      ;;;;;;;;;;;;;;;;;           :;;;;;;;;;;;;;;;;:     
+       ,;;;;;;;;;;;;;,              ;;;;;;;;;;;;;;       
+         .;;;;;;;;;`                  ,;;;;;;;;:         
+                                                         
+                                                         
+                                                         
+                                                         
+    ;;;   ;;;;;`  ;;;;:  .;;  ;; ,;;;;;, ;;. `;,  ;;;;   
+    ;;;   ;;:;;;  ;;;;;; .;;  ;; ,;;;;;: ;;; `;, ;;;:;;  
+   ,;:;   ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;,`;, ;;  ;;  
+   ;; ;:  ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;;`;, ;;  ;;. 
+   ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
+  ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
+  ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+```
+
+
+---
 ---
 
 ### Debug
@@ -1874,6 +2014,8 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 17. Add support to WIZNet W5100S, including [**WIZnet Ethernet HAT**](https://docs.wiznet.io/Product/Open-Source-Hardware/wiznet_ethernet_hat) and [**W5100S-EVB-Pico**](https://docs.wiznet.io/Product/iEthernet/W5100S/w5100s-evb-pico)
 18. Add support to STM32 boards using [Arduino_Core_STM32](https://github.com/stm32duino/Arduino_Core_STM32)
 19. Add support to any board with core supporting custom hardware / software `SPI`, for example STM32.
+20. Add support to custom SPI for RP2040, Nano_RP2040_Connect, Portenta_H7, etc. using [Arduino-mbed core](https://github.com/arduino/ArduinoCore-mbed)
+
 
 ---
 ---

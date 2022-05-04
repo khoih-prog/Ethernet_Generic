@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.2.0
+  Version: 2.3.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -40,6 +40,7 @@
   2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
   2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
   2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
+  2.3.0   K Hoang      03/05/2022 Add support to custom SPI for RP2040, Portenta_H7, etc. using Arduino-mbed core
  *****************************************************************************************************************************/
 
 #pragma once
@@ -50,13 +51,13 @@
 
 /////////////////////////////////////////////////////////
 
-#define ETHERNET_GENERIC_VERSION            "Ethernet_Generic v2.2.0"
+#define ETHERNET_GENERIC_VERSION            "Ethernet_Generic v2.3.0"
 
 #define ETHERNET_GENERIC_VERSION_MAJOR      2
-#define ETHERNET_GENERIC_VERSION_MINOR      2
+#define ETHERNET_GENERIC_VERSION_MINOR      3
 #define ETHERNET_GENERIC_VERSION_PATCH      0
 
-#define ETHERNET_GENERIC_VERSION_INT        2002000
+#define ETHERNET_GENERIC_VERSION_INT        2003000
 
 /////////////////////////////////////////////////////////
 

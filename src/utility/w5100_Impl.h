@@ -13,7 +13,7 @@
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
   
-  Version: 2.2.0
+  Version: 2.3.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -21,6 +21,7 @@
   2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
   2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
   2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
+  2.3.0   K Hoang      03/05/2022 Add support to custom SPI for RP2040, Portenta_H7, etc. using Arduino-mbed core
  *****************************************************************************************************************************/
 
 #pragma once
@@ -54,7 +55,7 @@
   #endif
   
   #if (_ETG_LOGLEVEL_ > 3)
-    #warning w5100.cpp Use PIN_SPI_SS_ETHERNET_LIB defined, change SS_PIN_DEFAULT to PIN_SPI_SS_ETHERNET_LIB
+    #warning w5100_Impl.h : Use PIN_SPI_SS_ETHERNET_LIB defined, change SS_PIN_DEFAULT to PIN_SPI_SS_ETHERNET_LIB
   #endif
 
 ///////////////////////////
@@ -68,7 +69,7 @@
   #endif
   
   #if (_ETG_LOGLEVEL_ > 3)
-    #warning w5100.cpp Use MKR, change SS_PIN_DEFAULT to 5
+    #warning w5100_Impl.h : Use MKR, change SS_PIN_DEFAULT to 5
   #endif
 
 ///////////////////////////
@@ -84,7 +85,7 @@
   #endif
   
   #if (_ETG_LOGLEVEL_ > 3)
-    #warning w5100.cpp Use __AVR__, change SS_PIN_DEFAULT to 10
+    #warning w5100_Impl.h : Use __AVR__, change SS_PIN_DEFAULT to 10
   #endif
 
 ///////////////////////////
@@ -97,7 +98,7 @@
   
     #if (_ETG_LOGLEVEL_ > 3)
       //10 - 2 (6 conflict) all not OK for Nano 33 IoT !!! SPI corrupted???
-      #warning w5100.cpp Use __SAMD21G18A__, change SS_PIN_DEFAULT to 10
+      #warning w5100_Impl.h : Use __SAMD21G18A__, change SS_PIN_DEFAULT to 10
     #endif
       
     #if !defined(SS_PIN_DEFAULT)
@@ -111,7 +112,7 @@
     #endif
   
     #if (_ETG_LOGLEVEL_ > 3)
-      #warning w5100.cpp Use PIN_SPI_SS defined, change SS_PIN_DEFAULT to PIN_SPI_SS
+      #warning w5100_Impl.h : Use PIN_SPI_SS defined, change SS_PIN_DEFAULT to PIN_SPI_SS
     #endif
   
   #endif
@@ -125,7 +126,7 @@
   #endif
   
   #if (_ETG_LOGLEVEL_ > 3)
-    #warning w5100.cpp Use CORE_SS0_PIN defined, change SS_PIN_DEFAULT to CORE_SS0_PIN
+    #warning w5100_Impl.h : Use CORE_SS0_PIN defined, change SS_PIN_DEFAULT to CORE_SS0_PIN
   #endif
 
 ///////////////////////////
@@ -136,7 +137,7 @@
   #if (_ETG_LOGLEVEL_ > 3)
     //pin SS already defined in ESP32 as pin 5, don't use this as conflict with SPIFFS, EEPROM, etc.
     // Use in GPIO22
-    #warning w5100.cpp Use ESP32, change SS_PIN_DEFAULT to GPIO22, MOSI(23), MISO(19), SCK(18)
+    #warning w5100_Impl.h : Use ESP32, change SS_PIN_DEFAULT to GPIO22, MOSI(23), MISO(19), SCK(18)
   #endif
   
   #if !defined(SS_PIN_DEFAULT)
@@ -150,7 +151,7 @@
 
   #if (_ETG_LOGLEVEL_ > 3)
     //pin SS already defined in ESP8266 as pin 15. Conflict => Move to pin GPIO4 (D2)
-    #warning w5100.cpp Use ESP8266, change SS_PIN_DEFAULT to SS(4), MOSI(13), MISO(12), SCK(14)
+    #warning w5100_Impl.h : Use ESP8266, change SS_PIN_DEFAULT to SS(4), MOSI(13), MISO(12), SCK(14)
   #endif
   
   #if !defined(SS_PIN_DEFAULT)
@@ -168,7 +169,7 @@
   
   #if (_ETG_LOGLEVEL_ > 3)
     //KH
-    #warning w5100.cpp Use fallback, change SS_PIN_DEFAULT to 10
+    #warning w5100_Impl.h : Use fallback, change SS_PIN_DEFAULT to 10
   #endif
 
 #endif
@@ -214,8 +215,9 @@ W5100Class W5100;
     #define CUR_PIN_MOSI      PIN_SPI1_MOSI
     #define CUR_PIN_SCK       PIN_SPI1_SCK
     #define CUR_PIN_SS        PIN_SPI1_SS
-    
+       
   #elif (USING_CUSTOM_SPI)
+    
     #if ( defined(CUR_PIN_MOSI) && defined(CUR_PIN_MISO) && defined(CUR_PIN_SCK) && defined(CUR_PIN_SS) )
       #if (SPI_NEW_INITIALIZED)
         #if(_ETG_LOGLEVEL_> 2)
@@ -226,11 +228,19 @@ W5100Class W5100;
           #warning ETHERNET_GENERIC_USING_SPI2 without SPI_NEW_INITIALIZED in w5100_Impl.h
         #endif
         
-        // Don't create the instance with CUR_PIN_SS, or Ethernet not working
-        SPIClass SPI_New(CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK);
+        #if defined(ARDUINO_ARCH_MBED)
+          // Don't create the instance with CUR_PIN_SS, or Ethernet not working
+          // Be careful, Mbed SPI ctor is so weird, reversing the order => MISO, MOSI, SCK
+          //arduino::MbedSPI::MbedSPI(int miso, int mosi, int sck)
+          SPIClass SPI_New(CUR_PIN_MISO, CUR_PIN_MOSI, CUR_PIN_SCK);
+        #else
+          // Don't create the instance with CUR_PIN_SS, or Ethernet not working
+          SPIClass SPI_New(CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK);
+        #endif
       #endif
       
       SPIClass* pCUR_SPI = (SPIClass*) &SPI_New;
+      
     #else
       #error You must define CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK and CUR_PIN_SS   
     #endif  
@@ -273,7 +283,7 @@ W5100Class W5100;
   uint32_t W5100Class::ss_pin_mask;
   
   #if (_ETG_LOGLEVEL_ > 3)
-    #warning w5100.cpp Use __SAMD21G18A__
+    #warning w5100_Impl.h : Use __SAMD21G18A__
   #endif
 #endif
 

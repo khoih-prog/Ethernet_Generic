@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.3.0](#releases-v230)
 	* [Releases v2.2.0](#releases-v220)
 	* [Releases v2.1.0](#releases-v210)
 	* [Releases v2.0.1](#releases-v201)
@@ -21,6 +22,11 @@
 ---
 
 ## Changelog
+
+### Releases v2.3.0
+
+1. Add support to custom SPI for RP2040, Nano_RP2040_Connect, Portenta_H7, etc. using [Arduino-mbed core](https://github.com/arduino/ArduinoCore-mbed)
+
 
 ### Releases v2.2.0
 

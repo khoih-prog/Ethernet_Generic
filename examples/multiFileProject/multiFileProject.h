@@ -10,7 +10,8 @@
 
 #pragma once
 
-#define _TEENSY41_ASYNC_TCP_LOGLEVEL_       1
+// Debug Level from 0 to 4
+#define _ETG_LOGLEVEL_                      2
 
 // Can be included as many times as necessary, without `Multiple Definitions` Linker Error
 #include <Ethernet_Generic.hpp>         // https://github.com/khoih-prog/Ethernet_Generic
