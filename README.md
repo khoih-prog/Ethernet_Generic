@@ -87,6 +87,7 @@
   * [13. WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer](#13-WebClientRepeating-on-NUCLEO_L552ZE_Q-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
   * [14. WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer](#14-WebClientRepeating-on-NUCLEO_F767ZI-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
   * [15. WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer](#15-WebClientRepeating_RP2040_SPI1-on-MBED-RASPBERRY_PI_PICO-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
+  * [16. SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer](#16-SetDHCPHostName-on-WIZNET_5100S_EVB_PICO-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
