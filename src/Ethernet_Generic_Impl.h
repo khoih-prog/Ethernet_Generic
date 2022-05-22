@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.3.0
+  Version: 2.3.1
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -41,6 +41,7 @@
   2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
   2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
   2.3.0   K Hoang      03/05/2022 Add support to custom SPI for RP2040, Portenta_H7, etc. using Arduino-mbed core
+  2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
  *****************************************************************************************************************************/
  
 #pragma once
@@ -73,8 +74,6 @@ void EthernetClass::setRstPin(uint8_t pinRST)
   pinMode(_pinRST, OUTPUT);
   digitalWrite(_pinRST, HIGH);
 }
-
-
 
 void EthernetClass::setCsPin(uint8_t pinCS)
 {
@@ -128,6 +127,14 @@ int EthernetClass::begin(uint8_t *mac, unsigned long timeout, unsigned long resp
   W5100.setMACAddress(mac);
   W5100.setIPAddress(IPAddress(0, 0, 0, 0).raw_address());
   W5100.endSPITransaction();
+  
+  if (strlen(_customHostname) != 0)
+  {
+    _dhcp->setCustomHostname(_customHostname);
+    
+    // Merge 
+    _hostName = _customHostname;
+  }
 
   // Now try to get our config info from a DHCP server
   int ret = _dhcp->beginWithDHCP(mac, timeout, responseTimeout);
@@ -441,6 +448,17 @@ EthernetChip_t EthernetClass::getAltChip()
 /////////////////////////////////////////
 // From Ethernet3
 /////////////////////////////////////////
+
+void EthernetClass::setHostname(const char* hostname) 
+{
+  memset(_customHostname, 0, HOSTNAME_SIZE);
+  memcpy((void*) _customHostname, (void*) hostname, 
+         strlen(hostname) >= HOSTNAME_SIZE - 1 ? HOSTNAME_SIZE - 1 : strlen(hostname));
+         
+  // Merge 
+  _hostName = _customHostname;
+}
+  
 // set Wake on LAN
 void WoL(bool wol) 
 { 

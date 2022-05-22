@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.3.0
+  Version: 2.3.1
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -41,6 +41,7 @@
   2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
   2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
   2.3.0   K Hoang      03/05/2022 Add support to custom SPI for RP2040, Portenta_H7, etc. using Arduino-mbed core
+  2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
  *****************************************************************************************************************************/
 
 #pragma once
@@ -81,19 +82,19 @@
 
 #if defined(ETHERNET_LARGE_BUFFERS)
 
-	#undef MAX_SOCK_NUM
-	#define MAX_SOCK_NUM 			2
-	
-	#if(_ETG_LOGLEVEL_> 3)
-		#warning Using ETHERNET_LARGE_BUFFERS feature similar to EthernetLarge Library
-	#endif
+  #undef MAX_SOCK_NUM
+  #define MAX_SOCK_NUM      2
+  
+  #if(_ETG_LOGLEVEL_> 3)
+    #warning Using ETHERNET_LARGE_BUFFERS feature similar to EthernetLarge Library
+  #endif
 #endif
 
 #include <Arduino.h>
 #include <SPI.h>
 
 #if defined(ARDUINO_ARCH_MBED)
-  #define SPIClass      	arduino::MbedSPI
+  #define SPIClass        arduino::MbedSPI
 #endif
 
 #include "Client.h"
@@ -159,11 +160,18 @@ class DhcpClass;
 
 ////////////////////////////////////////////////////////////////////////////////////
 
+// DHCP Hostname size max size is 32
+#define HOSTNAME_SIZE       32
+
 class EthernetClass
 {
   private:
     static IPAddress _dnsServerAddress;
     static DhcpClass* _dhcp;
+    
+    // From Ethernet3
+    char _customHostname[HOSTNAME_SIZE];
+    //////
     
     // From Ethernet2
     char* _dnsDomainName;
@@ -206,7 +214,10 @@ class EthernetClass
     
     inline EthernetChip_t getAltChip();
     
-    // From Ethernet3   
+    // From Ethernet3
+    
+    void setHostname(const char* hostname);
+    
     // set Wake on LAN
     inline void WoL(bool wol);
     
@@ -517,6 +528,7 @@ class DhcpClass
   private:
     uint32_t _dhcpInitialTransactionId;
     uint32_t _dhcpTransactionId;
+       
     uint8_t  _dhcpMacAddr[6];
     
 #ifdef __arm__
@@ -578,6 +590,11 @@ class DhcpClass
 
     int beginWithDHCP(uint8_t *, unsigned long timeout = 60000, unsigned long responseTimeout = 4000);
     int checkLease();
+    
+    inline void setCustomHostname(char* hostname)
+    {
+      _dhcpHostName = hostname;
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////

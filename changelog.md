@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.3.1](#releases-v231)
 	* [Releases v2.3.0](#releases-v230)
 	* [Releases v2.2.0](#releases-v220)
 	* [Releases v2.1.0](#releases-v210)
@@ -22,6 +23,12 @@
 ---
 
 ## Changelog
+
+### Releases v2.3.1
+
+1. Add setHostname() and related DHCP functions. Check [Only 15 UDP packets / second with W5100S-EVB-Pico possible? #6](https://github.com/khoih-prog/Ethernet_Generic/discussions/6#discussioncomment-2793483)
+2. Add example [SetDHCPHostName](examples/SetDHCPHostName) to demo the new feature
+3. Update `Packages' Patches`
 
 ### Releases v2.3.0
 

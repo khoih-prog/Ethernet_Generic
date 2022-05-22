@@ -42,6 +42,7 @@ begin	KEYWORD2
 maintain	KEYWORD2
 getChip	KEYWORD2
 getAltChip	KEYWORD2
+setHostname	KEYWORD2
 WoL	KEYWORD2
 phyMode	KEYWORD2
 phyState	KEYWORD2
@@ -131,6 +132,7 @@ getDnsDomainName	KEYWORD2
 getHostName	KEYWORD2
 beginWithDHCP	KEYWORD2
 checkLease	KEYWORD2
+setCustomHostname	KEYWORD2
 
 ########################
 # class DNSClient

@@ -13,7 +13,7 @@
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
   
-  Version: 2.3.0
+  Version: 2.3.1
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -22,6 +22,7 @@
   2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
   2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
   2.3.0   K Hoang      03/05/2022 Add support to custom SPI for RP2040, Portenta_H7, etc. using Arduino-mbed core
+  2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
  *****************************************************************************************************************************/
  
 // DHCP Library v0.3 - April 25, 2009
@@ -69,8 +70,8 @@
 #define MAGIC_COOKIE            0x63825363
 #define MAX_DHCP_OPT            16
 
-#define HOST_NAME "WIZnet"
-#define DEFAULT_LEASE (900) //default lease time in seconds
+#define HOST_NAME 							"WIZnet"
+#define DEFAULT_LEASE 					(900) //default lease time in seconds
 
 #define DHCP_CHECK_NONE         (0)
 #define DHCP_CHECK_RENEW_FAIL   (1)
