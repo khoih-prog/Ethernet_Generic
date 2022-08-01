@@ -15,7 +15,7 @@ If you don't find anything, please [open a new issue](https://github.com/khoih-p
 Please ensure to specify the following:
 
 * Arduino IDE version (e.g. 1.8.19) or Platform.io version
-* Board Core Version (e.g. Arduino SAMDUE core v1.6.12, ESP32 core v2.0.2, ESP8266 core v3.0.2, ArduinoCore-mbed v3.1.1, etc.)
+* Board Core Version (e.g. Arduino SAMDUE core v1.6.12, ESP32 core v2.0.4, ESP8266 core v3.0.2, ArduinoCore-mbed v3.1.1, etc.)
 * Contextual information (e.g. what you were trying to achieve)
 * Simplest possible steps to reproduce
 * Anything that might be relevant in your opinion, such as:
@@ -30,7 +30,7 @@ Arduino IDE version: 1.8.19
 RASPBERRY_PI_PICO board
 ArduinoCore-mbed v3.1.1
 OS: Ubuntu 20.04 LTS
-Linux xy-Inspiron-3593 5.13.0-41-generic #46~20.04.1-Ubuntu SMP Wed Apr 20 13:16:21 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+Linux xy-Inspiron-3593 5.13.0-52-generic #59~20.04.1-Ubuntu SMP Thu Jun 16 21:21:28 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
 
 Context:
 I encountered a crash while trying to use the Timer Interrupt.

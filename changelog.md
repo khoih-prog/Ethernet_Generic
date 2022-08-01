@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.4.0](#releases-v240)
 	* [Releases v2.3.1](#releases-v231)
 	* [Releases v2.3.0](#releases-v230)
 	* [Releases v2.2.0](#releases-v220)
@@ -23,6 +24,13 @@
 ---
 
 ## Changelog
+
+
+### Releases v2.4.0
+
+1. Using raw_address() as default instead of private IPAddress data
+2. Add missing `LibraryPatches` for ESP32
+3. Update `Packages' Patches`
 
 ### Releases v2.3.1
 

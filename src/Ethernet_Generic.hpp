@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.3.1
+  Version: 2.4.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -42,6 +42,7 @@
   2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
   2.3.0   K Hoang      03/05/2022 Add support to custom SPI for RP2040, Portenta_H7, etc. using Arduino-mbed core
   2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
+  2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
  *****************************************************************************************************************************/
 
 #pragma once
@@ -69,6 +70,13 @@
   #endif
   
   #define MAX_SOCK_NUM 8
+#endif
+
+////////////////////////////////////////////////////////////////////////////////////
+
+// Not using private data, such as _address.bytes to be compatible with new IPv6 + IPv4
+#if !defined(USING_RAW_ADDRESS)
+  #define USING_RAW_ADDRESS       true
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////
