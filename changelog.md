@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.4.1](#releases-v241)
 	* [Releases v2.4.0](#releases-v240)
 	* [Releases v2.3.1](#releases-v231)
 	* [Releases v2.3.0](#releases-v230)
@@ -25,6 +26,11 @@
 
 ## Changelog
 
+
+### Releases v2.4.1
+
+1. Auto-select SPI(s) `SS/CS` pins according to board package if available
+2. Update `Packages' Patches`
 
 ### Releases v2.4.0
 
