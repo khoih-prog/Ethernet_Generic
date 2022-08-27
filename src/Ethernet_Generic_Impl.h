@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.4.1
+  Version: 2.5.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -44,6 +44,7 @@
   2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
   2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
   2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
+  2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
  *****************************************************************************************************************************/
  
 #pragma once
@@ -229,22 +230,28 @@ void EthernetClass::begin(uint8_t *mac, IPAddress ip, IPAddress dns, IPAddress g
   W5100.setIPAddress(&ip[0]);
   W5100.setGatewayIp(&gateway[0]);
   W5100.setSubnetMask(&subnet[0]);
+  
 #elif ARDUINO > 106 || TEENSYDUINO > 121
 
-  #if USING_RAW_ADDRESS
+  #if ( USING_RAW_ADDRESS || (defined(ARDUINO_ARCH_RP2040) && !defined(ARDUINO_ARCH_MBED) ) )
   // KH
   // For new LwIp IPAddress code, such as arduino_pico core v2.3.0+
+  #if (_ETG_LOGLEVEL_ > 3)
+    #warning USING_RAW_ADDRESS
+  #endif
+  
   W5100.setIPAddress(ip.raw_address());
   W5100.setGatewayIp(gateway.raw_address());
   W5100.setSubnetMask(subnet.raw_address());
   #else
+  // For core other than arduino-pico for compatibility
   W5100.setIPAddress(ip._address.bytes);
   W5100.setGatewayIp(gateway._address.bytes);
   W5100.setSubnetMask(subnet._address.bytes);
   #endif
   //////
   
-#else
+#else 
   W5100.setIPAddress(ip._address);
   W5100.setGatewayIp(gateway._address);
   W5100.setSubnetMask(subnet._address);

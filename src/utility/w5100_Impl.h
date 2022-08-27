@@ -13,7 +13,7 @@
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
   
-  Version: 2.4.1
+  Version: 2.5.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -25,6 +25,7 @@
   2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
   2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
   2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
+  2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
  *****************************************************************************************************************************/
 
 #pragma once
@@ -65,7 +66,9 @@
 
 // MKR boards default to pin 5 for MKR ETH
 // Pins 8-10 are MOSI/SCK/MISO on MRK, so don't use pin 10
-#elif defined(USE_ARDUINO_MKR_PIN_LAYOUT) || defined(ARDUINO_SAMD_MKRZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRWAN1300)
+#elif defined(USE_ARDUINO_MKR_PIN_LAYOUT) || defined(ARDUINO_SAMD_MKRZERO) || defined(ARDUINO_SAMD_MKR1000) || \
+      defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRWAN1300) || \
+      defined(ARDUINO_SAMD_MKRVIDOR4000)
 
   #if !defined(SS_PIN_DEFAULT)
     #define SS_PIN_DEFAULT  5
@@ -311,8 +314,10 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
   // reset time, this can be edited or removed.
   delay(560);
 
-  ETG_LOGWARN5("W5100 init, using SS_PIN_DEFAULT =", SS_PIN_DEFAULT, ", new ss_pin = ", new_ss_pin, 
-                ", W5100Class::ss_pin = ", W5100Class::ss_pin);
+  //ETG_LOGWARN5("W5100 init, using SS_PIN_DEFAULT =", SS_PIN_DEFAULT, ", new ss_pin = ", new_ss_pin, 
+  //              ", W5100Class::ss_pin = ", W5100Class::ss_pin);
+  ETG_LOGWARN5("W5100 init, using W5100Class::ss_pin = ", W5100Class::ss_pin, ", whereas new ss_pin = ", new_ss_pin, 
+                ", SS_PIN_DEFAULT =", SS_PIN_DEFAULT);              
 
   pCUR_SPI->begin();
 
@@ -362,7 +367,7 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
 
     ETG_LOGWARN1("W5100::init: W5200, SSIZE =", SSIZE);
 
-    // Try W5500 next.  Wiznet finally seems to have implemented
+    // Try W5500 next.  WIZnet finally seems to have implemented
     // SPI well with this chip.  It appears to be very resilient,
     // so try it after the fragile W5200
   }  
@@ -458,7 +463,7 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
 
     ETG_LOGWARN1("W5100::init: W5100S, SSIZE =", SSIZE);
 
-    // Try W5500 next.  Wiznet finally seems to have implemented
+    // Try W5500 next.  WIZnet finally seems to have implemented
     // SPI well with this chip.  It appears to be very resilient,
     // so try it after the fragile W5200
   }  
@@ -482,7 +487,7 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
 
 ////////////////////////////////////////////////////////////
 
-// Soft reset the Wiznet chip, by writing to its MR register reset bit
+// Soft reset the WIZnet chip, by writing to its MR register reset bit
 uint8_t W5100Class::softReset()
 {
   uint16_t count = 0;

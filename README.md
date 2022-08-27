@@ -47,6 +47,7 @@
   * [2. How to use EthernetLarge feature](#2-How-to-use-EthernetLarge-feature)
   * [3. How to select another CS/SS pin to use](#3-how-to-select-another-csss-pin-to-use)
   * [4. How to use W5x00 with ESP8266](#4-how-to-use-w5x00-with-esp8266)
+* [Ethernet_Generic Library API](#Ethernet_Generic-Library-API) 
 * [Configuration Notes](#configuration-notes)
   * [1. How to select which SPI to use](#1-How-to-select-which-SPI-to-use)
   	* [1.1. For boards other than STM32](#11-For-boards-other-than-STM32)
@@ -533,6 +534,13 @@ just rename the following file in ./arduino-1.8.19/hardware/esp8266com/esp8266/l
 ---
 ---
 
+### Ethernet_Generic Library API
+
+Have a look at the [Ethernet_Generic library's API](docs/api.md)
+
+
+---
+---
 
 ### Configuration Notes
 
@@ -773,7 +781,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -854,7 +862,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -936,7 +944,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1014,7 +1022,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1094,7 +1102,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -1174,7 +1182,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1254,7 +1262,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1335,7 +1343,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1372,7 +1380,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1456,7 +1464,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1540,7 +1548,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1548,7 +1556,7 @@ Ethernet_Generic v2.4.1
 [ETG] SS: 13
 [ETG] =========================
 [ETG] RPIPICO setCsPin: 13
-[ETG] W5100 init, using SS_PIN_DEFAULT = 13 , new ss_pin =  10 , W5100Class::ss_pin =  13
+[ETG] W5100 init, using W5100Class::ss_pin =  13 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 13
 [ETG] Chip is W5500
 [ETG] W5100::init: W5500, SSIZE = 8192
 [ETG] Currently Used SPI pinout:
@@ -1629,7 +1637,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1637,7 +1645,7 @@ Ethernet_Generic v2.4.1
 [ETG] SS: 17
 [ETG] =========================
 [ETG] RPIPICO setCsPin: 17
-[ETG] W5100 init, using SS_PIN_DEFAULT = 17 , new ss_pin =  10 , W5100Class::ss_pin =  17
+[ETG] W5100 init, using W5100Class::ss_pin =  17 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 17
 [ETG] Chip is W5100S
 [ETG] W5100::init: W5100S, SSIZE = 4096
 [ETG] Currently Used SPI pinout:
@@ -1721,7 +1729,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1729,7 +1737,7 @@ Ethernet_Generic v2.4.1
 [ETG] SS: 24
 [ETG] =========================
 [ETG] Board : NUCLEO_L552ZE_Q , setCsPin: 24
-[ETG] W5100 init, using SS_PIN_DEFAULT = 10 , new ss_pin =  10 , W5100Class::ss_pin =  24
+[ETG] W5100 init, using W5100Class::ss_pin =  24 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 10
 [ETG] Chip is W5500
 [ETG] W5100::init: W5500, SSIZE = 8192
 [ETG] Currently Used SPI pinout:
@@ -1808,7 +1816,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Start WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1816,7 +1824,7 @@ Ethernet_Generic v2.4.1
 [ETG] SS: 24
 [ETG] =========================
 [ETG] Board : NUCLEO_F767ZI , setCsPin: 24
-[ETG] W5100 init, using SS_PIN_DEFAULT = 10 , new ss_pin =  10 , W5100Class::ss_pin =  24
+[ETG] W5100 init, using W5100Class::ss_pin =  24 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 10
 [ETG] Chip is W5500
 [ETG] W5100::init: W5500, SSIZE = 8192
 [ETG] Currently Used SPI pinout:
@@ -1894,7 +1902,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1902,7 +1910,7 @@ Ethernet_Generic v2.4.1
 [ETG] SS: 13
 [ETG] =========================
 [ETG] RPIPICO setCsPin: 13
-[ETG] W5100 init, using SS_PIN_DEFAULT = 13 , new ss_pin =  10 , W5100Class::ss_pin =  13
+[ETG] W5100 init, using W5100Class::ss_pin =  13 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 13
 [ETG] Chip is W5500
 [ETG] W5100::init: W5500, SSIZE = 8192
 [ETG] Currently Used SPI pinout:
@@ -1982,7 +1990,7 @@ The following are debug terminal output when running example [SetDHCPHostName](e
 
 ```
 Starting SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1990,7 +1998,7 @@ Ethernet_Generic v2.4.1
 [ETG] SS: 17
 [ETG] =========================
 [ETG] RPIPICO setCsPin: 17
-[ETG] W5100 init, using SS_PIN_DEFAULT = 17 , new ss_pin =  10 , W5100Class::ss_pin =  17
+[ETG] W5100 init, using W5100Class::ss_pin =  17 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 17
 [ETG] Chip is W5100S
 [ETG] W5100::init: W5100S, SSIZE = 4096
 [ETG] Currently Used SPI pinout:
@@ -2080,7 +2088,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.4.1
+Ethernet_Generic v2.5.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2088,7 +2096,7 @@ Ethernet_Generic v2.4.1
 [ETG] SS: 17
 [ETG] =========================
 [ETG] RPIPICO setCsPin: 17
-[ETG] W5100 init, using SS_PIN_DEFAULT = 17 , new ss_pin =  10 , W5100Class::ss_pin =  17
+[ETG] W5100 init, using W5100Class::ss_pin =  17 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 17
 [ETG] Chip is W5100S
 [ETG] W5100::init: W5100S, SSIZE = 4096
 [ETG] Currently Used SPI pinout:
@@ -2224,7 +2232,7 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 19. Add support to any board with core supporting custom hardware / software `SPI`, for example STM32.
 20. Add support to custom SPI for RP2040, Nano_RP2040_Connect, Portenta_H7, etc. using [Arduino-mbed core](https://github.com/arduino/ArduinoCore-mbed)
 21. Add setHostname() and related DHCP functions
-22. Using `raw_address()` as default instead of `private IPAddress` data
+22. Using `raw_address()` instead of `private IPAddress` data, as default only for [arduino-pico core]((https://github.com/earlephilhower/arduino-pico)) for compatibility
 23. Auto-select SPI(s) `SS/CS` pins according to board package if available
 
 

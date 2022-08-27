@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.4.1
+  Version: 2.5.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -44,6 +44,7 @@
   2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
   2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
   2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
+  2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
  *****************************************************************************************************************************/
 
 #pragma once
@@ -76,18 +77,19 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Not using private data, such as _address.bytes to be compatible with new IPv6 + IPv4
+// Default to false to be sure compatible with old cores. From v2.5.0
 #if !defined(USING_RAW_ADDRESS)
-  #define USING_RAW_ADDRESS       true
+  #define USING_RAW_ADDRESS       false		//true
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-// By default, each socket uses 2K buffers inside the Wiznet chip.  If
+// By default, each socket uses 2K buffers inside the WIZnet chip.  If
 // MAX_SOCK_NUM is set to fewer than the chip's maximum, uncommenting
-// this will use larger buffers within the Wiznet chip.  Large buffers
+// this will use larger buffers within the WIZnet chip.  Large buffers
 // can really help with UDP protocols like Artnet.  In theory larger
 // buffers should allow faster TCP over high-latency links, but this
-// does not always seem to work in practice (maybe Wiznet bugs?)
+// does not always seem to work in practice (maybe WIZnet bugs?)
 
 #if defined(ETHERNET_LARGE_BUFFERS)
 
@@ -359,11 +361,11 @@ class EthernetUDP : public UDP
     uint16_t _offset;       // offset into the packet being sent
 
   protected:
-    uint8_t sockindex;
+    uint8_t _sockindex;
     uint16_t _remaining;    // remaining bytes of incoming packet yet to be processed
 
   public:
-    EthernetUDP() : sockindex(MAX_SOCK_NUM) {}  // Constructor
+    EthernetUDP() : _sockindex(MAX_SOCK_NUM) {}  // Constructor
 
     // initialize, start listening on specified port. Returns 1 if successful, 0 if there are no sockets available to use
     virtual uint8_t begin(uint16_t);
@@ -444,8 +446,10 @@ class EthernetUDP : public UDP
 class EthernetClient : public Client 
 {
   public:
-    EthernetClient() : sockindex(MAX_SOCK_NUM), _timeout(1000) { }
-    EthernetClient(uint8_t s) : sockindex(s), _timeout(1000) { }
+    EthernetClient() : _sockindex(MAX_SOCK_NUM), _timeout(1000) { }
+    EthernetClient(uint8_t s) : _sockindex(s), _timeout(1000) { }
+    
+    virtual ~EthernetClient() {};
 
     uint8_t status();
     virtual int connect(IPAddress ip, uint16_t port);
@@ -464,7 +468,7 @@ class EthernetClient : public Client
     
     virtual operator bool() 
     {
-      return sockindex < MAX_SOCK_NUM;
+      return _sockindex < MAX_SOCK_NUM;
     }
     
     virtual bool operator==(const bool value) 
@@ -486,7 +490,7 @@ class EthernetClient : public Client
     
     inline uint8_t getSocketNumber() const 
     {
-      return sockindex;
+      return _sockindex;
     }
     
     virtual uint16_t localPort();
@@ -503,7 +507,7 @@ class EthernetClient : public Client
     using Print::write;
 
   private:
-    uint8_t sockindex; // MAX_SOCK_NUM means client not in use
+    uint8_t _sockindex; // MAX_SOCK_NUM means client not in use
     uint16_t _timeout;
 };
 

@@ -13,7 +13,7 @@
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
   
-  Version: 2.4.1
+  Version: 2.5.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -25,6 +25,7 @@
   2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
   2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
   2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
+  2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
  *****************************************************************************************************************************/
 
 // w5100.h contains private W5x00 hardware "driver" level definitions
@@ -869,14 +870,21 @@ extern W5100Class W5100;
 #ifndef UTIL_H
 #define UTIL_H
 
+// The host order of the Arduino platform is little endian.
+// Sometimes it is desired to convert to big endian (or network order)
+
 #ifndef htons
-  #define htons(x) ( (((x)<<8)&0xFF00) | (((x)>>8)&0xFF) )
+  // Host to Network short
+  //#define htons(x) ( (((x)<<8)&0xFF00) | (((x)>>8)&0xFF) )
+  #define htons(x) ( (((x)&0xFF)<<8) | (((x)>>8)&0xFF) )
 #endif
 
 #ifndef ntohs
+  // Network to Host short
   #define ntohs(x) htons(x)
 #endif
 
+// Host to Network long
 #ifndef htonl
   #define htonl(x) ( ((x)<<24 & 0xFF000000UL) | \
                      ((x)<< 8 & 0x00FF0000UL) | \
@@ -885,6 +893,7 @@ extern W5100Class W5100;
 #endif
 
 #ifndef ntohl
+  // Network to Host long
   #define ntohl(x) htonl(x)
 #endif
 

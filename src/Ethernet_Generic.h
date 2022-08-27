@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.4.1
+  Version: 2.5.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -44,6 +44,7 @@
   2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
   2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
   2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
+  2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
  *****************************************************************************************************************************/
 
 #pragma once
@@ -54,13 +55,13 @@
 
 /////////////////////////////////////////////////////////
 
-#define ETHERNET_GENERIC_VERSION            "Ethernet_Generic v2.4.1"
+#define ETHERNET_GENERIC_VERSION            "Ethernet_Generic v2.5.0"
 
 #define ETHERNET_GENERIC_VERSION_MAJOR      2
-#define ETHERNET_GENERIC_VERSION_MINOR      4
-#define ETHERNET_GENERIC_VERSION_PATCH      1
+#define ETHERNET_GENERIC_VERSION_MINOR      5
+#define ETHERNET_GENERIC_VERSION_PATCH      0
 
-#define ETHERNET_GENERIC_VERSION_INT        2004001
+#define ETHERNET_GENERIC_VERSION_INT        2005000
 
 /////////////////////////////////////////////////////////
 

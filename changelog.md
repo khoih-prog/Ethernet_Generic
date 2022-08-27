@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.5.0](#releases-v250)
 	* [Releases v2.4.1](#releases-v241)
 	* [Releases v2.4.0](#releases-v240)
 	* [Releases v2.3.1](#releases-v231)
@@ -25,6 +26,13 @@
 ---
 
 ## Changelog
+
+
+### Releases v2.5.0
+
+1. Using `raw_address()` as default only for arduino-pico core for compatibility with remaining cores
+2. Sync with [Ethernet library v2.0.1](https://github.com/arduino-libraries/Ethernet/releases/tag/2.0.1)
+3. Add [Ethernet_Generic Library API](https://github.com/khoih-prog/Ethernet_Generic/blob/main/docs/api.md)
 
 
 ### Releases v2.4.1
