@@ -2232,7 +2232,7 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 19. Add support to any board with core supporting custom hardware / software `SPI`, for example STM32.
 20. Add support to custom SPI for RP2040, Nano_RP2040_Connect, Portenta_H7, etc. using [Arduino-mbed core](https://github.com/arduino/ArduinoCore-mbed)
 21. Add setHostname() and related DHCP functions
-22. Using `raw_address()` instead of `private IPAddress` data, as default only for [arduino-pico core]((https://github.com/earlephilhower/arduino-pico)) for compatibility
+22. Using `raw_address()` instead of `private IPAddress` data, as default only for [arduino-pico core](https://github.com/earlephilhower/arduino-pico) for compatibility
 23. Auto-select SPI(s) `SS/CS` pins according to board package if available
 
 
