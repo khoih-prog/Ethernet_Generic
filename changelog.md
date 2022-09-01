@@ -30,7 +30,7 @@
 
 ### Releases v2.5.1
 
-1. Slow SPI clock to `8MHz` and select `SPI_MODE0` for old W5100 shield using SAMD Zero
+1. Slow SPI clock to `8MHz` and select `SPI_MODE0` for old W5100 shield using SAMD Zero. Check [AdvancedWebServer example give me wrong ip HTTP EthernetWebServer is @ IP : 0.0.0.0 #62](https://github.com/khoih-prog/EthernetWebServer/issues/62)
 2. Default to `W5100` to be safe. To change if using `W5200, W5500, W5100s` or testing faster SPI clock speeds
 
 

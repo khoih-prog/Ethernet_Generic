@@ -123,6 +123,7 @@ To use with shields different from `W5100`, such as `W5200, W5500, W5100S`, chan
 #define USE_W5100                           false
 ```
 
+---
 
 ### Why do we need this [Ethernet_Generic library](https://github.com/khoih-prog/Ethernet_Generic)
 
@@ -138,6 +139,7 @@ for **AVR, Portenta_H7, Teensy, SAM DUE, Arduino SAMD21, Adafruit SAMD21/SAMD51,
 
 The `h-only` library now supports `SPI1/SPI2`, most of `EthernetLarge`, `Ethernet2` and `Ethernet3` features by simply changing definitions in the sketch.
 
+---
 
 #### Currently supported Boards
 
@@ -781,14 +783,14 @@ These pins are tested OK with ESP8266 and W5x00
 
 #### 1. File [WebClientRepeating.ino](examples/WebClientRepeating/WebClientRepeating.ino)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/f76e3591e1f7680776f46a62b2367fbb229688a0/examples/WebClientRepeating/WebClientRepeating.ino#L9-L226
+https://github.com/khoih-prog/Ethernet_Generic/blob/8217ac5ce07bea409c0db733284f72561af0bad3/examples/WebClientRepeating/WebClientRepeating.ino#L9-L226
 
 
 ---
 
 #### 2. File [defines.h](examples/WebClientRepeating/defines.h)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/f76e3591e1f7680776f46a62b2367fbb229688a0/examples/WebClientRepeating/defines.h#L10-L397
+https://github.com/khoih-prog/Ethernet_Generic/blob/8217ac5ce07bea409c0db733284f72561af0bad3/examples/WebClientRepeating/defines.h#L10-L411
 
 ---
 ---
