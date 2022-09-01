@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.5.1](#releases-v251)
 	* [Releases v2.5.0](#releases-v250)
 	* [Releases v2.4.1](#releases-v241)
 	* [Releases v2.4.0](#releases-v240)
@@ -26,6 +27,11 @@
 ---
 
 ## Changelog
+
+### Releases v2.5.1
+
+1. Slow SPI clock to `8MHz` and select `SPI_MODE0` for old W5100 shield using SAMD Zero
+2. Default to `W5100` to be safe. To change if using `W5200, W5500, W5100s` or testing faster SPI clock speeds
 
 
 ### Releases v2.5.0

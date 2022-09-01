@@ -13,7 +13,7 @@
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
   
-  Version: 2.5.0
+  Version: 2.5.1
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -26,6 +26,7 @@
   2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
   2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
   2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
+  2.5.1   K Hoang      01/09/2022 Slow SPI clock for old W5100 shield using SAMD Zero
  *****************************************************************************************************************************/
 
 // w5100.h contains private W5x00 hardware "driver" level definitions
@@ -88,8 +89,8 @@ extern SPIClass* pCUR_SPI;
 
 // Arduino 101's SPI can not run faster than 8 MHz.
 #if defined(ARDUINO_ARCH_ARC32)
-#undef SPI_ETHERNET_SETTINGS
-#define SPI_ETHERNET_SETTINGS SPISettings(8000000, MSBFIRST, SPI_MODE0)
+  #undef SPI_ETHERNET_SETTINGS
+  #define SPI_ETHERNET_SETTINGS SPISettings(8000000, MSBFIRST, SPI_MODE0)
 #endif
 
 /////////////////////////////////////////////////////////
@@ -98,16 +99,24 @@ extern SPIClass* pCUR_SPI;
 // https://github.com/arduino-libraries/Ethernet/issues/37#issuecomment-408036848
 // W5500 does seem to work at 12 MHz.  Delete this if only using W5500
 #if defined(__SAMD21G18A__)
-#undef SPI_ETHERNET_SETTINGS
+  #undef SPI_ETHERNET_SETTINGS
 
-#if (_ETG_LOGLEVEL_ > 3)
-//#warning Use SAMD21 architecture SPISettings(8000000, MSBFIRST, SPI_MODE3) => IP OK
-#warning Use SAMD21 architecture SPISettings(30000000, MSBFIRST, SPI_MODE3) => IP OK
-#endif
+  #if USE_W5100
+    #if (_ETG_LOGLEVEL_ > 3)
+      #warning Use SAMD21 architecture SPISettings(8000000, MSBFIRST, SPI_MODE0) => IP OK
+    #endif
 
-// Still not working !!! Original SPI_MODE0 not OK at all
-//#define SPI_ETHERNET_SETTINGS SPISettings(8000000, MSBFIRST, SPI_MODE3)
-#define SPI_ETHERNET_SETTINGS SPISettings(30000000, MSBFIRST, SPI_MODE3)
+    #define SPI_ETHERNET_SETTINGS SPISettings(8000000, MSBFIRST, SPI_MODE0)
+  
+  #else
+    #if (_ETG_LOGLEVEL_ > 3)
+      #warning Use SAMD21 architecture SPISettings(30000000, MSBFIRST, SPI_MODE3) => IP OK
+    #endif
+
+    #define SPI_ETHERNET_SETTINGS SPISettings(30000000, MSBFIRST, SPI_MODE3)
+
+  #endif
+
 #endif
 
 /////////////////////////////////////////////////////////

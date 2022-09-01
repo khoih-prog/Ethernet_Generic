@@ -13,6 +13,7 @@
 
 ## Table of Contents
 
+* [Important Note from v2.5.1](#Important-Note-from-v251)
 * [Why do we need this Ethernet_Generic library](#why-do-we-need-this-Ethernet_Generic-library)
   * [Features](#features)
   * [Currently supported Boards](#currently-supported-boards)
@@ -103,6 +104,25 @@
 ---
 ---
 
+### Important Note from v2.5.1
+
+To be safe for systems using old `W5100` shields, the **examples** are using conservative values for SPI clock speed of 14MHz and `SPI_MODE0`
+
+For `SAMD21 M0`, such as `SAMD Zero`, SPI clock speed of 8MHz and `SPI_MODE0` are used.
+
+
+```
+// Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
+#define USE_W5100                           true
+```
+
+To use with shields different from `W5100`, such as `W5200, W5500, W5100S`, change to 
+
+```
+// Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
+#define USE_W5100                           false
+```
+
 
 ### Why do we need this [Ethernet_Generic library](https://github.com/khoih-prog/Ethernet_Generic)
 
@@ -185,7 +205,7 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
  9. [`ESP32 Core 2.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
 10. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
 11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 3.1.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
-12. [`Earle Philhower's arduino-pico core v2.4.1+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
+12. [`Earle Philhower's arduino-pico core v2.5.0+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
 13. [`Arduino megaAVR core 1.8.7+`](https://github.com/arduino/ArduinoCore-megaavr/releases) for Arduino megaAVR boards such as **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
 14. [`Arduino Core for STM32 v2.3.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
 
@@ -781,7 +801,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -862,7 +882,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -944,7 +964,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1022,7 +1042,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1102,7 +1122,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -1182,7 +1202,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1262,7 +1282,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1343,7 +1363,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1380,7 +1400,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1464,7 +1484,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1548,7 +1568,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1637,7 +1657,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1729,7 +1749,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1816,7 +1836,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Start WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1902,7 +1922,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1990,7 +2010,7 @@ The following are debug terminal output when running example [SetDHCPHostName](e
 
 ```
 Starting SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2088,7 +2108,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.0
+Ethernet_Generic v2.5.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2234,7 +2254,8 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 21. Add setHostname() and related DHCP functions
 22. Using `raw_address()` instead of `private IPAddress` data, as default only for [arduino-pico core](https://github.com/earlephilhower/arduino-pico) for compatibility
 23. Auto-select SPI(s) `SS/CS` pins according to board package if available
-
+24. Slow SPI clock to `8MHz` and select `SPI_MODE0` for old W5100 shield using SAMD Zero
+25. Default to `W5100` to be safe. To change if using `W5200, W5500, W5100s` or testing faster SPI clock speeds
 
 ---
 ---
@@ -2252,6 +2273,7 @@ Many thanks for everyone for bug reporting, new feature suggesting, testing and 
 3. [OPEnSLab-OSU](https://github.com/OPEnSLab-OSU) for [EthernetLarge](hhttps://github.com/OPEnSLab-OSU/EthernetLarge) library
 4. [Adafruit](https://github.com/adafruit) for [Ethernet2](https://github.com/adafruit/Ethernet2) library
 5. [Stefan Staub](https://github.com/sstaub) for [Ethernet3](https://github.com/sstaub/Ethernet3) library
+6. [proasnet](https://github.com/proasnet) to report issue [AdvancedWebServer example give me wrong ip HTTP EthernetWebServer is @ IP : 0.0.0.0 #62](https://github.com/khoih-prog/EthernetWebServer/issues/62) leading to version v2.5.1 to fix the issue with `SAMD Zero` and `W5100` shield
 
 Many thanks to so many authors as listed in [AUTHORS](AUTHORS)
 
@@ -2261,6 +2283,7 @@ Many thanks to so many authors as listed in [AUTHORS](AUTHORS)
     <td align="center"><a href="https://github.com/OPEnSLab-OSU"><img src="https://github.com/OPEnSLab-OSU.png" width="100px;" alt="OPEnSLab-OSU"/><br /><sub><b>⭐️ OPEnSLab-OSU</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/adafruit"><img src="https://github.com/adafruit.png" width="100px;" alt="adafruit"/><br /><sub><b>⭐️ Adafruit</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/sstaub"><img src="https://github.com/sstaub.png" width="100px;" alt="sstaub"/><br /><sub><b>⭐️ Stefan Staub</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/proasnet"><img src="https://github.com/proasnet.png" width="100px;" alt="proasnet"/><br /><sub><b>proasnet</b></sub></a><br /></td>
   </tr> 
 </table>
 

@@ -15,6 +15,9 @@
 // Debug Level from 0 to 4
 #define _ETG_LOGLEVEL_                      2
 
+// Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
+#define USE_W5100                           true
+
 #define USING_SPI2                          true
 
 #if ( defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_GENERIC_RP2040) ) 

@@ -15,6 +15,9 @@
 // Debug Level from 0 to 4
 #define _ETG_LOGLEVEL_                      2
 
+// Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
+#define USE_W5100                           true
+
 #if    ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
       || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) || defined(ARDUINO_SAMD_MKRWAN1310) \
       || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) \
@@ -54,7 +57,7 @@
   // Default pin SS/CS,if no SS pin, use pin 10
   #if defined(PIN_SPI_MOSI)
     #warning Using SS pin
-    #define USE_THIS_SS_PIN       SS
+    #define USE_THIS_SS_PIN       10   //SS
   #else  
     #define USE_THIS_SS_PIN       10
   #endif  
