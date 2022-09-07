@@ -91,6 +91,8 @@
   * [15. WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer](#15-WebClientRepeating_RP2040_SPI1-on-MBED-RASPBERRY_PI_PICO-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
   * [16. SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer](#16-SetDHCPHostName-on-WIZNET_5100S_EVB_PICO-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
   * [17. WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer](#17-WebClientRepeating-on-WIZNET_5500_EVB_PICO-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
+  * [18. WebClientRepeating on SAMD_FEATHER_M0_EXPRESS with W5x00 using Ethernet_Generic Library with Large Buffer](#18-WebClientRepeating-on-SAMD_FEATHER_M0_EXPRESS-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
+  * [19. UdpNTPClient on SAMD_ZERO with W5x00 using Ethernet_Generic Library with Large Buffer](#19-UdpNTPClient-on-SAMD_ZERO-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -104,16 +106,16 @@
 ---
 ---
 
-### Important Note from v2.5.1
+### Important Note from v2.5.2
 
-To be safe for systems using old `W5100` shields, the **examples** are using conservative values for SPI clock speed of 14MHz and `SPI_MODE0`
+To be safe for systems using old `W5100` shields, the **examples** are using `optional` conservative values for SPI clock speed of 14MHz and `SPI_MODE0`
 
 For `SAMD21 M0`, such as `SAMD Zero`, SPI clock speed of 8MHz and `SPI_MODE0` are used.
 
 
 ```
 // Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
-#define USE_W5100                           true
+//#define USE_W5100                           true
 ```
 
 To use with shields different from `W5100`, such as `W5200, W5500, W5100S`, change to 
@@ -121,6 +123,16 @@ To use with shields different from `W5100`, such as `W5200, W5500, W5100S`, chan
 ```
 // Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
 #define USE_W5100                           false
+```
+
+For Arduino SAMD21 Zero, in order to print to Terminal, use `SERIAL_PORT_USBVIRTUAL` == `SerialUSB`
+
+```
+// Use this for ARDUINO_SAMD_ZERO, etc. if can't print to terminal with Serial.print
+#if defined(SERIAL_PORT_USBVIRTUAL)
+  #define Serial          SERIAL_PORT_USBVIRTUAL
+  #warning Using SAMD Zero SerialUSB
+#endif
 ```
 
 ---
@@ -207,7 +219,7 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
  9. [`ESP32 Core 2.0.4+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
 10. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
 11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 3.1.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
-12. [`Earle Philhower's arduino-pico core v2.5.0+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
+12. [`Earle Philhower's arduino-pico core v2.5.2+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
 13. [`Arduino megaAVR core 1.8.7+`](https://github.com/arduino/ArduinoCore-megaavr/releases) for Arduino megaAVR boards such as **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
 14. [`Arduino Core for STM32 v2.3.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
 
@@ -224,9 +236,9 @@ You can also use this link [![arduino-library-badge](https://www.ardu-badge.com/
 ### Manual Install
 
 1. Navigate to [Ethernet_Generic](https://github.com/khoih-prog/Ethernet_Generic) page.
-2. Download the latest release `Ethernet_Generic-master.zip`.
-3. Extract the zip file to `Ethernet_Generic-master` directory 
-4. Copy the whole `Ethernet_Generic-master` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
+2. Download the latest release `Ethernet_Generic-main.zip`.
+3. Extract the zip file to `Ethernet_Generic-main` directory 
+4. Copy the whole `Ethernet_Generic-main` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
 
 ### VS Code & PlatformIO:
 
@@ -783,14 +795,14 @@ These pins are tested OK with ESP8266 and W5x00
 
 #### 1. File [WebClientRepeating.ino](examples/WebClientRepeating/WebClientRepeating.ino)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/8217ac5ce07bea409c0db733284f72561af0bad3/examples/WebClientRepeating/WebClientRepeating.ino#L9-L226
+https://github.com/khoih-prog/Ethernet_Generic/blob/77e6ac30c65ac436b706207dd49781334a3344fd/examples/WebClientRepeating/WebClientRepeating.ino#L15-L226
 
 
 ---
 
 #### 2. File [defines.h](examples/WebClientRepeating/defines.h)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/8217ac5ce07bea409c0db733284f72561af0bad3/examples/WebClientRepeating/defines.h#L10-L411
+https://github.com/khoih-prog/Ethernet_Generic/blob/77e6ac30c65ac436b706207dd49781334a3344fd/examples/WebClientRepeating/defines.h#L10-L419
 
 ---
 ---
@@ -803,7 +815,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -884,7 +896,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -966,7 +978,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1044,7 +1056,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1124,7 +1136,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -1204,7 +1216,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1284,7 +1296,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1365,7 +1377,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1402,7 +1414,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1486,7 +1498,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1570,7 +1582,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1659,7 +1671,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1751,7 +1763,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1838,7 +1850,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Start WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1924,7 +1936,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -2012,7 +2024,7 @@ The following are debug terminal output when running example [SetDHCPHostName](e
 
 ```
 Starting SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2110,7 +2122,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.1
+Ethernet_Generic v2.5.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2190,6 +2202,132 @@ alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
   ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
 ```
 
+
+---
+
+#### 18. WebClientRepeating on SAMD_FEATHER_M0_EXPRESS with W5x00 using Ethernet_Generic Library with Large Buffer
+
+The following are debug terminal output when running example [WebClientRepeating](examples/WebClientRepeating) on SAMD_FEATHER_M0_EXPRESS with `W5100` using Ethernet_Generic Library
+
+```
+Starting WebClientRepeating on SAMD_FEATHER_M0_EXPRESS with W5x00 using Ethernet_Generic Library with Large Buffer
+Ethernet_Generic v2.5.2
+[ETG] Default SPI pinout:
+[ETG] MOSI: 29
+[ETG] MISO: 28
+[ETG] SCK: 30
+[ETG] SS: 16
+[ETG] =========================
+[ETG] Board : SAMD_FEATHER_M0_EXPRESS , setCsPin: 10
+[ETG] W5100 init, using W5100Class::ss_pin =  10 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 10
+[ETG] Chip is W5100
+[ETG] W5100::init: W5100, SSIZE = 4096
+[ETG] Currently Used SPI pinout:
+[ETG] MOSI: 29
+[ETG] MISO: 28
+[ETG] SCK: 30
+[ETG] SS: 16
+[ETG] =========================
+Using mac index = 2
+Connected! IP address: 192.168.2.92
+
+Connecting...
+HTTP/1.1 200 OK
+Date: Wed, 07 Sep 2022 01:46:11 GMT
+Content-Type: text/plain
+Content-Length: 2263
+Connection: close
+x-amz-id-2: BTad8l9echSPfK+UZ89JLi7k90PfLbPiqR5AXKRwoTPOYs7iAGyDNDmHDaTaJ5XLng1AvnksT70=
+x-amz-request-id: YZDVW5Y862935MHG
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=%2FkVVD%2BXT6K%2FwNfo3r9X7bkZegwlGYeVugF%2F%2B%2FFkhwRYpx145mMEIvXcTm8DivuAGhd%2Bn3GsUVg7HRHNhLtuboYgTI6vT4Yyjjz1gLbR9tHux8rJVconVHxQPWQ14CwA%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 746bc4ec6b04b665-YWG
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
+
+
+           `:;;;,`                      .:;;:.           
+        .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
+      `;;;;;;;;;;;;;;;`            :;;;;;;;;;;;;;;;      
+     :;;;;;;;;;;;;;;;;;;         `;;;;;;;;;;;;;;;;;;     
+    ;;;;;;;;;;;;;;;;;;;;;       .;;;;;;;;;;;;;;;;;;;;    
+   ;;;;;;;;:`   `;;;;;;;;;     ,;;;;;;;;.`   .;;;;;;;;   
+  .;;;;;;,         :;;;;;;;   .;;;;;;;          ;;;;;;;  
+  ;;;;;;             ;;;;;;;  ;;;;;;,            ;;;;;;. 
+ ,;;;;;               ;;;;;;.;;;;;;`              ;;;;;; 
+ ;;;;;.                ;;;;;;;;;;;`      ```       ;;;;;`
+ ;;;;;                  ;;;;;;;;;,       ;;;       .;;;;;
+`;;;;:                  `;;;;;;;;        ;;;        ;;;;;
+,;;;;`    `,,,,,,,,      ;;;;;;;      .,,;;;,,,     ;;;;;
+:;;;;`    .;;;;;;;;       ;;;;;,      :;;;;;;;;     ;;;;;
+:;;;;`    .;;;;;;;;      `;;;;;;      :;;;;;;;;     ;;;;;
+.;;;;.                   ;;;;;;;.        ;;;        ;;;;;
+ ;;;;;                  ;;;;;;;;;        ;;;        ;;;;;
+ ;;;;;                 .;;;;;;;;;;       ;;;       ;;;;;,
+ ;;;;;;               `;;;;;;;;;;;;                ;;;;; 
+ `;;;;;,             .;;;;;; ;;;;;;;              ;;;;;; 
+  ;;;;;;:           :;;;;;;.  ;;;;;;;            ;;;;;;  
+   ;;;;;;;`       .;;;;;;;,    ;;;;;;;;        ;;;;;;;:  
+    ;;;;;;;;;:,:;;;;;;;;;:      ;;;;;;;;;;:,;;;;;;;;;;   
+    `;;;;;;;;;;;;;;;;;;;.        ;;;;;;;;;;;;;;;;;;;;    
+      ;;;;;;;;;;;;;;;;;           :;;;;;;;;;;;;;;;;:     
+       ,;;;;;;;;;;;;;,              ;;;;;;;;;;;;;;       
+         .;;;;;;;;;`                  ,;;;;;;;;:         
+                                                         
+                                                         
+                                                         
+                                                         
+    ;;;   ;;;;;`  ;;;;:  .;;  ;; ,;;;;;, ;;. `;,  ;;;;   
+    ;;;   ;;:;;;  ;;;;;; .;;  ;; ,;;;;;: ;;; `;, ;;;:;;  
+   ,;:;   ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;,`;, ;;  ;;  
+   ;; ;:  ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;;`;, ;;  ;;. 
+   ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
+  ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
+  ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+
+```
+
+---
+
+
+#### 19. UdpNTPClient on SAMD_ZERO with W5x00 using Ethernet_Generic Library with Large Buffer
+
+The following are debug terminal output when running example [UdpNTPClient](examples/UdpNTPClient) on SAMD_ZERO with `W5100` using Ethernet_Generic Library
+
+```
+Start UdpNTPClient on SAMD_ZERO with W5x00 using Ethernet_Generic Library with Large Buffer
+Ethernet_Generic v2.5.2
+[ETG] Default SPI pinout:
+[ETG] MOSI: 23
+[ETG] MISO: 22
+[ETG] SCK: 24
+[ETG] SS: 16
+[ETG] =========================
+[ETG] Board : SAMD_ZERO , setCsPin: 10
+[ETG] W5100 init, using W5100Class::ss_pin =  10 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 10
+[ETG] Chip is W5100
+[ETG] W5100::init: W5100, SSIZE = 4096
+[ETG] Currently Used SPI pinout:
+[ETG] MOSI: 23
+[ETG] MISO: 22
+[ETG] SCK: 24
+[ETG] SS: 16
+[ETG] =========================
+Using mac index = 2
+Connected! IP address: 192.168.2.92
+UDP Packet received, size 48
+From 128.138.141.172, port 123
+Seconds since Jan 1 1900 = 3871504317
+Unix time = 1662515517
+The UTC time is 1:51:57
+
+```
+
+
 ---
 ---
 
@@ -2258,6 +2396,8 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 23. Auto-select SPI(s) `SS/CS` pins according to board package if available
 24. Slow SPI clock to `8MHz` and select `SPI_MODE0` for old W5100 shield using SAMD Zero
 25. Default to `W5100` to be safe. To change if using `W5200, W5500, W5100s` or testing faster SPI clock speeds
+26. Slow SPI clock only when necessary (such as for W5100, SAMD21 Zero, etc.)
+27. Use correct Debug Terminal `Serial` for so-called **SAMD21 Zero** boards from Arduino as well as Adafruit
 
 ---
 ---
