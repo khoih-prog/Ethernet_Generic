@@ -13,7 +13,7 @@
 
 ## Table of Contents
 
-* [Important Note from v2.5.1](#Important-Note-from-v251)
+* [Important Note from v2.5.2](#Important-Note-from-v252)
 * [Why do we need this Ethernet_Generic library](#why-do-we-need-this-Ethernet_Generic-library)
   * [Features](#features)
   * [Currently supported Boards](#currently-supported-boards)
