@@ -20,7 +20,7 @@
 #define _ETG_LOGLEVEL_                      2
 
 // Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
-#define USE_W5100                           true
+//#define USE_W5100                           true
 
 #if ( defined(ESP8266) )
   // For ESP8266

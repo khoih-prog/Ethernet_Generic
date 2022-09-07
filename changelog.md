@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.5.2](#releases-v252)
 	* [Releases v2.5.1](#releases-v251)
 	* [Releases v2.5.0](#releases-v250)
 	* [Releases v2.4.1](#releases-v241)
@@ -27,6 +28,12 @@
 ---
 
 ## Changelog
+
+### Releases v2.5.2
+
+1. Slow SPI clock only when necessary (such as for W5100, SAMD21 Zero, etc.)
+2. Use correct Debug Terminal `Serial` for so-called **SAMD21 Zero** boards from Arduino as well as Adafruit
+
 
 ### Releases v2.5.1
 

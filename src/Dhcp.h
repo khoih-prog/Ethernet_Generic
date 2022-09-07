@@ -13,7 +13,7 @@
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
   
-  Version: 2.5.1
+  Version: 2.5.2
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -27,6 +27,7 @@
   2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
   2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
   2.5.1   K Hoang      01/09/2022 Slow SPI clock for old W5100 shield using SAMD Zero
+  2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
  *****************************************************************************************************************************/
  
 // DHCP Library v0.3 - April 25, 2009
