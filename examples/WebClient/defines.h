@@ -10,7 +10,16 @@
 #ifndef defines_h
 #define defines_h
 
-#define DEBUG_ETHERNET_GENERIC_PORT         Serial
+#if defined(__AVR_AVR128DA48__) 
+  #define SerialDebug   Serial1
+#elif defined(__AVR_AVR128DB48__) 
+  #define SerialDebug   Serial3
+#else
+  // standard Serial
+  #define SerialDebug   Serial
+#endif
+
+#define DEBUG_ETHERNET_GENERIC_PORT         SerialDebug
 
 // Debug Level from 0 to 4
 #define _ETG_LOGLEVEL_                      2
@@ -70,10 +79,11 @@
     #define USE_W5100                           true
     
     // Use this for ARDUINO_SAMD_ZERO, etc. if can't print to terminal with Serial.print
-    #if defined(SerialUSB)
-      #define Serial          SerialUSB
+    #if defined(SERIAL_PORT_USBVIRTUAL)
+      #define Serial          SERIAL_PORT_USBVIRTUAL
+      #warning Using SAMD Zero SerialUSB
     #endif
-    
+   
   #elif defined(ARDUINO_SAMD_MKR1000)
     #define BOARD_TYPE      "SAMD MKR1000"
   #elif defined(ARDUINO_SAMD_MKRWIFI1010)
@@ -309,6 +319,17 @@
   // For RPI Pico
   #warning Use RPI-Pico RP2040 architecture
 
+#elif defined(DXCORE)
+
+  // Default pin 10 to SS/CS
+  #define USE_THIS_SS_PIN       SS
+
+  #if defined(__AVR_AVR128DA48__) 
+    #define BOARD_TYPE            "Curiosity AVR_AVR128DA48"
+  #elif defined(__AVR_AVR128DB48__) 
+    #define BOARD_TYPE            "Curiosity AVR_AVR128DB48"
+  #endif
+  
 #else
   // For Mega
   // Default pin 10 to SS/CS

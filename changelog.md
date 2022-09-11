@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.6.0](#releases-v260)
 	* [Releases v2.5.2](#releases-v252)
 	* [Releases v2.5.1](#releases-v251)
 	* [Releases v2.5.0](#releases-v250)
@@ -28,6 +29,11 @@
 ---
 
 ## Changelog
+
+### Releases v2.6.0
+
+1. Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using [DxCore](https://github.com/SpenceKonde/DxCore)
+
 
 ### Releases v2.5.2
 

@@ -148,17 +148,17 @@ void initEthernet()
   ETG_LOGWARN(F("========================="));
 #endif
 
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
+  SerialDebug.print(F("Using mac index = "));
+  SerialDebug.println(index);
 
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
+  SerialDebug.print(F("Connected! IP address: "));
+  SerialDebug.println(Ethernet.localIP());
 
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
-    Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
-    Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
-    Serial.print(F(", Link status: ")); Serial.println(Ethernet.linkReport());
+    SerialDebug.print(F("Speed: "));    SerialDebug.print(Ethernet.speedReport());
+    SerialDebug.print(F(", Duplex: ")); SerialDebug.print(Ethernet.duplexReport());
+    SerialDebug.print(F(", Link status: ")); SerialDebug.println(Ethernet.linkReport());
   }
 }
 
@@ -169,33 +169,33 @@ void printoutData()
   while (client.available())
   {
     char c = client.read();
-    Serial.write(c);
-    Serial.flush();  
+    SerialDebug.write(c);
+    SerialDebug.flush();  
   }
 }
 
 void setup()
 {
-  Serial.begin(115200);
+  SerialDebug.begin(115200);
   while (!Serial && millis() < 5000);
 
   delay(500);
 
-  Serial.print("\nStarting SetDHCPHostName on "); Serial.print(BOARD_NAME);
-  Serial.print(F(" with ")); Serial.println(SHIELD_TYPE); 
-  Serial.println(ETHERNET_GENERIC_VERSION);
+  SerialDebug.print("\nStarting SetDHCPHostName on "); SerialDebug.print(BOARD_NAME);
+  SerialDebug.print(F(" with ")); SerialDebug.println(SHIELD_TYPE); 
+  SerialDebug.println(ETHERNET_GENERIC_VERSION);
 
   initEthernet();
 
-  Serial.print(F("DHCP Hostname is ")); Serial.println(Ethernet.hostName());
+  SerialDebug.print(F("DHCP Hostname is ")); SerialDebug.println(Ethernet.hostName());
 
-  Serial.println();
-  Serial.println(F("Starting connection to server..."));
+  SerialDebug.println();
+  SerialDebug.println(F("Starting connection to server..."));
 
   // if you get a connection, report back via serial
   if (client.connect(server, 80))
   {
-    Serial.println(F("Connected to server"));
+    SerialDebug.println(F("Connected to server"));
     // Make a HTTP request
     client.println(F("GET /asciilogo.txt HTTP/1.1"));
     client.println(F("Host: arduino.tips"));
@@ -211,15 +211,15 @@ void loop()
   // if the server's disconnected, stop the client
   if (!client.connected())
   {
-    Serial.println();
-    Serial.println(F("Disconnecting from server..."));
+    SerialDebug.println();
+    SerialDebug.println(F("Disconnecting from server..."));
     client.stop();
 
     // do nothing forevermore
     while (true)
     {
       Ethernet.maintain();
-      Serial.print(F("DHCP Hostname is ")); Serial.println(Ethernet.hostName());
+      SerialDebug.print(F("DHCP Hostname is ")); SerialDebug.println(Ethernet.hostName());
 
       delay(60000);
     }  

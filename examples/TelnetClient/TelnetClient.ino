@@ -28,14 +28,14 @@ IPAddress server(192, 168, 2, 30);
 
 void setup() 
 {
-  Serial.begin(115200);
+  SerialDebug.begin(115200);
   while (!Serial && millis() < 5000);
 
   delay(500);
 
-  Serial.print("\nStarting TelnetClient on "); Serial.print(BOARD_NAME);
-  Serial.print(F(" with ")); Serial.println(SHIELD_TYPE);
-  Serial.println(ETHERNET_GENERIC_VERSION);
+  SerialDebug.print("\nStarting TelnetClient on "); SerialDebug.print(BOARD_NAME);
+  SerialDebug.print(F(" with ")); SerialDebug.println(SHIELD_TYPE);
+  SerialDebug.println(ETHERNET_GENERIC_VERSION);
   
 #if (USING_SPI2)
   #if defined(CUR_PIN_MISO)
@@ -164,32 +164,32 @@ void setup()
   ETG_LOGWARN(F("========================="));
 #endif
 
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
+  SerialDebug.print(F("Using mac index = "));
+  SerialDebug.println(index);
 
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
+  SerialDebug.print(F("Connected! IP address: "));
+  SerialDebug.println(Ethernet.localIP());
   
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
-    Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
-    Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
-    Serial.print(F(", Link status: ")); Serial.println(Ethernet.linkReport());
+    SerialDebug.print(F("Speed: "));    SerialDebug.print(Ethernet.speedReport());
+    SerialDebug.print(F(", Duplex: ")); SerialDebug.print(Ethernet.duplexReport());
+    SerialDebug.print(F(", Link status: ")); SerialDebug.println(Ethernet.linkReport());
   }
 
   // give the Ethernet shield a second to initialize:
   delay(1000);
-  Serial.println("connecting...");
+  SerialDebug.println("connecting...");
 
   // if you get a connection, report back via serial:
   if (client.connect(server, TELNET_PORT)) 
   {
-    Serial.println("connected");
+    SerialDebug.println("connected");
   } 
   else 
   {
     // if you didn't get a connection to the server:
-    Serial.println("connection failed");
+    SerialDebug.println("connection failed");
   }
 }
 
@@ -200,14 +200,14 @@ void loop()
   if (client.available()) 
   {
     char c = client.read();
-    Serial.print(c);
+    SerialDebug.print(c);
   }
 
   // as long as there are bytes in the serial queue,
   // read them and send them out the socket if it's open:
-  while (Serial.available() > 0) 
+  while (SerialDebug.available() > 0) 
   {
-    char inChar = Serial.read();
+    char inChar = SerialDebug.read();
     
     if (client.connected()) 
     {
@@ -218,8 +218,8 @@ void loop()
   // if the server's disconnected, stop the client:
   if (!client.connected()) 
   {
-    Serial.println();
-    Serial.println("disconnecting.");
+    SerialDebug.println();
+    SerialDebug.println("disconnecting.");
     client.stop();
     
     // do nothing:

@@ -25,7 +25,7 @@ EthernetClient client;
 // this method makes a HTTP connection to the server
 void httpRequest()
 {
-  Serial.println();
+  SerialDebug.println();
 
   // close any connection before send a new request
   // this will free the socket on the WiFi shield
@@ -34,7 +34,7 @@ void httpRequest()
   // if there's a successful connection
   if (client.connect(server, 80))
   {
-    Serial.println(F("Connecting..."));
+    SerialDebug.println(F("Connecting..."));
 
     // send the HTTP PUT request
     client.println(F("GET /asciilogo.txt HTTP/1.1"));
@@ -48,20 +48,20 @@ void httpRequest()
   else
   {
     // if you couldn't make a connection
-    Serial.println(F("Connection failed"));
+    SerialDebug.println(F("Connection failed"));
   }
 }
 
 void setup()
 {
-  Serial.begin(115200);
+  SerialDebug.begin(115200);
   while (!Serial && millis() < 5000);
 
   delay(500);
 
-  Serial.print("\nStarting WebClientRepeating on "); Serial.print(BOARD_NAME);
-  Serial.print(F(" with ")); Serial.println(SHIELD_TYPE);
-  Serial.println(ETHERNET_GENERIC_VERSION);
+  SerialDebug.print("\nStarting WebClientRepeating on "); SerialDebug.print(BOARD_NAME);
+  SerialDebug.print(F(" with ")); SerialDebug.println(SHIELD_TYPE);
+  SerialDebug.println(ETHERNET_GENERIC_VERSION);
 
 #if (USING_SPI2)
   #if defined(CUR_PIN_MISO)
@@ -190,18 +190,18 @@ void setup()
   ETG_LOGWARN(F("========================="));
 #endif
 
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
+  SerialDebug.print(F("Using mac index = "));
+  SerialDebug.println(index);
 
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
+  SerialDebug.print(F("Connected! IP address: "));
+  SerialDebug.println(Ethernet.localIP());
 
 #if !(USING_CUSTOM_SPI)
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
-    Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
-    Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
-    Serial.print(F(", Link status: ")); Serial.println(Ethernet.linkReport());
+    SerialDebug.print(F("Speed: "));    SerialDebug.print(Ethernet.speedReport());
+    SerialDebug.print(F(", Duplex: ")); SerialDebug.print(Ethernet.duplexReport());
+    SerialDebug.print(F(", Link status: ")); SerialDebug.println(Ethernet.linkReport());
   }
 #endif  
 }
@@ -213,8 +213,8 @@ void loop()
   while (client.available())
   {
     char c = client.read();
-    Serial.write(c);
-    Serial.flush();
+    SerialDebug.write(c);
+    SerialDebug.flush();
   }
 
   // if 10 seconds have passed since your last connection,

@@ -10,7 +10,16 @@
 #ifndef defines_h
 #define defines_h
 
-#define DEBUG_ETHERNET_GENERIC_PORT         Serial
+#if defined(__AVR_AVR128DA48__) 
+  #define SerialDebug   Serial1
+#elif defined(__AVR_AVR128DB48__) 
+  #define SerialDebug   Serial3
+#else
+  // standard Serial
+  #define SerialDebug   Serial
+#endif
+
+#define DEBUG_ETHERNET_GENERIC_PORT         SerialDebug
 
 // Debug Level from 0 to 4
 #define _ETG_LOGLEVEL_                      2
@@ -310,6 +319,17 @@
   // For RPI Pico
   #warning Use RPI-Pico RP2040 architecture
 
+#elif defined(DXCORE)
+
+  // Default pin 10 to SS/CS
+  #define USE_THIS_SS_PIN       SS
+
+  #if defined(__AVR_AVR128DA48__) 
+    #define BOARD_TYPE            "Curiosity AVR_AVR128DA48"
+  #elif defined(__AVR_AVR128DB48__) 
+    #define BOARD_TYPE            "Curiosity AVR_AVR128DB48"
+  #endif
+  
 #else
   // For Mega
   // Default pin 10 to SS/CS

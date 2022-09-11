@@ -23,12 +23,12 @@ EthernetServer server(2323);
 
 void setup() 
 {
-  Serial.begin(115200);
-  while (!Serial && millis() < 5000);
+  SerialDebug.begin(115200);
+  while (!SerialDebug && millis() < 5000);
 
-  Serial.print("\nStarting PagerServer on "); Serial.print(BOARD_NAME);
-  Serial.print(F(" with ")); Serial.println(SHIELD_TYPE); 
-  Serial.println(ETHERNET_GENERIC_VERSION);
+  SerialDebug.print("\nStarting PagerServer on "); SerialDebug.print(BOARD_NAME);
+  SerialDebug.print(F(" with ")); SerialDebug.println(SHIELD_TYPE); 
+  SerialDebug.println(ETHERNET_GENERIC_VERSION);
   
 #if (USING_SPI2)
   #if defined(CUR_PIN_MISO)
@@ -157,27 +157,27 @@ void setup()
   ETG_LOGWARN(F("========================="));
 #endif
 
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
+  SerialDebug.print(F("Using mac index = "));
+  SerialDebug.println(index);
 
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
+  SerialDebug.print(F("Connected! IP address: "));
+  SerialDebug.println(Ethernet.localIP());
 
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
-    Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
-    Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
-    Serial.print(F(", Link status: ")); Serial.println(Ethernet.linkReport());
+    SerialDebug.print(F("Speed: "));    SerialDebug.print(Ethernet.speedReport());
+    SerialDebug.print(F(", Duplex: ")); SerialDebug.print(Ethernet.duplexReport());
+    SerialDebug.print(F(", Link status: ")); SerialDebug.println(Ethernet.linkReport());
   }
 
   server.begin();
 
   IPAddress ip = Ethernet.localIP();
   
-  Serial.println();
-  Serial.print("To access the server, connect with Telnet client to ");
-  Serial.print(ip);
-  Serial.println(" 2323");
+  SerialDebug.println();
+  SerialDebug.print("To access the server, connect with Telnet client to ");
+  SerialDebug.print(ip);
+  SerialDebug.println(" 2323");
 }
 
 void loop() 
@@ -190,7 +190,7 @@ void loop()
     String s = client.readStringUntil('\n'); // read the message incoming from one of the clients
     s.trim(); // trim eventual \r
     
-    Serial.println(s); // print the message to Serial Monitor
+    SerialDebug.println(s); // print the message to Serial Monitor
     client.print("echo: "); // this is only for the sending client
     server.println(s); // send the message to all connected clients
     

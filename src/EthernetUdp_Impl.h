@@ -13,7 +13,7 @@
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
   
-  Version: 2.5.2
+  Version: 2.6.0
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -28,6 +28,7 @@
   2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
   2.5.1   K Hoang      01/09/2022 Slow SPI clock for old W5100 shield using SAMD Zero
   2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
+  2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
  *****************************************************************************************************************************/
 /*
  *  Udp.cpp: Library to send/receive UDP packets with the Arduino ethernet shield.

@@ -24,12 +24,12 @@ EthernetUDP Udp;
 
 void setup()
 {
-  Serial.begin(115200);
+  SerialDebug.begin(115200);
   while (!Serial && millis() < 5000);
 
-  Serial.print("\nStart UDPSendReceive on "); Serial.print(BOARD_NAME);
-  Serial.print(F(" with ")); Serial.println(SHIELD_TYPE); 
-  Serial.println(ETHERNET_GENERIC_VERSION);
+  SerialDebug.print("\nStart UDPSendReceive on "); SerialDebug.print(BOARD_NAME);
+  SerialDebug.print(F(" with ")); SerialDebug.println(SHIELD_TYPE); 
+  SerialDebug.println(ETHERNET_GENERIC_VERSION);
   
 #if (USING_SPI2)
   #if defined(CUR_PIN_MISO)
@@ -158,25 +158,25 @@ void setup()
   ETG_LOGWARN(F("========================="));
 #endif
 
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
+  SerialDebug.print(F("Using mac index = "));
+  SerialDebug.println(index);
 
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
+  SerialDebug.print(F("Connected! IP address: "));
+  SerialDebug.println(Ethernet.localIP());
 
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
-    Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
-    Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
-    Serial.print(F(", Link status: ")); Serial.println(Ethernet.linkReport());
+    SerialDebug.print(F("Speed: "));    SerialDebug.print(Ethernet.speedReport());
+    SerialDebug.print(F(", Duplex: ")); SerialDebug.print(Ethernet.duplexReport());
+    SerialDebug.print(F(", Link status: ")); SerialDebug.println(Ethernet.linkReport());
   }
 
-  Serial.println(F("\nStarting connection to server..."));
+  SerialDebug.println(F("\nStarting connection to server..."));
   // if you get a connection, report back via serial:
   Udp.begin(localPort);
 
-  Serial.print(F("Listening on port "));
-  Serial.println(localPort);
+  SerialDebug.print(F("Listening on port "));
+  SerialDebug.println(localPort);
 }
 
 void loop()
@@ -186,13 +186,13 @@ void loop()
 
   if (packetSize)
   {
-    Serial.print(F("Received packet of size "));
-    Serial.println(packetSize);
-    Serial.print(F("From "));
+    SerialDebug.print(F("Received packet of size "));
+    SerialDebug.println(packetSize);
+    SerialDebug.print(F("From "));
     IPAddress remoteIp = Udp.remoteIP();
-    Serial.print(remoteIp);
-    Serial.print(F(", port "));
-    Serial.println(Udp.remotePort());
+    SerialDebug.print(remoteIp);
+    SerialDebug.print(F(", port "));
+    SerialDebug.println(Udp.remotePort());
 
     // read the packet into packetBufffer
     int len = Udp.read(packetBuffer, 255);
@@ -202,8 +202,8 @@ void loop()
       packetBuffer[len] = 0;
     }
 
-    Serial.println(F("Contents:"));
-    Serial.println(packetBuffer);
+    SerialDebug.println(F("Contents:"));
+    SerialDebug.println(packetBuffer);
 
     // send a reply, to the IP address and port that sent us the packet we received
     Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
