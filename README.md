@@ -48,6 +48,7 @@
   * [2. How to use EthernetLarge feature](#2-How-to-use-EthernetLarge-feature)
   * [3. How to select another CS/SS pin to use](#3-how-to-select-another-csss-pin-to-use)
   * [4. How to use W5x00 with ESP8266](#4-how-to-use-w5x00-with-esp8266)
+  * [5. Important Note for AVRDx using Arduino IDE](#5-Important-Note-for-AVRDx-using-Arduino-IDE) **New**
 * [Ethernet_Generic Library API](#Ethernet_Generic-Library-API) 
 * [Configuration Notes](#configuration-notes)
   * [1. How to select which SPI to use](#1-How-to-select-which-SPI-to-use)
@@ -93,6 +94,7 @@
   * [17. WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer](#17-WebClientRepeating-on-WIZNET_5500_EVB_PICO-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
   * [18. WebClientRepeating on SAMD_FEATHER_M0_EXPRESS with W5x00 using Ethernet_Generic Library with Large Buffer](#18-WebClientRepeating-on-SAMD_FEATHER_M0_EXPRESS-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
   * [19. UdpNTPClient on SAMD_ZERO with W5x00 using Ethernet_Generic Library with Large Buffer](#19-UdpNTPClient-on-SAMD_ZERO-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
+  * [20. WebClientRepeating on Curiosity AVR_AVR128DA48 with W5x00 using Ethernet_Generic Library with Large Buffer](#20-WebClientRepeating-on-Curiosity-AVR_AVR128DA48-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -195,6 +197,20 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
 - Generic Flight Controllers
 - Midatronics boards
 
+12. **Arduino AVR_Dx boards using DxCore**
+
+- **AVRDA-based boards (AVR128DA, AVR64DA, AVR32DA, etc.)**
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/blob/main/pics/Curiosity_AVR128DA48.png">
+</p>
+
+
+- **AVRDB-based boards (AVR128DB, AVR64DB, AVR32DB, etc.)**
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/blob/main/pics/Curiosity_AVR128DB48.png">
+</p>
 
 #### Currently supported Ethernet shields/modules
 
@@ -222,7 +238,7 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
 12. [`Earle Philhower's arduino-pico core v2.5.2+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
 13. [`Arduino megaAVR core 1.8.7+`](https://github.com/arduino/ArduinoCore-megaavr/releases) for Arduino megaAVR boards such as **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
 14. [`Arduino Core for STM32 v2.3.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
-
+15. [`SpenceKonde DxCore core 1.4.10+`](https://github.com/SpenceKonde/DxCore) for Arduino AVRDx boards.  [![GitHub release](https://img.shields.io/github/release/SpenceKonde/DxCore.svg)](https://github.com/SpenceKonde/DxCore/releases/latest). Follow [**DxCore Installation**](https://github.com/SpenceKonde/DxCore/blob/master/Installation.md).
 
 ---
 
@@ -769,6 +785,75 @@ These pins are tested OK with ESP8266 and W5x00
   Ethernet.init (USE_THIS_SS_PIN);
 ```
 
+#### 5. Important Note for AVRDx using Arduino IDE
+
+With some Arduino IDE versions, such as v1.8.19, upload directly via USB to some boards, such as `Curiosity_AVR128DA48` or `Curiosity_AVR128DB48` can't be done without unknown-to-me fix. We'll get the following error when uploading
+
+```
+avrdude: Version 6.3-20201216
+     Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
+     Copyright (c) 2007-2014 Joerg Wunsch
+
+     System wide configuration file is "/home/kh/.arduino15/packages/DxCore/hardware/megaavr/1.4.10/avrdude.conf"
+     User configuration file is "/home/kh/.avrduderc"
+     User configuration file does not exist or is not a regular file, skipping
+
+     Using Port                    : usb
+     Using Programmer              : curiosity_updi
+avrdude: usbdev_open(): Found nEDBG CMSIS-DAP, serno: MCHP3280041800002682
+avrdude: usbdev_open(): WARNING: failed to set configuration 1: Device or resource busy
+avrdude: Found CMSIS-DAP compliant device, using EDBG protocol
+avrdude: usbdev_send(): wrote -5 out of 912 bytes, err = Input/output error
+avrdude: jtag3_edbg_prepare(): failed to send command to serial port
+
+avrdude done.  Thank you.
+
+the selected serial port 
+ does not exist or your board is not connected
+```
+
+We can use drag-and-drop method to `drag-and-drop` the compiled **hex** file to `CURIOSITY` virtual drive. 
+
+If `success`, The LED blinks **slowly** for 2 sec. The LED will blinks **rapidly** for 2 sec if `failure`
+
+
+For example, to run [Change_Interval example](https://github.com/khoih-prog/Ethernet_Generic/tree/main/examples/Change_Interval), use Arduino IDE to compile, and get the `Change_Interval.ino.hex` file. For Ubuntu Linux, the file is stored in directory `/tmp/arduino_build_xxxxxx`
+
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Ethernet_Generic/blob/main/pics/Change_Interval.png">
+</p>
+
+
+After drag-and-drop the `Change_Interval.ino.hex` into `CURIOSITY` virtual drive, the code will run immidiately if successfully loaded (LED blinks **slowly**)
+
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Ethernet_Generic/blob/main/pics/CURIOSITY_drive.png">
+</p>
+
+##### How to connect W5x00 to AVDDx
+
+This is example to demo how to connect W5x00 to Curiosity `AVR128DA48` or `AVR128DB48`
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Ethernet_Generic/blob/main/pics/Curiosity_Dx48_pinout.png">
+</p>
+
+|W5x00|<--->|AVRDx|
+|:-:|:-:|:-:|
+|MOSI|<--->|PA_4 = 4|
+|MISO|<--->|PA_5 = 5|
+|SCK|<--->|PA_6 = 6|
+|SS|<--->|PA_7 = 7|
+|GND|<--->|GND = 52|
+|3.3V|<--->|VCC = 51|
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Ethernet_Generic/blob/main/pics/Curiosity_Dx48_wiring.png">
+</p>
+
+
 ---
 ---
 
@@ -795,14 +880,14 @@ These pins are tested OK with ESP8266 and W5x00
 
 #### 1. File [WebClientRepeating.ino](examples/WebClientRepeating/WebClientRepeating.ino)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/77e6ac30c65ac436b706207dd49781334a3344fd/examples/WebClientRepeating/WebClientRepeating.ino#L15-L226
+https://github.com/khoih-prog/Ethernet_Generic/blob/c3f55ac25ffa8ba9a186eed41524ffbf12a45969/examples/WebClientRepeating/WebClientRepeating.ino#L15-L226
 
 
 ---
 
 #### 2. File [defines.h](examples/WebClientRepeating/defines.h)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/77e6ac30c65ac436b706207dd49781334a3344fd/examples/WebClientRepeating/defines.h#L10-L419
+https://github.com/khoih-prog/Ethernet_Generic/blob/c3f55ac25ffa8ba9a186eed41524ffbf12a45969/examples/WebClientRepeating/defines.h#L10-L442
 
 ---
 ---
@@ -815,7 +900,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -896,7 +981,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -978,7 +1063,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1056,7 +1141,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1136,7 +1221,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -1216,7 +1301,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1296,7 +1381,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1377,7 +1462,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1414,7 +1499,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1498,7 +1583,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1582,7 +1667,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1671,7 +1756,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1763,7 +1848,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1850,7 +1935,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Start WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1936,7 +2021,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -2024,7 +2109,7 @@ The following are debug terminal output when running example [SetDHCPHostName](e
 
 ```
 Starting SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2122,7 +2207,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2211,7 +2296,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAMD_FEATHER_M0_EXPRESS with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 29
 [ETG] MISO: 28
@@ -2300,7 +2385,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on SAMD_ZERO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.5.2
+Ethernet_Generic v2.6.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 23
 [ETG] MISO: 22
@@ -2324,7 +2409,94 @@ From 128.138.141.172, port 123
 Seconds since Jan 1 1900 = 3871504317
 Unix time = 1662515517
 The UTC time is 1:51:57
+```
 
+---
+
+#### 20. WebClientRepeating on Curiosity AVR_AVR128DA48 with W5x00 using Ethernet_Generic Library with Large Buffer
+
+The following are debug terminal output when running example [UdpNTPClient](examples/UdpNTPClient) on Curiosity `AVR_AVR128DA48` with `W5100` using Ethernet_Generic Library
+
+```
+Starting WebClientRepeating on Curiosity AVR_AVR128DA48 with W5x00 using Ethernet_Generic Library with Large Buffer
+Ethernet_Generic v2.6.0
+[ETG] Default SPI pinout:
+[ETG] MOSI: 4
+[ETG] MISO: 5
+[ETG] SCK: 6
+[ETG] SS: 7
+[ETG] =========================
+[ETG] Board : Curiosity AVR_AVR128DA48 , setCsPin: 7
+[ETG] W5100 init, using W5100Class::ss_pin =  7 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 10
+[ETG] Chip is W5500
+[ETG] W5100::init: W5500, SSIZE = 8192
+[ETG] Currently Used SPI pinout:
+[ETG] MOSI: 4
+[ETG] MISO: 5
+[ETG] SCK: 6
+[ETG] SS: 7
+[ETG] =========================
+Using mac index = 2
+Connected! IP address: 192.168.2.92
+Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+
+Connecting...
+HTTP/1.1 200 OK
+Date: Sun, 11 Sep 2022 19:24:38 GMT
+Content-Type: text/plain
+Content-Length: 2263
+Connection: close
+x-amz-id-2: wjRb+0d4738DLS5A3ojIx4s82EcxuOx52R9dmxO3jEzd7LY+M99iWiFTqlgqyMLa5GhpTMLlXFw=
+x-amz-request-id: X91JFDNN58RRSXMC
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=Oun0NIXChiT17Q1H0zK4VhpgjNjiyc%2F14Eye9RgmXLVOSKMIJ0rT3kKjQUKNukau6UFCcTHHnMRwU%2FZo74yXc09Kc4GI8rn%2BCKYz6O7e%2Bp03Jm3u%2FtO4Nqskkgc5EP4%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 7492c8e3fd18a235-YYZ
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
+
+
+           `:;;;,`                      .:;;:.           
+        .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
+      `;;;;;;;;;;;;;;;`            :;;;;;;;;;;;;;;;      
+     :;;;;;;;;;;;;;;;;;;         `;;;;;;;;;;;;;;;;;;     
+    ;;;;;;;;;;;;;;;;;;;;;       .;;;;;;;;;;;;;;;;;;;;    
+   ;;;;;;;;:`   `;;;;;;;;;     ,;;;;;;;;.`   .;;;;;;;;   
+  .;;;;;;,         :;;;;;;;   .;;;;;;;          ;;;;;;;  
+  ;;;;;;             ;;;;;;;  ;;;;;;,            ;;;;;;. 
+ ,;;;;;               ;;;;;;.;;;;;;`              ;;;;;; 
+ ;;;;;.                ;;;;;;;;;;;`      ```       ;;;;;`
+ ;;;;;                  ;;;;;;;;;,       ;;;       .;;;;;
+`;;;;:                  `;;;;;;;;        ;;;        ;;;;;
+,;;;;`    `,,,,,,,,      ;;;;;;;      .,,;;;,,,     ;;;;;
+:;;;;`    .;;;;;;;;       ;;;;;,      :;;;;;;;;     ;;;;;
+:;;;;`    .;;;;;;;;      `;;;;;;      :;;;;;;;;     ;;;;;
+.;;;;.                   ;;;;;;;.        ;;;        ;;;;;
+ ;;;;;                  ;;;;;;;;;        ;;;        ;;;;;
+ ;;;;;                 .;;;;;;;;;;       ;;;       ;;;;;,
+ ;;;;;;               `;;;;;;;;;;;;                ;;;;; 
+ `;;;;;,             .;;;;;; ;;;;;;;              ;;;;;; 
+  ;;;;;;:           :;;;;;;.  ;;;;;;;            ;;;;;;  
+   ;;;;;;;`       .;;;;;;;,    ;;;;;;;;        ;;;;;;;:  
+    ;;;;;;;;;:,:;;;;;;;;;:      ;;;;;;;;;;:,;;;;;;;;;;   
+    `;;;;;;;;;;;;;;;;;;;.        ;;;;;;;;;;;;;;;;;;;;    
+      ;;;;;;;;;;;;;;;;;           :;;;;;;;;;;;;;;;;:     
+       ,;;;;;;;;;;;;;,              ;;;;;;;;;;;;;;       
+         .;;;;;;;;;`                  ,;;;;;;;;:         
+                                                         
+                                                         
+                                                         
+                                                         
+    ;;;   ;;;;;`  ;;;;:  .;;  ;; ,;;;;;, ;;. `;,  ;;;;   
+    ;;;   ;;:;;;  ;;;;;; .;;  ;; ,;;;;;: ;;; `;, ;;;:;;  
+   ,;:;   ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;,`;, ;;  ;;  
+   ;; ;:  ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;;`;, ;;  ;;. 
+   ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
+  ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
+  ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;
 ```
 
 
@@ -2336,11 +2508,11 @@ The UTC time is 1:51:57
 Debug is enabled by default on Serial. Debug Level from 0 to 4. To disable, change the _ETHERNET_WEBSERVER_LOGLEVEL_ to 0
 
 ```cpp
-// Use this to output debug msgs to Serial
-#define DEBUG_ETHERNET_GENERIC_PORT       Serial
-// Use this to disable all output debug msgs
+// Use this to output debug msgs to SerialDebug
+#define DEBUG_ETHERNET_GENERIC_PORT         SerialDebug
+// Use 0 to disable all output debug msgs
 // Debug Level from 0 to 4
-#define _ETG_LOGLEVEL_                    0
+#define _ETG_LOGLEVEL_                      2
 ```
 
 ---
@@ -2398,6 +2570,8 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 25. Default to `W5100` to be safe. To change if using `W5200, W5500, W5100s` or testing faster SPI clock speeds
 26. Slow SPI clock only when necessary (such as for W5100, SAMD21 Zero, etc.)
 27. Use correct Debug Terminal `Serial` for so-called **SAMD21 Zero** boards from Arduino as well as Adafruit
+28. Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using [DxCore](https://github.com/SpenceKonde/DxCore)
+
 
 ---
 ---
