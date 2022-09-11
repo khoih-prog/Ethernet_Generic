@@ -48,7 +48,6 @@
   * [2. How to use EthernetLarge feature](#2-How-to-use-EthernetLarge-feature)
   * [3. How to select another CS/SS pin to use](#3-how-to-select-another-csss-pin-to-use)
   * [4. How to use W5x00 with ESP8266](#4-how-to-use-w5x00-with-esp8266)
-  * [5. Important Note for AVRDx using Arduino IDE](#5-Important-Note-for-AVRDx-using-Arduino-IDE) **New**
 * [Ethernet_Generic Library API](#Ethernet_Generic-Library-API) 
 * [Configuration Notes](#configuration-notes)
   * [1. How to select which SPI to use](#1-How-to-select-which-SPI-to-use)
@@ -57,6 +56,7 @@
   * [2. How to use EthernetLarge feature](#2-How-to-use-EthernetLarge-feature)
   * [3. How to select another CS/SS pin to use](#3-How-to-select-another-CSSS-pin-to-use)
   * [4. How to use W5x00 with ESP8266](#4-How-to-use-W5x00-with-ESP8266)
+  * [5. Important Note for AVRDx using Arduino IDE](#5-Important-Note-for-AVRDx-using-Arduino-IDE) **New**
 * [Examples](#examples)
   * [ 1. multiFileProject](examples/multiFileProject)
   * [ 2. TelnetClient](examples/TelnetClient)
@@ -2570,7 +2570,7 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 25. Default to `W5100` to be safe. To change if using `W5200, W5500, W5100s` or testing faster SPI clock speeds
 26. Slow SPI clock only when necessary (such as for W5100, SAMD21 Zero, etc.)
 27. Use correct Debug Terminal `Serial` for so-called **SAMD21 Zero** boards from Arduino as well as Adafruit
-28. Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using [DxCore](https://github.com/SpenceKonde/DxCore)
+28. Add support to AVR_Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using [**DxCore**](https://github.com/SpenceKonde/DxCore)
 
 
 ---
