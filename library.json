@@ -1,6 +1,6 @@
 {
   "name": "Ethernet_Generic",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "keywords": "WebServer, Ethernet, SPI2, Teensy, SAMD, STM32, SAM DUE, nRF52, ESP32, ESP8266, rpi-pico, rp2040, W5x00, W5500, LAN, Wiznet, WIZ550io, WIZ850io, USR-ES1",
   "description": "Simple Ethernet library for AVR, AVR Dx, Portenta_H7, Teensy, SAM DUE, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, nRF52 and RASPBERRY_PI_PICO boards using Ethernet shields W5100, W5200, W5500, W5100S. With this library, you can use the Arduino Ethernet (shield or board) to connect to Internet. The library provides both Client and server functionalities. The library permits you to connect to a local network also with DHCP and to resolve DNS. The h-only library now  supporting SPI1/SPI2, EthernetLarge, Ethernet2 and Ethernet3 features by simply changing definitions in the sketch. RASPBERRY_PI_PICO using arduino-pico core now can use SPI1. Now STM32, Arduino_mbed boards can use any custom hardware / software SPI",
   "authors": [

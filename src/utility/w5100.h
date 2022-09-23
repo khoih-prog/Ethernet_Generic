@@ -13,7 +13,7 @@
     
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
   
-  Version: 2.6.0
+  Version: 2.6.1
     
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -29,6 +29,7 @@
   2.5.1   K Hoang      01/09/2022 Slow SPI clock for old W5100 shield using SAMD Zero
   2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
+  2.6.1   K Hoang      23/09/2022 Fix bug for W5200
  *****************************************************************************************************************************/
 
 // w5100.h contains private W5x00 hardware "driver" level definitions

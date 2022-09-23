@@ -12,6 +12,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.6.1](#releases-v261)
 	* [Releases v2.6.0](#releases-v260)
 	* [Releases v2.5.2](#releases-v252)
 	* [Releases v2.5.1](#releases-v251)
@@ -29,6 +30,11 @@
 ---
 
 ## Changelog
+
+### Releases v2.6.1
+
+1. Fix bug for `Wiznet W5200 / wiz820io`. Check [ESP32 - Wiznet W5200 problem #13](https://github.com/khoih-prog/Ethernet_Generic/discussions/13)
+2. Update `Packages' Patches`
 
 ### Releases v2.6.0
 
