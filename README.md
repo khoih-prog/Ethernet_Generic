@@ -43,6 +43,7 @@
   * [10. For RTL8720DN boards using AmebaD core](#10-for-rtl8720dn-boards-using-amebad-core)
   * [11. For SAMD21 and SAMD51 boards using ArduinoCore-fab-sam core](#11-For-SAMD21-and-SAMD51-boards-using-ArduinoCore-fab-sam-core)
   * [12. For Seeeduino RP2040 boards](#12-For-Seeeduino-RP2040-boards)
+  * [13. For Seeeduino nRF52840 boards](#13-For-Seeeduino-nRF52840-boards)
 * [Libraries' Patches](#libraries-patches)
   * [1. For application requiring 2K+ HTML page](#1-for-application-requiring-2k-html-page)
   * [2. How to use EthernetLarge feature](#2-How-to-use-EthernetLarge-feature)
@@ -115,21 +116,21 @@ To be safe for systems using old `W5100` shields, the **examples** are using `op
 For `SAMD21 M0`, such as `SAMD Zero`, SPI clock speed of 8MHz and `SPI_MODE0` are used.
 
 
-```
+```cpp
 // Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
 //#define USE_W5100                           true
 ```
 
 To use with shields different from `W5100`, such as `W5200, W5500, W5100S`, change to 
 
-```
+```cpp
 // Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
 #define USE_W5100                           false
 ```
 
 For Arduino SAMD21 Zero, in order to print to Terminal, use `SERIAL_PORT_USBVIRTUAL` == `SerialUSB`
 
-```
+```cpp
 // Use this for ARDUINO_SAMD_ZERO, etc. if can't print to terminal with Serial.print
 #if defined(SERIAL_PORT_USBVIRTUAL)
   #define Serial          SERIAL_PORT_USBVIRTUAL
@@ -212,6 +213,10 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
     <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/blob/main/pics/Curiosity_AVR128DB48.png">
 </p>
 
+
+13. **Seeeduino nRF52840-based boards such as XIAO_NRF52840 and XIAO_NRF52840_SENSE**, etc. using Seeed `mbed` or `nRF52` core
+
+
 #### Currently supported Ethernet shields/modules
 
 1. W5x00 shield /module such as W5100, W5200, W5500 and W5100S
@@ -234,11 +239,14 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
  8. [`Adafruit nRF52 v1.3.0+`](https://github.com/adafruit/Adafruit_nRF52_Arduino) for nRF52 boards such as Adafruit NRF52840_FEATHER, NRF52832_FEATHER, NRF52840_FEATHER_SENSE, NRF52840_ITSYBITSY, NRF52840_CIRCUITPLAY, NRF52840_CLUE, NRF52840_METRO, NRF52840_PCA10056, PARTICLE_XENON, **NINA_B302_ublox**, etc. [![GitHub release](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino/releases/latest)
  9. [`ESP32 Core 2.0.5+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
 10. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
-11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 3.3.0+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
-12. [`Earle Philhower's arduino-pico core v2.5.4+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
+11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 3.4.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
+12. [`Earle Philhower's arduino-pico core v2.6.2+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
 13. [`Arduino megaAVR core 1.8.7+`](https://github.com/arduino/ArduinoCore-megaavr/releases) for Arduino megaAVR boards such as **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
 14. [`Arduino Core for STM32 v2.3.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
 15. [`SpenceKonde DxCore core 1.4.10+`](https://github.com/SpenceKonde/DxCore) for Arduino AVRDx boards.  [![GitHub release](https://img.shields.io/github/release/SpenceKonde/DxCore.svg)](https://github.com/SpenceKonde/DxCore/releases/latest). Follow [**DxCore Installation**](https://github.com/SpenceKonde/DxCore/blob/master/Installation.md).
+16. [`Seeeduino nRF52 core 1.0.0+`](https://github.com/Seeed-Studio/Adafruit_nRF52_Arduino) for Seeed nRF52840-based boards such as **Seeed_XIAO_NRF52840 and Seeed_XIAO_NRF52840_SENSE**. [![GitHub release](https://img.shields.io/github/release/Seeed-Studio/Adafruit_nRF52_Arduino.svg)](https://github.com/Seeed-Studio/Adafruit_nRF52_Arduino/releases/latest)
+17. `Seeeduino mbed core 2.7.2+` for Seeed nRF52840-based boards such as **SEEED_XIAO_NRF52840 and SEEED_XIAO_NRF52840_SENSE**
+
 
 ---
 
@@ -373,14 +381,14 @@ Whenever the above-mentioned compiler error issue is fixed with the new Arduino 
  
  ***To be able to compile, run and automatically detect and display BOARD_NAME on Adafruit SAMD (Itsy-Bitsy M4, etc) boards***, you have to copy the whole [Adafruit SAMD Packages_Patches](Packages_Patches/adafruit/hardware/samd/1.7.10) directory into Adafruit samd directory (~/.arduino15/packages/adafruit/hardware/samd/1.7.10). 
 
-Supposing the Adafruit SAMD core version is 1.7.10. This file must be copied into the directory:
+Supposing the Adafruit SAMD core version is 1.7.10. These files must be copied into the directory:
 
 - `~/.arduino15/packages/adafruit/hardware/samd/1.7.10/platform.txt`
 - `~/.arduino15/packages/adafruit/hardware/samd/1.7.10/cores/arduino/Print.h`
 - `~/.arduino15/packages/adafruit/hardware/samd/1.7.10/cores/arduino/Print.cpp`
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
-This file must be copied into the directory:
+These files must be copied into the directory:
 
 - `~/.arduino15/packages/adafruit/hardware/samd/x.yy.zz/platform.txt`
 - `~/.arduino15/packages/adafruit/hardware/samd/x.yy.zz/cores/arduino/Print.h`
@@ -390,7 +398,7 @@ This file must be copied into the directory:
  
  ***To be able to compile, run and automatically detect and display BOARD_NAME on Seeeduino SAMD (XIAO M0, Wio Terminal, etc) boards***, you have to copy the whole [Seeeduino SAMD Packages_Patches](Packages_Patches/Seeeduino/hardware/samd/1.8.3) directory into Seeeduino samd directory (~/.arduino15/packages/Seeeduino/hardware/samd/1.8.3). 
 
-Supposing the Seeeduino SAMD core version is 1.8.3. This file must be copied into the directory:
+Supposing the Seeeduino SAMD core version is 1.8.3. These files must be copied into the directory:
 
 - `~/.arduino15/packages/Seeeduino/hardware/samd/1.8.3/platform.txt`
 - `~/.arduino15/packages/Seeeduino/hardware/samd/1.8.3/cores/arduino/Arduino.h`
@@ -398,7 +406,7 @@ Supposing the Seeeduino SAMD core version is 1.8.3. This file must be copied int
 - `~/.arduino15/packages/Seeeduino/hardware/samd/1.8.3/cores/arduino/Print.cpp`
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
-This file must be copied into the directory:
+These files must be copied into the directory:
 
 - `~/.arduino15/packages/Seeeduino/hardware/samd/x.yy.zz/platform.txt`
 - `~/.arduino15/packages/Seeeduino/hardware/samd/x.yy.zz/cores/arduino/Arduino.h`
@@ -540,16 +548,40 @@ This file must be copied into the directory:
  
  ***To be able to compile, run and automatically detect and display BOARD_NAME on Seeeduino RP2040 (XIAO RP2040, Wio RP2040 Mini) boards***, you have to copy the whole [Seeeduino RP2040 Packages_Patches](Packages_Patches/Seeeduino/hardware/rp2040/2.7.2) directory into Seeeduino samd directory (~/.arduino15/packages/Seeeduino/hardware/rp2040/2.7.2). 
 
-Supposing the Seeeduino SAMD core version is 2.7.2. This file must be copied into the directory:
+Supposing the Seeeduino RP2040 core version is 2.7.2. These files must be copied into the directory:
 
 - `~/.arduino15/packages/Seeeduino/hardware/rp2040/2.7.2/boards.txt`
 - `~/.arduino15/packages/Seeeduino/hardware/rp2040/2.7.2/variants/Seeed_XIAO_RP2040/pins_arduino.h`
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
-This file must be copied into the directory:
+These files must be copied into the directory:
 
 - `~/.arduino15/packages/Seeeduino/hardware/samd/x.yy.zz/boards.txt`
 - `~/.arduino15/packages/Seeeduino/hardware/samd/x.yy.zz/variants/Seeed_XIAO_RP2040/pins_arduino.h`
+
+
+---
+
+#### 13. For Seeeduino nRF52840 boards
+
+**To be able to compile and run on Xiao nRF52840 boards**, you have to copy the whole [nRF52 1.0.0](Packages_Patches/Seeeduino/hardware/nrf52/1.0.0) directory into Seeeduino nRF52 directory (~/.arduino15/packages/Seeeduino/hardware/nrf52/1.0.0). 
+
+Supposing the Seeeduino nRF52 version is 1.0.0. These files must be copied into the directory:
+
+- **`~/.arduino15/packages/Seeeduino/hardware/nrf52/1.0.0/platform.txt`**
+- **`~/.arduino15/packages/Seeeduino/hardware/nrf52/1.0.0/cores/nRF5/Print.h`**
+- **`~/.arduino15/packages/Seeeduino/hardware/nrf52/1.0.0/cores/nRF5/Print.cpp`**
+- **`~/.arduino15/packages/Seeeduino/hardware/nrf52/1.0.0/cores/nRF5/Udp.h`**
+
+Whenever a new version is installed, remember to copy these files into the new version directory. For example, new version is x.yy.z
+These files must be copied into the directory:
+
+- **`~/.arduino15/packages/Seeeduino/hardware/nrf52/x.yy.z/platform.txt`**
+- **`~/.arduino15/packages/Seeeduino/hardware/nrf52/x.yy.z/cores/nRF5/Print.h`**
+- **`~/.arduino15/packages/Seeeduino/hardware/nrf52/x.yy.z/cores/nRF5/Print.cpp`**
+- **`~/.arduino15/packages/Seeeduino/hardware/nrf52/x.yy.z/cores/nRF5/Udp.h`**
+
+
 
 
 ---
@@ -746,7 +778,7 @@ To use SPI2 or any custom SPI
 To use `ETHERNET_LARGE_BUFFERS` feature, similar to the one provided by EthernetLarge library, just add to your sketch
 
 
-```
+```cpp
 // W5100 chips can have up to 4 sockets.  W5200 & W5500 can have up to 8 sockets.
 // Use EthernetLarge feature, Larger buffers, but reduced number of simultaneous connections/sockets (MAX_SOCK_NUM == 2)
 #define ETHERNET_LARGE_BUFFERS
@@ -880,14 +912,14 @@ This is example to demo how to connect W5x00 to Curiosity `AVR128DA48` or `AVR12
 
 #### 1. File [WebClientRepeating.ino](examples/WebClientRepeating/WebClientRepeating.ino)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/c3f55ac25ffa8ba9a186eed41524ffbf12a45969/examples/WebClientRepeating/WebClientRepeating.ino#L15-L226
+https://github.com/khoih-prog/Ethernet_Generic/blob/61ede0494d377d16177b119599542dfb55a35ff8/examples/WebClientRepeating/WebClientRepeating.ino#L15-L234
 
 
 ---
 
 #### 2. File [defines.h](examples/WebClientRepeating/defines.h)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/c3f55ac25ffa8ba9a186eed41524ffbf12a45969/examples/WebClientRepeating/defines.h#L10-L442
+https://github.com/khoih-prog/Ethernet_Generic/blob/61ede0494d377d16177b119599542dfb55a35ff8/examples/WebClientRepeating/defines.h#L10-L466
 
 ---
 ---
@@ -900,7 +932,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -981,7 +1013,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -1063,7 +1095,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1141,7 +1173,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1221,7 +1253,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -1301,7 +1333,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1381,7 +1413,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1462,7 +1494,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1494,7 +1526,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1578,7 +1610,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1662,7 +1694,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1751,7 +1783,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1843,7 +1875,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1930,7 +1962,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Start WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -2016,7 +2048,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -2104,7 +2136,7 @@ The following are debug terminal output when running example [SetDHCPHostName](e
 
 ```
 Starting SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2202,7 +2234,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2291,7 +2323,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAMD_FEATHER_M0_EXPRESS with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 29
 [ETG] MISO: 28
@@ -2380,7 +2412,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on SAMD_ZERO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 23
 [ETG] MISO: 22
@@ -2424,7 +2456,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Starting WebClientRepeating on Curiosity AVR_AVR128DA48 with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.6.1
+Ethernet_Generic v2.6.2
 [ETG] Default SPI pinout:
 [ETG] MOSI: 4
 [ETG] MISO: 5
@@ -2576,7 +2608,9 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 26. Slow SPI clock only when necessary (such as for W5100, SAMD21 Zero, etc.)
 27. Use correct Debug Terminal `Serial` for so-called **SAMD21 Zero** boards from Arduino as well as Adafruit
 28. Add support to AVR_Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using [**DxCore**](https://github.com/SpenceKonde/DxCore)
-
+29. Add support to Seeeduino nRF52840-based boards such as **SEEED_XIAO_NRF52840 and SEEED_XIAO_NRF52840_SENSE**, etc. using Seeed `mbed` or `nRF52` core
+30. Add astyle using `allman` style. Restyle the library
+31. Update `Packages' Patches` to add Seeeduino `nRF52` core
 
 ---
 ---
