@@ -1,9 +1,9 @@
 /****************************************************************************************************************************
   UdpNTPClient.ino
-  
+
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Generic
  *****************************************************************************************************************************/
 /*
@@ -55,21 +55,24 @@ void sendNTPpacket(char *ntpSrv)
 void setup()
 {
   SerialDebug.begin(115200);
+
   while (!SerialDebug && millis() < 5000);
 
-  SerialDebug.print("\nStart UdpNTPClient on "); SerialDebug.print(BOARD_NAME);
-  SerialDebug.print(F(" with ")); SerialDebug.println(SHIELD_TYPE); 
+  SerialDebug.print("\nStart UdpNTPClient on ");
+  SerialDebug.print(BOARD_NAME);
+  SerialDebug.print(F(" with "));
+  SerialDebug.println(SHIELD_TYPE);
   SerialDebug.println(ETHERNET_GENERIC_VERSION);
-  
+
 #if (USING_SPI2)
-  #if defined(CUR_PIN_MISO)
-    ETG_LOGWARN(F("Default SPI pinout:"));
-    ETG_LOGWARN1(F("MOSI:"), CUR_PIN_MOSI);
-    ETG_LOGWARN1(F("MISO:"), CUR_PIN_MISO);
-    ETG_LOGWARN1(F("SCK:"),  CUR_PIN_SCK);
-    ETG_LOGWARN1(F("SS:"),   CUR_PIN_SS);
-    ETG_LOGWARN(F("========================="));
-  #endif
+#if defined(CUR_PIN_MISO)
+  ETG_LOGWARN(F("Default SPI pinout:"));
+  ETG_LOGWARN1(F("MOSI:"), CUR_PIN_MOSI);
+  ETG_LOGWARN1(F("MISO:"), CUR_PIN_MISO);
+  ETG_LOGWARN1(F("SCK:"),  CUR_PIN_SCK);
+  ETG_LOGWARN1(F("SS:"),   CUR_PIN_SS);
+  ETG_LOGWARN(F("========================="));
+#endif
 #else
   ETG_LOGWARN(F("Default SPI pinout:"));
   ETG_LOGWARN1(F("MOSI:"), MOSI);
@@ -81,9 +84,9 @@ void setup()
 
 #if defined(ESP8266)
   // For ESP8266, change for other boards if necessary
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   D2    // For ESP8266
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   D2    // For ESP8266
+#endif
 
   ETG_LOGWARN1(F("ESP8266 setCsPin:"), USE_THIS_SS_PIN);
 
@@ -104,9 +107,9 @@ void setup()
   //Ethernet.init(15);  // ESP8266 with Adafruit Featherwing Ethernet
   //Ethernet.init(33);  // ESP32 with Adafruit Featherwing Ethernet
 
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   5   //22    // For ESP32
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   5   //22    // For ESP32
+#endif
 
   ETG_LOGWARN1(F("ESP32 setCsPin:"), USE_THIS_SS_PIN);
 
@@ -116,20 +119,20 @@ void setup()
 
   //Ethernet.setCsPin (USE_THIS_SS_PIN);
   Ethernet.init (USE_THIS_SS_PIN);
-  
+
 #elif ETHERNET_USE_RPIPICO
 
   pinMode(USE_THIS_SS_PIN, OUTPUT);
   digitalWrite(USE_THIS_SS_PIN, HIGH);
-  
+
   // ETHERNET_USE_RPIPICO, use default SS = 5 or 17
-  #ifndef USE_THIS_SS_PIN
-    #if defined(ARDUINO_ARCH_MBED)
-      #define USE_THIS_SS_PIN   17     // For Arduino Mbed core
-    #else  
-      #define USE_THIS_SS_PIN   17    // For E.Philhower core
-    #endif
-  #endif
+#ifndef USE_THIS_SS_PIN
+#if defined(ARDUINO_ARCH_MBED)
+#define USE_THIS_SS_PIN   17     // For Arduino Mbed core
+#else
+#define USE_THIS_SS_PIN   17    // For E.Philhower core
+#endif
+#endif
 
   ETG_LOGWARN1(F("RPIPICO setCsPin:"), USE_THIS_SS_PIN);
 
@@ -142,20 +145,20 @@ void setup()
 
   //Ethernet.setCsPin (USE_THIS_SS_PIN);
   Ethernet.init (USE_THIS_SS_PIN);
-  
+
 #else   //defined(ESP8266)
   // unknown board, do nothing, use default SS = 10
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   10    // For other boards
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   10    // For other boards
+#endif
 
-  #if defined(BOARD_NAME)
-    ETG_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
-  #else
-    ETG_LOGWARN1(F("Unknown board setCsPin:"), USE_THIS_SS_PIN);
-  #endif
+#if defined(BOARD_NAME)
+  ETG_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
+#else
+  ETG_LOGWARN1(F("Unknown board setCsPin:"), USE_THIS_SS_PIN);
+#endif
 
-  // For other boards, to change if necessary 
+  // For other boards, to change if necessary
   Ethernet.init (USE_THIS_SS_PIN);
 
 #endif    // defined(ESP8266)
@@ -196,9 +199,12 @@ void setup()
 
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
-    SerialDebug.print(F("Speed: "));    SerialDebug.print(Ethernet.speedReport());
-    SerialDebug.print(F(", Duplex: ")); SerialDebug.print(Ethernet.duplexReport());
-    SerialDebug.print(F(", Link status: ")); SerialDebug.println(Ethernet.linkReport());
+    SerialDebug.print(F("Speed: "));
+    SerialDebug.print(Ethernet.speedReport());
+    SerialDebug.print(F(", Duplex: "));
+    SerialDebug.print(Ethernet.duplexReport());
+    SerialDebug.print(F(", Link status: "));
+    SerialDebug.println(Ethernet.linkReport());
   }
 
   Udp.begin(localPort);
@@ -210,6 +216,7 @@ void loop()
 
   // wait for a reply for UDP_TIMEOUT miliseconds
   unsigned long startMs = millis();
+
   while (!Udp.available() && (millis() - startMs) < UDP_TIMEOUT) {}
 
   // if there's data available, read a packet
@@ -237,7 +244,7 @@ void loop()
     // combine the four bytes (two words) into a long integer
     // this is NTP time (seconds since Jan 1 1900):
     unsigned long secsSince1900 = highWord << 16 | lowWord;
-    
+
     SerialDebug.print(F("Seconds since Jan 1 1900 = "));
     SerialDebug.println(secsSince1900);
 
@@ -254,25 +261,25 @@ void loop()
     SerialDebug.print(F("The UTC time is "));       // UTC is the time at Greenwich Meridian (GMT)
     SerialDebug.print((epoch  % 86400L) / 3600); // print the hour (86400 equals secs per day)
     SerialDebug.print(F(":"));
-    
-    if (((epoch % 3600) / 60) < 10) 
+
+    if (((epoch % 3600) / 60) < 10)
     {
       // In the first 10 minutes of each hour, we'll want a leading '0'
       SerialDebug.print(F("0"));
     }
-    
+
     SerialDebug.print((epoch  % 3600) / 60); // print the minute (3600 equals secs per minute)
     SerialDebug.print(F(":"));
-    
-    if ((epoch % 60) < 10) 
+
+    if ((epoch % 60) < 10)
     {
       // In the first 10 seconds of each minute, we'll want a leading '0'
       SerialDebug.print(F("0"));
     }
-    
+
     SerialDebug.println(epoch % 60); // print the second
   }
-  
+
   // wait ten seconds before asking for the time again
   delay(10000);
 }

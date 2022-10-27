@@ -1,18 +1,18 @@
 /****************************************************************************************************************************
   defines.h
-  
+
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Generic
  ***************************************************************************************************************************************/
 
 #ifndef defines_h
 #define defines_h
 
-#if defined(__AVR_AVR128DA48__) 
+#if defined(__AVR_AVR128DA48__)
   #define SerialDebug   Serial1
-#elif defined(__AVR_AVR128DB48__) 
+#elif defined(__AVR_AVR128DB48__)
   #define SerialDebug   Serial3
 #else
   // standard Serial
@@ -32,19 +32,19 @@
       || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) \
       || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) || defined(__SAMD21E18A__) || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) \
       || defined(__SAMD51G19A__) || defined(__SAMD51P19A__) || defined(__SAMD21G18A__) )
-  #if defined(ETHERNET_USE_SAMD)
-    #undef ETHERNET_USE_SAMD
-  #endif
-  #define ETHERNET_USE_SAMD      true
+#if defined(ETHERNET_USE_SAMD)
+  #undef ETHERNET_USE_SAMD
+#endif
+#define ETHERNET_USE_SAMD      true
 #endif
 
 #if ( defined(NRF52840_FEATHER) || defined(NRF52832_FEATHER) || defined(NRF52_SERIES) || defined(ARDUINO_NRF52_ADAFRUIT) || \
         defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || defined(NRF52840_CLUE) || \
         defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) || defined(NINA_B302_ublox) || defined(NINA_B112_ublox) )
-  #if defined(ETHERNET_USE_NRF528XX)
-    #undef ETHERNET_USE_NRF528XX
-  #endif
-  #define ETHERNET_USE_NRF528XX      true
+#if defined(ETHERNET_USE_NRF528XX)
+  #undef ETHERNET_USE_NRF528XX
+#endif
+#define ETHERNET_USE_NRF528XX      true
 #endif
 
 #if ( defined(ARDUINO_SAM_DUE) || defined(__SAM3X8E__) )
@@ -67,23 +67,23 @@
   #if defined(PIN_SPI_MOSI)
     //#warning Using SS pin
     #define USE_THIS_SS_PIN       10    //SS
-  #else  
+  #else
     #define USE_THIS_SS_PIN       10
-  #endif  
-  
+  #endif
+
   #if ( defined(ARDUINO_SAMD_ZERO) && !defined(SEEED_XIAO_M0) )
     #define BOARD_TYPE      "SAMD Zero"
-    
+
     // Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
     // Must use true for SAMD21, such as Zero, SAMD_FEATHER_M0_EXPRESS, etc.
     #define USE_W5100                           true
-    
+
     // Use this for ARDUINO_SAMD_ZERO, etc. if can't print to terminal with Serial.print
     #if defined(SERIAL_PORT_USBVIRTUAL)
       #define Serial          SERIAL_PORT_USBVIRTUAL
       #warning Using SAMD Zero SerialUSB
     #endif
-   
+
   #elif defined(ARDUINO_SAMD_MKR1000)
     #define BOARD_TYPE      "SAMD MKR1000"
   #elif defined(ARDUINO_SAMD_MKRWIFI1010)
@@ -197,9 +197,9 @@
   #if defined(PIN_SPI_MOSI)
     #warning Using SS pin
     #define USE_THIS_SS_PIN       SS
-  #else  
+  #else
     #define USE_THIS_SS_PIN       10
-  #endif  
+  #endif
 
   #if defined(NRF52840_FEATHER)
     #define BOARD_TYPE      "NRF52840_FEATHER"
@@ -233,7 +233,7 @@
 #elif ( defined(CORE_TEENSY) )
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       SS    //10
-  
+
   #if defined(__IMXRT1062__)
     // For Teensy 4.1/4.0
     #if defined(ARDUINO_TEENSY41)
@@ -244,7 +244,7 @@
       #define BOARD_TYPE      "TEENSY 4.0"
     #else
       #define BOARD_TYPE      "TEENSY 4.x"
-    #endif      
+    #endif
   #elif defined(__MK66FX1M0__)
     #define BOARD_TYPE "Teensy 3.6"
   #elif defined(__MK64FX512__)
@@ -276,23 +276,23 @@
   #warning Use ESP32 architecture
   #define ETHERNET_USE_ESP32
   #define BOARD_TYPE      "ESP32"
-  
+
   #define W5500_RST_PORT   21
 
 #elif ETHERNET_USE_RPIPICO
-  
+
   // Default pin 17 to SS/CS
   #if defined(ARDUINO_ARCH_MBED)
     // For RPI Pico using newer Arduino Mbed RP2040 core
     // SCK: GPIO18,  MOSI: GPIO19, MISO: GPIO16, SS/CS: GPIO17
-    
+
     #define USE_THIS_SS_PIN         PIN_SPI_SS    //17
 
     #if defined(BOARD_NAME)
       #undef BOARD_NAME
     #endif
 
-    #if defined(ARDUINO_RASPBERRY_PI_PICO) 
+    #if defined(ARDUINO_RASPBERRY_PI_PICO)
       #define BOARD_TYPE      "MBED RASPBERRY_PI_PICO"
     #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
       #define BOARD_TYPE      "MBED ADAFRUIT_FEATHER_RP2040"
@@ -301,7 +301,7 @@
     #else
       #define BOARD_TYPE      "MBED Unknown RP2040"
     #endif
-    
+
   #else
     // For RPI Pico using E. Philhower RP2040 core
     #if (USING_SPI2)
@@ -313,7 +313,7 @@
     #endif
 
   #endif
-   
+
   #define SS_PIN_DEFAULT        USE_THIS_SS_PIN
 
   // For RPI Pico
@@ -324,12 +324,12 @@
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       SS
 
-  #if defined(__AVR_AVR128DA48__) 
+  #if defined(__AVR_AVR128DA48__)
     #define BOARD_TYPE            "Curiosity AVR_AVR128DA48"
-  #elif defined(__AVR_AVR128DB48__) 
+  #elif defined(__AVR_AVR128DB48__)
     #define BOARD_TYPE            "Curiosity AVR_AVR128DB48"
   #endif
-  
+
 #else
   // For Mega
   // Default pin 10 to SS/CS
@@ -337,7 +337,7 @@
 
   // Reduce size for Mega
   #define SENDCONTENT_P_BUFFER_SZ     512
-  
+
   #define BOARD_TYPE            "AVR Mega"
 #endif
 
@@ -360,39 +360,39 @@
 #if ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3)  ||defined(STM32F4) || defined(STM32F7) || \
        defined(STM32L0) || defined(STM32L1) || defined(STM32L4) || defined(STM32H7)  ||defined(STM32G0) || defined(STM32G4) || \
        defined(STM32WB) || defined(STM32MP1) || defined(STM32L5) )
-       
-  // Be sure to use true only if necessary for your board, or compile error
-  #define USING_CUSTOM_SPI            true
 
-  #if ( USING_CUSTOM_SPI )
-    // Currently test OK for F767ZI and L552ZE_Q
-    #define USING_SPI2                  true
-  
-    #if (USING_SPI2)
-      //#include <SPI.h>
-      // For L552ZE-Q, F767ZI, but you can change the pins for any other boards
-      // SCK: 23,  MOSI: 22, MISO: 25, SS/CS: 24 for SPI1
-      #define CUR_PIN_MISO              25
-      #define CUR_PIN_MOSI              22
-      #define CUR_PIN_SCK               23
-      #define CUR_PIN_SS                24
-  
-      #define SPI_NEW_INITIALIZED       true
-  
-      // Don't create the instance with CUR_PIN_SS, or Ethernet not working
-      // To change for other boards' SPI libraries
-      SPIClass SPI_New(CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK);
-      
-      //#warning Using USE_THIS_SS_PIN = CUR_PIN_SS = 24
-  
-      #if defined(USE_THIS_SS_PIN)
-        #undef USE_THIS_SS_PIN
-      #endif   
-      #define USE_THIS_SS_PIN       CUR_PIN_SS    //24
-      
+// Be sure to use true only if necessary for your board, or compile error
+#define USING_CUSTOM_SPI            true
+
+#if ( USING_CUSTOM_SPI )
+  // Currently test OK for F767ZI and L552ZE_Q
+  #define USING_SPI2                  true
+
+  #if (USING_SPI2)
+    //#include <SPI.h>
+    // For L552ZE-Q, F767ZI, but you can change the pins for any other boards
+    // SCK: 23,  MOSI: 22, MISO: 25, SS/CS: 24 for SPI1
+    #define CUR_PIN_MISO              25
+    #define CUR_PIN_MOSI              22
+    #define CUR_PIN_SCK               23
+    #define CUR_PIN_SS                24
+
+    #define SPI_NEW_INITIALIZED       true
+
+    // Don't create the instance with CUR_PIN_SS, or Ethernet not working
+    // To change for other boards' SPI libraries
+    SPIClass SPI_New(CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK);
+
+    //#warning Using USE_THIS_SS_PIN = CUR_PIN_SS = 24
+
+    #if defined(USE_THIS_SS_PIN)
+      #undef USE_THIS_SS_PIN
     #endif
-    
+    #define USE_THIS_SS_PIN       CUR_PIN_SS    //24
+
   #endif
+
+#endif
 
 #endif
 

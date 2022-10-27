@@ -26,26 +26,29 @@ IPAddress server(192, 168, 2, 30);
 
 #define TELNET_PORT     23
 
-void setup() 
+void setup()
 {
   SerialDebug.begin(115200);
+
   while (!Serial && millis() < 5000);
 
   delay(500);
 
-  SerialDebug.print("\nStarting TelnetClient on "); SerialDebug.print(BOARD_NAME);
-  SerialDebug.print(F(" with ")); SerialDebug.println(SHIELD_TYPE);
+  SerialDebug.print("\nStarting TelnetClient on ");
+  SerialDebug.print(BOARD_NAME);
+  SerialDebug.print(F(" with "));
+  SerialDebug.println(SHIELD_TYPE);
   SerialDebug.println(ETHERNET_GENERIC_VERSION);
-  
+
 #if (USING_SPI2)
-  #if defined(CUR_PIN_MISO)
-    ETG_LOGWARN(F("Default SPI pinout:"));
-    ETG_LOGWARN1(F("MOSI:"), CUR_PIN_MOSI);
-    ETG_LOGWARN1(F("MISO:"), CUR_PIN_MISO);
-    ETG_LOGWARN1(F("SCK:"),  CUR_PIN_SCK);
-    ETG_LOGWARN1(F("SS:"),   CUR_PIN_SS);
-    ETG_LOGWARN(F("========================="));
-  #endif
+#if defined(CUR_PIN_MISO)
+  ETG_LOGWARN(F("Default SPI pinout:"));
+  ETG_LOGWARN1(F("MOSI:"), CUR_PIN_MOSI);
+  ETG_LOGWARN1(F("MISO:"), CUR_PIN_MISO);
+  ETG_LOGWARN1(F("SCK:"),  CUR_PIN_SCK);
+  ETG_LOGWARN1(F("SS:"),   CUR_PIN_SS);
+  ETG_LOGWARN(F("========================="));
+#endif
 #else
   ETG_LOGWARN(F("Default SPI pinout:"));
   ETG_LOGWARN1(F("MOSI:"), MOSI);
@@ -57,9 +60,9 @@ void setup()
 
 #if defined(ESP8266)
   // For ESP8266, change for other boards if necessary
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   D2    // For ESP8266
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   D2    // For ESP8266
+#endif
 
   ETG_LOGWARN1(F("ESP8266 setCsPin:"), USE_THIS_SS_PIN);
 
@@ -80,9 +83,9 @@ void setup()
   //Ethernet.init(15);  // ESP8266 with Adafruit Featherwing Ethernet
   //Ethernet.init(33);  // ESP32 with Adafruit Featherwing Ethernet
 
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   5   //22    // For ESP32
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   5   //22    // For ESP32
+#endif
 
   ETG_LOGWARN1(F("ESP32 setCsPin:"), USE_THIS_SS_PIN);
 
@@ -92,20 +95,20 @@ void setup()
 
   //Ethernet.setCsPin (USE_THIS_SS_PIN);
   Ethernet.init (USE_THIS_SS_PIN);
-  
+
 #elif ETHERNET_USE_RPIPICO
 
   pinMode(USE_THIS_SS_PIN, OUTPUT);
   digitalWrite(USE_THIS_SS_PIN, HIGH);
-  
+
   // ETHERNET_USE_RPIPICO, use default SS = 5 or 17
-  #ifndef USE_THIS_SS_PIN
-    #if defined(ARDUINO_ARCH_MBED)
-      #define USE_THIS_SS_PIN   17     // For Arduino Mbed core
-    #else  
-      #define USE_THIS_SS_PIN   17    // For E.Philhower core
-    #endif
-  #endif
+#ifndef USE_THIS_SS_PIN
+#if defined(ARDUINO_ARCH_MBED)
+#define USE_THIS_SS_PIN   17     // For Arduino Mbed core
+#else
+#define USE_THIS_SS_PIN   17    // For E.Philhower core
+#endif
+#endif
 
   ETG_LOGWARN1(F("RPIPICO setCsPin:"), USE_THIS_SS_PIN);
 
@@ -118,20 +121,20 @@ void setup()
 
   //Ethernet.setCsPin (USE_THIS_SS_PIN);
   Ethernet.init (USE_THIS_SS_PIN);
-  
+
 #else   //defined(ESP8266)
   // unknown board, do nothing, use default SS = 10
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   10    // For other boards
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   10    // For other boards
+#endif
 
-  #if defined(BOARD_NAME)
-    ETG_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
-  #else
-    ETG_LOGWARN1(F("Unknown board setCsPin:"), USE_THIS_SS_PIN);
-  #endif
+#if defined(BOARD_NAME)
+  ETG_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
+#else
+  ETG_LOGWARN1(F("Unknown board setCsPin:"), USE_THIS_SS_PIN);
+#endif
 
-  // For other boards, to change if necessary 
+  // For other boards, to change if necessary
   Ethernet.init (USE_THIS_SS_PIN);
 
 #endif    // defined(ESP8266)
@@ -169,12 +172,15 @@ void setup()
 
   SerialDebug.print(F("Connected! IP address: "));
   SerialDebug.println(Ethernet.localIP());
-  
+
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
-    SerialDebug.print(F("Speed: "));    SerialDebug.print(Ethernet.speedReport());
-    SerialDebug.print(F(", Duplex: ")); SerialDebug.print(Ethernet.duplexReport());
-    SerialDebug.print(F(", Link status: ")); SerialDebug.println(Ethernet.linkReport());
+    SerialDebug.print(F("Speed: "));
+    SerialDebug.print(Ethernet.speedReport());
+    SerialDebug.print(F(", Duplex: "));
+    SerialDebug.print(Ethernet.duplexReport());
+    SerialDebug.print(F(", Link status: "));
+    SerialDebug.println(Ethernet.linkReport());
   }
 
   // give the Ethernet shield a second to initialize:
@@ -182,22 +188,22 @@ void setup()
   SerialDebug.println("connecting...");
 
   // if you get a connection, report back via serial:
-  if (client.connect(server, TELNET_PORT)) 
+  if (client.connect(server, TELNET_PORT))
   {
     SerialDebug.println("connected");
-  } 
-  else 
+  }
+  else
   {
     // if you didn't get a connection to the server:
     SerialDebug.println("connection failed");
   }
 }
 
-void loop() 
+void loop()
 {
   // if there are incoming bytes available
   // from the server, read them and print them:
-  if (client.available()) 
+  if (client.available())
   {
     char c = client.read();
     SerialDebug.print(c);
@@ -205,25 +211,25 @@ void loop()
 
   // as long as there are bytes in the serial queue,
   // read them and send them out the socket if it's open:
-  while (SerialDebug.available() > 0) 
+  while (SerialDebug.available() > 0)
   {
     char inChar = SerialDebug.read();
-    
-    if (client.connected()) 
+
+    if (client.connected())
     {
       client.print(inChar);
     }
   }
 
   // if the server's disconnected, stop the client:
-  if (!client.connected()) 
+  if (!client.connected())
   {
     SerialDebug.println();
     SerialDebug.println("disconnecting.");
     client.stop();
-    
+
     // do nothing:
-    while (true) 
+    while (true)
     {
       delay(1);
     }

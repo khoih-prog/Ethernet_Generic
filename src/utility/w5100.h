@@ -3,18 +3,18 @@
 
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
-  Based on and modified from 
-  
+
+  Based on and modified from
+
   1) Ethernet Library         https://github.com/arduino-libraries/Ethernet
   2) EthernetLarge Library    https://github.com/OPEnSLab-OSU/EthernetLarge
   3) Ethernet2 Library        https://github.com/adafruit/Ethernet2
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
-    
+
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  
-  Version: 2.6.1
-    
+
+  Version: 2.6.2
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
@@ -30,6 +30,7 @@
   2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
+  2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
  *****************************************************************************************************************************/
 
 // w5100.h contains private W5x00 hardware "driver" level definitions
@@ -67,14 +68,14 @@ extern SPIClass* pCUR_SPI;
   #if (_ETG_LOGLEVEL_ > 3)
     #warning Use 25MHz clock for W5200/W5500. Not for W5100
   #endif
-  
+
   #define SPI_ETHERNET_SETTINGS SPISettings(25000000, MSBFIRST, SPI_MODE0)
 
 #else
 
   // Safe for all chips but too slow
   #define SPI_ETHERNET_SETTINGS SPISettings(14000000, MSBFIRST, SPI_MODE0)
-  
+
   #if (_ETG_LOGLEVEL_ > 3)
     #warning Use 14MHz clock for W5100/W5200/W5500. Slow.
   #endif
@@ -110,7 +111,7 @@ extern SPIClass* pCUR_SPI;
     #endif
 
     #define SPI_ETHERNET_SETTINGS SPISettings(8000000, MSBFIRST, SPI_MODE0)
-  
+
   #else
     #if (_ETG_LOGLEVEL_ > 3)
       #warning Use SAMD21 architecture SPISettings(30000000, MSBFIRST, SPI_MODE3) => IP OK
@@ -130,7 +131,7 @@ class SnMR
 {
   public:
     static const uint8_t CLOSE  = 0x00;
-    
+
     // Fix bug
     //static const uint8_t TCP    = 0x21;
     static const uint8_t TCP    = 0x01;
@@ -230,7 +231,7 @@ class W5100Class
     {
       writeSUBR(addr);
     }
-    
+
     inline void getSubnetMask(uint8_t * addr)
     {
       readSUBR(addr);
@@ -240,7 +241,7 @@ class W5100Class
     {
       writeSHAR(addr);
     }
-    
+
     inline void getMACAddress(uint8_t * addr)
     {
       readSHAR(addr);
@@ -270,6 +271,7 @@ class W5100Class
     {
       // Send command to socket
       writeSnCR(s, _cmd);
+
       // Wait for command to complete
       while (readSnCR(s));
     }
@@ -290,9 +292,9 @@ class W5100Class
     static inline uint8_t read(uint16_t addr)
     {
       uint8_t data;
-      
+
       read(addr, &data, 1);
-      
+
       return data;
     }
 
@@ -344,12 +346,12 @@ class W5100Class
     __GP_REGISTER16(UPORT,  0x002E);              // Unreachable Port address in UDP mode (W5100 only)
     __GP_REGISTER8 (VERSIONR_W5200, 0x001F);      // Chip Version Register (W5200 only)
     __GP_REGISTER8 (VERSIONR_W5500, 0x0039);      // Chip Version Register (W5500 only)
-    
+
     // KH
     __GP_REGISTER8 (VERSIONR_W5100S, 0x0080);     // Chip Version Register (W5100S only)
     __GP_REGISTER8 (PSTATUS_W5100S,  0x003C);     // PHY Status (W5100S only)
     //////
-    
+
     __GP_REGISTER8 (PSTATUS_W5200,     0x0035);   // PHY Status
     __GP_REGISTER8 (PHYCFGR_W5500,     0x002E);   // PHY Configuration register, default: 10111xxx
 
@@ -450,11 +452,11 @@ class W5100Class
     // KH
     bool initialized = false;
     static EthernetChip_t chip;
-    
+
     // KH, for W5100S only
     static EthernetChip_t altChip;
     //////
-    
+
     static uint8_t ss_pin;
 
     static uint8_t isW5100();
@@ -464,44 +466,44 @@ class W5100Class
     static uint8_t isW5100S();
 
   public:
-   
-    // From Ethernet3    
-    inline void setPHYCFGR(uint8_t _val) 
+
+    // From Ethernet3
+    inline void setPHYCFGR(uint8_t _val)
     {
       if (chip == w5500)
         writePHYCFGR_W5500(_val);
     }
 
-    inline uint8_t getPHYCFGR() 
+    inline uint8_t getPHYCFGR()
     {
       if (chip == w5500)
         return readPHYCFGR_W5500();
       else
-        return 0;  
+        return 0;
     }
-    
-  	inline void WoL(bool wol) 
+
+    inline void WoL(bool wol)
     {
       uint8_t val = readMR();
       bitWrite(val, 5, wol);
       writeMR(val);
     }
-    
-    inline bool WoL() 
+
+    inline bool WoL()
     {
       uint8_t val = readMR();
-      
+
       return bitRead(val, 5);
     }
-    
+
     void phyMode(phyMode_t mode);  // set PHYCFGR
-    
+
     // returns the PHYCFGR
     inline uint8_t phyState()
     {
       return getPHYCFGR();
     }
-    
+
     // returns the linkstate, 1 = linked, 0 = no link
     inline uint8_t link()
     {
@@ -510,13 +512,13 @@ class W5100Class
       else
         return 0;
     }
-    
+
     // returns speed in MB/s
     inline uint8_t speed()
     {
       if (chip != w5500)
         return 0;
-    
+
       if (bitRead(getPHYCFGR(), 0) == 1)
       {
         if (bitRead(getPHYCFGR(), 1) == 1)
@@ -528,13 +530,13 @@ class W5100Class
 
       return 0;
     }
-    
+
     // returns duplex mode 0 = no link, 1 = Half Duplex, 2 = Full Duplex
     inline uint8_t duplex()
     {
       if (chip != w5500)
         return 0;
-    
+
       if (bitRead(getPHYCFGR(), 0) == 1)
       {
         if (bitRead(getPHYCFGR(), 2) == 1)
@@ -546,23 +548,23 @@ class W5100Class
 
       return 0;
     }
-    
-    const char* linkReport();      // returns the linkstate as a string    
-    const char* speedReport();     // returns speed as a string   
+
+    const char* linkReport();      // returns the linkstate as a string
+    const char* speedReport();     // returns speed as a string
     const char* duplexReport();    // returns duplex mode as a string
-  	
+
     //////
-  
+
     static inline void beginSPITransaction()
     {
       pCUR_SPI->beginTransaction(SPI_ETHERNET_SETTINGS);
     }
-    
+
     static inline void endSPITransaction()
     {
       pCUR_SPI->endTransaction();
     }
-    
+
     // KH
     static uint8_t softReset();
 
@@ -571,7 +573,7 @@ class W5100Class
     {
       return chip;
     }
-    
+
     // w5100S
     static inline EthernetChip_t getAltChip()
     {
@@ -618,7 +620,7 @@ class W5100Class
       return false;
     }
 
-    static inline void setSS(uint8_t pin) 
+    static inline void setSS(uint8_t pin)
     {
       ss_pin = pin;
     }
@@ -626,13 +628,13 @@ class W5100Class
   private:
 
 
-/////////////////////////////////////////////////////////
-  
+    /////////////////////////////////////////////////////////
+
 #if defined(__AVR__)
 
-  #if (_ETG_LOGLEVEL_ > 3)
-    #warning Use AVR architecture
-  #endif
+#if (_ETG_LOGLEVEL_ > 3)
+#warning Use AVR architecture
+#endif
 
     static volatile uint8_t *ss_pin_reg;
     static uint8_t ss_pin_mask;
@@ -654,13 +656,13 @@ class W5100Class
       *(ss_pin_reg) |= ss_pin_mask;
     }
 
-/////////////////////////////////////////////////////////
-    
+    /////////////////////////////////////////////////////////
+
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK66FX1M0__) || defined(__MK64FX512__)
 
-  #if (_ETG_LOGLEVEL_ > 3)
-    #warning Use MK architecture
-  #endif
+#if (_ETG_LOGLEVEL_ > 3)
+#warning Use MK architecture
+#endif
 
     static volatile uint8_t *ss_pin_reg;
 
@@ -680,13 +682,13 @@ class W5100Class
       *(ss_pin_reg + 128) = 1;
     }
 
-/////////////////////////////////////////////////////////
-    
+    /////////////////////////////////////////////////////////
+
 #elif defined(__IMXRT1062__)
 
-  #if (_ETG_LOGLEVEL_ > 3)
-    #warning Use Teensy architecture
-  #endif
+#if (_ETG_LOGLEVEL_ > 3)
+#warning Use Teensy architecture
+#endif
 
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
@@ -714,13 +716,13 @@ class W5100Class
         delayNanoseconds(10); // <-- fixes W5100 on Teensy 4
     }
 
-/////////////////////////////////////////////////////////
-    
+    /////////////////////////////////////////////////////////
+
 #elif defined(__MKL26Z64__)
 
     static volatile uint8_t *ss_pin_reg;
     static uint8_t ss_pin_mask;
-    
+
     inline static void initSS()
     {
       ss_pin_reg = portOutputRegister(digitalPinToPort(ss_pin));
@@ -738,13 +740,13 @@ class W5100Class
       *(ss_pin_reg + 4) = ss_pin_mask;
     }
 
-/////////////////////////////////////////////////////////
-    
+    /////////////////////////////////////////////////////////
+
 #elif defined(__SAM3X8E__) || defined(__SAM3A8C__) || defined(__SAM3A4C__)
 
-  #if (_ETG_LOGLEVEL_ > 3)
-    #warning Use SAM3 architecture
-  #endif
+#if (_ETG_LOGLEVEL_ > 3)
+#warning Use SAM3 architecture
+#endif
 
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
@@ -766,8 +768,8 @@ class W5100Class
       *(ss_pin_reg + 12) = ss_pin_mask;
     }
 
-/////////////////////////////////////////////////////////
-    
+    /////////////////////////////////////////////////////////
+
 #elif defined(__PIC32MX__)
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
@@ -789,13 +791,13 @@ class W5100Class
       *(ss_pin_reg + 8 + 2) = ss_pin_mask;
     }
 
-/////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
 
 #elif defined(ARDUINO_ARCH_ESP8266)
 
-  #if (_ETG_LOGLEVEL_ > 3)
-    #warning Use ARDUINO_ARCH_ESP8266 architecture
-  #endif
+#if (_ETG_LOGLEVEL_ > 3)
+#warning Use ARDUINO_ARCH_ESP8266 architecture
+#endif
 
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
@@ -817,13 +819,13 @@ class W5100Class
       GPOS = ss_pin_mask;
     }
 
-/////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
 
 #elif defined(__SAMD21G18A__)
 
-  #if (_ETG_LOGLEVEL_ > 3)
-    #warning Use SAMD21 architecture
-  #endif
+#if (_ETG_LOGLEVEL_ > 3)
+#warning Use SAMD21 architecture
+#endif
 
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
@@ -845,13 +847,13 @@ class W5100Class
       *(ss_pin_reg + 6) = ss_pin_mask;
     }
 
-/////////////////////////////////////////////////////////
-    
+    /////////////////////////////////////////////////////////
+
 #else
 
-  #if (_ETG_LOGLEVEL_ > 3)
-    #warning Use Default architecture
-  #endif
+#if (_ETG_LOGLEVEL_ > 3)
+#warning Use Default architecture
+#endif
 
     inline static void initSS()
     {
@@ -869,7 +871,7 @@ class W5100Class
     }
 #endif
 
-/////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
 
 };
 
@@ -898,7 +900,7 @@ extern W5100Class W5100;
 
 // Host to Network long
 #ifndef htonl
-  #define htonl(x) ( ((x)<<24 & 0xFF000000UL) | \
+#define htonl(x) ( ((x)<<24 & 0xFF000000UL) | \
                      ((x)<< 8 & 0x00FF0000UL) | \
                      ((x)>> 8 & 0x0000FF00UL) | \
                      ((x)>>24 & 0x000000FFUL) )

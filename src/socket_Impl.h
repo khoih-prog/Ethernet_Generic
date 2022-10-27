@@ -3,37 +3,37 @@
 
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
-  Based on and modified from 
-  
+
+  Based on and modified from
+
   1) Ethernet Library         https://github.com/arduino-libraries/Ethernet
   2) EthernetLarge Library    https://github.com/OPEnSLab-OSU/EthernetLarge
   3) Ethernet2 Library        https://github.com/adafruit/Ethernet2
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
-    
+
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  
+
   Copyright 2018 Paul Stoffregen
-  
+
   Permission is hereby granted, free of charge, to any person obtaining a copy of this
   software and associated documentation files (the "Software"), to deal in the Software
   without restriction, including without limitation the rights to use, copy, modify,
   merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
   permit persons to whom the Software is furnished to do so, subject to the following
   conditions:
-  
+
   The above copyright notice and this permission notice shall be included in all
   copies or substantial portions of the Software.
-  
+
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
   INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
   PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  
-  Version: 2.6.1
-    
+
+  Version: 2.6.2
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
@@ -49,6 +49,7 @@
   2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
+  2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
  *****************************************************************************************************************************/
 
 #pragma once
@@ -64,9 +65,9 @@
 /////////////////////////////////////////////////////////
 
 #if ARDUINO >= 156 && !defined(ARDUINO_ARCH_PIC32)
-extern void yield();
+  extern void yield();
 #else
-#define yield()
+  #define yield()
 #endif
 
 // TODO: randomize this when not using DHCP, but how?
@@ -122,8 +123,10 @@ uint8_t EthernetClass::socketBegin(uint8_t protocol, uint16_t port)
     return MAX_SOCK_NUM; // immediate error if no hardware detected
 
 #if MAX_SOCK_NUM > 4
+
   if ( (chip == w5100) || (chip == w5100s) )
     maxindex = 4; // W5100/W5100S chip never supports more than 4 sockets
+
 #endif
 
   ETG_LOGDEBUG3("socketBegin, protocol =", protocol, ", port =", port);
@@ -171,8 +174,9 @@ uint8_t EthernetClass::socketBegin(uint8_t protocol, uint16_t port)
     if (stat == SnSR::CLOSE_WAIT)
       goto closemakesocket;
   }
+
 #endif
-       
+
   W5100.endSPITransaction();
 
   return MAX_SOCK_NUM; // all sockets are in use
@@ -212,7 +216,7 @@ makesocket:
   state[s].TX_FSR = 0;
 
   ETG_LOGDEBUG3("socketBegin, prot =", W5100.readSnMR(s), ", RX_RD =", state[s].RX_RD);
-     
+
   W5100.endSPITransaction();
 
   return s;
@@ -235,8 +239,10 @@ uint8_t EthernetClass::socketBeginMulticast(uint8_t protocol, IPAddress ip, uint
     return 0;
 
 #if MAX_SOCK_NUM > 4
+
   if ( (chip == w5100) || (chip == w5100s) )
     maxindex = 4; // W5100/W5100S chip never supports more than 4 sockets
+
 #endif
 
   ETG_LOGDEBUG3("socketBeginMulticast, protocol =", protocol, ", port =", port);
@@ -284,8 +290,9 @@ uint8_t EthernetClass::socketBeginMulticast(uint8_t protocol, IPAddress ip, uint
     if (stat == SnSR::CLOSE_WAIT)
       goto closemakesocket;
   }
+
 #endif
-     
+
   W5100.endSPITransaction();
 
   return MAX_SOCK_NUM; // all sockets are in use
@@ -333,7 +340,7 @@ makesocket:
   state[s].TX_FSR = 0;
 
   ETG_LOGDEBUG3("socketBeginMulticast, prot =", W5100.readSnMR(s), ", RX_RD =", state[s].RX_RD);
-     
+
   W5100.endSPITransaction();
 
   return s;
@@ -359,7 +366,7 @@ uint8_t EthernetClass::socketStatus(uint8_t s)
 //
 void EthernetClass::socketClose(uint8_t s)
 {
-  W5100.beginSPITransaction();  
+  W5100.beginSPITransaction();
   W5100.execCmdSn(s, Sock_CLOSE);
   W5100.endSPITransaction();
 }
@@ -373,14 +380,14 @@ uint8_t EthernetClass::socketListen(uint8_t s)
   W5100.beginSPITransaction();
 
   if (W5100.readSnSR(s) != SnSR::INIT)
-  {  
+  {
     W5100.endSPITransaction();
 
     return 0;
   }
 
   W5100.execCmdSn(s, Sock_LISTEN);
-       
+
   W5100.endSPITransaction();
 
   return 1;
@@ -406,7 +413,7 @@ void EthernetClass::socketConnect(uint8_t s, uint8_t * addr, uint16_t port)
 //
 void EthernetClass::socketDisconnect(uint8_t s)
 {
-  W5100.beginSPITransaction();  
+  W5100.beginSPITransaction();
   W5100.execCmdSn(s, Sock_DISCON);
   W5100.endSPITransaction();
 }
@@ -432,6 +439,7 @@ static uint16_t getSnRX_RSR(uint8_t s)
     {
       return val;
     }
+
     prev = val;
   }
 }
@@ -470,7 +478,7 @@ int EthernetClass::socketRecv(uint8_t s, uint8_t *buf, int16_t len)
 {
   // Check how much data is available
   int ret = state[s].RX_RSR;
-  
+
   W5100.beginSPITransaction();
 
   if (ret < len)
@@ -528,7 +536,7 @@ int EthernetClass::socketRecv(uint8_t s, uint8_t *buf, int16_t len)
       state[s].RX_inc = inc;
     }
   }
-  
+
   W5100.endSPITransaction();
 
   ETG_LOGDEBUG1("socketRecv, ret =", ret);
@@ -541,21 +549,21 @@ int EthernetClass::socketRecv(uint8_t s, uint8_t *buf, int16_t len)
 uint16_t EthernetClass::socketRecvAvailable(uint8_t s)
 {
   uint16_t ret = state[s].RX_RSR;
-  
-  if (ret == 0) 
+
+  if (ret == 0)
   {
     W5100.beginSPITransaction();
-    
+
     uint16_t rsr = getSnRX_RSR(s);
-         
+
     W5100.endSPITransaction();
-    
+
     ret = rsr - state[s].RX_inc;
     state[s].RX_RSR = ret;
 
     ETG_LOGDEBUG3("socketRecvAvailable, socket =", s, ", RX_RSR =", ret);
   }
-  
+
   return ret;
 }
 
@@ -566,14 +574,14 @@ uint16_t EthernetClass::socketRecvAvailable(uint8_t s)
 uint8_t EthernetClass::socketPeek(uint8_t s)
 {
   uint8_t b;
-  
+
   W5100.beginSPITransaction();
-  
+
   uint16_t ptr = state[s].RX_RD;
   W5100.read((ptr & W5100.SMASK) + W5100.RBASE(s), &b, 1);
-       
+
   W5100.endSPITransaction();
-  
+
   return b;
 }
 
@@ -588,18 +596,18 @@ static uint16_t getSnTX_FSR(uint8_t s)
   uint16_t val, prev;
 
   prev = W5100.readSnTX_FSR(s);
-  
-  while (1) 
+
+  while (1)
   {
     val = W5100.readSnTX_FSR(s);
-    
-    if (val == prev) 
+
+    if (val == prev)
     {
       state[s].TX_FSR = val;
-      
+
       return val;
     }
-    
+
     prev = val;
   }
 }
@@ -613,18 +621,18 @@ static void write_data(uint8_t s, uint16_t data_offset, const uint8_t *data, uin
   uint16_t offset = ptr & W5100.SMASK;
   uint16_t dstAddr = offset + W5100.SBASE(s);
 
-  if (W5100.hasOffsetAddressMapping() || offset + len <= W5100.SSIZE) 
+  if (W5100.hasOffsetAddressMapping() || offset + len <= W5100.SSIZE)
   {
     W5100.write(dstAddr, data, len);
-  } 
-  else 
+  }
+  else
   {
     // Wrap around circular buffer
     uint16_t size = W5100.SSIZE - offset;
     W5100.write(dstAddr, data, size);
     W5100.write(W5100.SBASE(s), data + size, len - size);
   }
-  
+
   ptr += len;
   W5100.writeSnTX_WR(s, ptr);
 }
@@ -641,59 +649,59 @@ uint16_t EthernetClass::socketSend(uint8_t s, const uint8_t * buf, uint16_t len)
   uint16_t ret = 0;
   uint16_t freesize = 0;
 
-  if (len > W5100.SSIZE) 
+  if (len > W5100.SSIZE)
   {
     ret = W5100.SSIZE; // check size not to exceed MAX size.
-  } 
-  else 
+  }
+  else
   {
     ret = len;
   }
 
   // if freebuf is available, start.
-  do 
+  do
   {
     W5100.beginSPITransaction();
     freesize = getSnTX_FSR(s);
-    status = W5100.readSnSR(s);        
+    status = W5100.readSnSR(s);
     W5100.endSPITransaction();
-    
-    if ((status != SnSR::ESTABLISHED) && (status != SnSR::CLOSE_WAIT)) 
+
+    if ((status != SnSR::ESTABLISHED) && (status != SnSR::CLOSE_WAIT))
     {
       ret = 0;
       break;
     }
-    
+
     yield();
   } while (freesize < ret);
 
   // copy data
   W5100.beginSPITransaction();
-  
+
   write_data(s, 0, (uint8_t *)buf, ret);
   W5100.execCmdSn(s, Sock_SEND);
 
   /* +2008.01 bj */
-  while ( (W5100.readSnIR(s) & SnIR::SEND_OK) != SnIR::SEND_OK ) 
+  while ( (W5100.readSnIR(s) & SnIR::SEND_OK) != SnIR::SEND_OK )
   {
     /* m2008.01 [bj] : reduce code */
-    if ( W5100.readSnSR(s) == SnSR::CLOSED ) 
-    {           
+    if ( W5100.readSnSR(s) == SnSR::CLOSED )
+    {
       W5100.endSPITransaction();
       return 0;
     }
-             
+
     W5100.endSPITransaction();
-    
+
     yield();
-    
+
     W5100.beginSPITransaction();
   }
-  
+
   /* +2008.01 bj */
   W5100.writeSnIR(s, SnIR::SEND_OK);
   W5100.endSPITransaction();
-  
+
   return ret;
 }
 
@@ -703,17 +711,17 @@ uint16_t EthernetClass::socketSendAvailable(uint8_t s)
 {
   uint8_t status = 0;
   uint16_t freesize = 0;
-  
-  W5100.beginSPITransaction();  
+
+  W5100.beginSPITransaction();
   freesize = getSnTX_FSR(s);
   status = W5100.readSnSR(s);
   W5100.endSPITransaction();
-  
-  if ((status == SnSR::ESTABLISHED) || (status == SnSR::CLOSE_WAIT)) 
+
+  if ((status == SnSR::ESTABLISHED) || (status == SnSR::CLOSE_WAIT))
   {
     return freesize;
   }
-  
+
   return 0;
 }
 
@@ -724,24 +732,24 @@ uint16_t EthernetClass::socketBufferData(uint8_t s, uint16_t offset, const uint8
   ETG_LOGDEBUG3("socketBufferData, offset =", offset, ", len =", len);
 
   uint16_t ret = 0;
-  
+
   W5100.beginSPITransaction();
-  
+
   uint16_t txfree = getSnTX_FSR(s);
-  
-  if (len > txfree) 
+
+  if (len > txfree)
   {
     ret = txfree; // check size not to exceed MAX size.
-  } 
-  else 
+  }
+  else
   {
     ret = len;
   }
-  
+
   write_data(s, offset, buf, ret);
-       
+
   W5100.endSPITransaction();
-  
+
   return ret;
 }
 
@@ -749,16 +757,16 @@ uint16_t EthernetClass::socketBufferData(uint8_t s, uint16_t offset, const uint8
 
 bool EthernetClass::socketStartUDP(uint8_t s, uint8_t* addr, uint16_t port)
 {
-  if ( ((addr[0] == 0x00) && (addr[1] == 0x00) && (addr[2] == 0x00) && (addr[3] == 0x00)) || ((port == 0x00)) ) 
+  if ( ((addr[0] == 0x00) && (addr[1] == 0x00) && (addr[2] == 0x00) && (addr[3] == 0x00)) || ((port == 0x00)) )
   {
     return false;
   }
-  
+
   W5100.beginSPITransaction();
   W5100.writeSnDIPR(s, addr);
   W5100.writeSnDPORT(s, port);
   W5100.endSPITransaction();
-  
+
   return true;
 }
 
@@ -767,13 +775,13 @@ bool EthernetClass::socketStartUDP(uint8_t s, uint8_t* addr, uint16_t port)
 bool EthernetClass::socketSendUDP(uint8_t s)
 {
   W5100.beginSPITransaction();
-  
+
   W5100.execCmdSn(s, Sock_SEND);
 
   /* +2008.01 bj */
-  while ( (W5100.readSnIR(s) & SnIR::SEND_OK) != SnIR::SEND_OK ) 
+  while ( (W5100.readSnIR(s) & SnIR::SEND_OK) != SnIR::SEND_OK )
   {
-    if (W5100.readSnIR(s) & SnIR::TIMEOUT) 
+    if (W5100.readSnIR(s) & SnIR::TIMEOUT)
     {
       /* +2008.01 [bj]: clear interrupt */
       W5100.writeSnIR(s, (SnIR::SEND_OK | SnIR::TIMEOUT));
@@ -783,11 +791,11 @@ bool EthernetClass::socketSendUDP(uint8_t s)
 
       return false;
     }
-    
+
     W5100.endSPITransaction();
-    
+
     yield();
-    
+
     W5100.beginSPITransaction();
   }
 

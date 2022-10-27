@@ -3,18 +3,18 @@
 
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
-  Based on and modified from 
-  
+
+  Based on and modified from
+
   1) Ethernet Library         https://github.com/arduino-libraries/Ethernet
   2) EthernetLarge Library    https://github.com/OPEnSLab-OSU/EthernetLarge
   3) Ethernet2 Library        https://github.com/adafruit/Ethernet2
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
-    
+
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  
-  Version: 2.6.1
-    
+
+  Version: 2.6.2
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
@@ -30,8 +30,9 @@
   2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
+  2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
  *****************************************************************************************************************************/
- 
+
 // DHCP Library v0.3 - April 25, 2009
 // Author: Jordan Terrell - blog.jordanterrell.com
 
@@ -77,8 +78,8 @@
 #define MAGIC_COOKIE            0x63825363
 #define MAX_DHCP_OPT            16
 
-#define HOST_NAME 							"WIZnet"
-#define DEFAULT_LEASE 					(900) //default lease time in seconds
+#define HOST_NAME               "WIZnet"
+#define DEFAULT_LEASE           (900) //default lease time in seconds
 
 #define DHCP_CHECK_NONE         (0)
 #define DHCP_CHECK_RENEW_FAIL   (1)
@@ -92,25 +93,25 @@ enum
   subnetMask                = 1,
   timerOffset               = 2,
   routersOnSubnet           = 3,
-  
+
   /* timeServer             = 4,
     nameServer              = 5,*/
-    
+
   dns                       = 6,
-  
+
   /*logServer               = 7,
     cookieServer            = 8,
     lprServer               = 9,
     impressServer           = 10,
     resourceLocationServer  = 11,*/
-    
+
   hostName                  = 12,
-  
+
   /*bootFileSize            = 13,
     meritDumpFile           = 14,*/
-    
+
   domainName                = 15,
-  
+
   /*swapServer              = 16,
     rootPath                = 17,
     extentionsPath          = 18,
@@ -145,24 +146,24 @@ enum
     netBIOSscope            = 47,
     xFontServer             = 48,
     xDisplayManager         = 49,*/
-    
+
   dhcpRequestedIPaddr       = 50,
   dhcpIPaddrLeaseTime       = 51,
-  
+
   /*dhcpOptionOverload      = 52,*/
-  
+
   dhcpMessageType           = 53,
   dhcpServerIdentifier      = 54,
   dhcpParamRequest          = 55,
-  
+
   /*dhcpMsg                 = 56,
     dhcpMaxMsgSize          = 57,*/
-    
+
   dhcpT1value               = 58,
   dhcpT2value               = 59,
-  
+
   /*dhcpClassIdentifier     = 60,*/
-  
+
   dhcpClientIdentifier      = 61,
   endOption                 = 255
 };

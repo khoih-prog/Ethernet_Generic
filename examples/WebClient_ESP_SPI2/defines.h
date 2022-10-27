@@ -1,9 +1,9 @@
 /****************************************************************************************************************************
   defines.h
-  
+
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Generic
  ***************************************************************************************************************************************/
 
@@ -11,7 +11,7 @@
 #define defines_h
 
 #if !( defined( ESP32 ) )
-  #error This code is designed to run on ESP32 platform! Please check your Tools->Board setting. 
+  #error This code is designed to run on ESP32 platform! Please check your Tools->Board setting.
 #endif
 
 #define DEBUG_ETHERNET_GENERIC_PORT         Serial
@@ -31,7 +31,7 @@
 #include <SPI.h>
 
 #include <soc/spi_pins.h>
-   
+
 #define USING_SPI2              true
 
 #if USING_SPI2
@@ -41,7 +41,7 @@
   #define PIN_SS            HSPI_IOMUX_PIN_NUM_CS
 
   #define SHIELD_TYPE       "W5x00 using Ethernet_Generic Library on SPI2"
-  
+
 #else
 
   #define PIN_MISO          MISO
@@ -50,7 +50,7 @@
   #define PIN_SS            SS
 
   #define SHIELD_TYPE       "W5x00 using Ethernet_Generic Library on SPI"
-  
+
 #endif
 
 ///////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@
 #define ETHERNET_LARGE_BUFFERS
 
 //////////////////////////////////////////////////////////
-   
+
 #include "Ethernet_Generic.h"
 
 // Enter a MAC address and IP address for your controller below.

@@ -2,7 +2,7 @@
   multiFileProject.h
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Generic
 *****************************************************************************************************************************/
 
@@ -10,9 +10,9 @@
 
 #pragma once
 
-#if defined(__AVR_AVR128DA48__) 
+#if defined(__AVR_AVR128DA48__)
   #define SerialDebug   Serial1
-#elif defined(__AVR_AVR128DB48__) 
+#elif defined(__AVR_AVR128DB48__)
   #define SerialDebug   Serial3
 #else
   // standard Serial

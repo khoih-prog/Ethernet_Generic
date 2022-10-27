@@ -1,9 +1,9 @@
 /****************************************************************************************************************************
   WebClient_ESP_SPI2.ino
-  
+
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Generic
  *****************************************************************************************************************************/
 
@@ -20,14 +20,17 @@ EthernetClient client;
 void setup()
 {
   Serial.begin(115200);
+
   while (!Serial && millis() < 5000);
 
   delay(200);
 
-  Serial.print("\nStarting WebClient_ESP_SPI2 on "); Serial.print(ARDUINO_BOARD);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStarting WebClient_ESP_SPI2 on ");
+  Serial.print(ARDUINO_BOARD);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_GENERIC_VERSION);
-  
+
   // You can use Ethernet.init(pin) to configure the CS pin
   //Ethernet.init(10);  // Most Arduino shields
   //Ethernet.init(5);   // MKR ETH shield
@@ -36,9 +39,9 @@ void setup()
   //Ethernet.init(15);  // ESP8266 with Adafruit Featherwing Ethernet
   //Ethernet.init(33);  // ESP32 with Adafruit Featherwing Ethernet
 
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   5   //22    // For ESP32
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   5   //22    // For ESP32
+#endif
 
   ETG_LOGWARN1(F("ESP32 setCsPin:"), USE_THIS_SS_PIN);
 
@@ -48,7 +51,7 @@ void setup()
 
   //Ethernet.setCsPin (USE_THIS_SS_PIN);
   Ethernet.init (USE_THIS_SS_PIN);
-  
+
   // start the ethernet connection and the server:
   // Use DHCP dynamic IP and random mac
   uint16_t index = millis() % NUMBER_OF_MAC;
@@ -80,9 +83,12 @@ void setup()
 
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
-    Serial.print(F("Speed: "));    Serial.print(Ethernet.speedReport());
-    Serial.print(F(", Duplex: ")); Serial.print(Ethernet.duplexReport());
-    Serial.print(F(", Link status: ")); Serial.println(Ethernet.linkReport());
+    Serial.print(F("Speed: "));
+    Serial.print(Ethernet.speedReport());
+    Serial.print(F(", Duplex: "));
+    Serial.print(Ethernet.duplexReport());
+    Serial.print(F(", Link status: "));
+    Serial.println(Ethernet.linkReport());
   }
 
   Serial.println();

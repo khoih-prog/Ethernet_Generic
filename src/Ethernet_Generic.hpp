@@ -32,8 +32,8 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.6.1
-    
+  Version: 2.6.2
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
@@ -49,6 +49,7 @@
   2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
+  2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
  *****************************************************************************************************************************/
 
 #pragma once

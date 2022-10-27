@@ -1,9 +1,9 @@
 /****************************************************************************************************************************
   defines.h
-  
+
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Generic
  ***************************************************************************************************************************************/
 
@@ -11,7 +11,7 @@
 #define defines_h
 
 #if !( defined( ESP32 ) || defined(ESP8266) )
-  #error This code is designed to run on ESP32 / ESP8266 platform! Please check your Tools->Board setting. 
+  #error This code is designed to run on ESP32 / ESP8266 platform! Please check your Tools->Board setting.
 #endif
 
 #define DEBUG_ETHERNET_GENERIC_PORT         Serial
@@ -32,7 +32,7 @@
   // For ESP32
   #define ETHERNET_USE_ESP32
   #define BOARD_TYPE      "ESP32"
-  
+
   #define W5500_RST_PORT   21
 
 #endif
@@ -42,26 +42,26 @@
 #if defined( ESP32 )
 
   #include <soc/spi_pins.h>
-     
+
   #define USING_SPI2              false
-  
+
   #if USING_SPI2
     #define PIN_MISO          HSPI_IOMUX_PIN_NUM_MISO
     #define PIN_MOSI          HSPI_IOMUX_PIN_NUM_MOSI
     #define PIN_SCK           HSPI_IOMUX_PIN_NUM_CLK
     #define PIN_SS            HSPI_IOMUX_PIN_NUM_CS
-  
+
     #define SHIELD_TYPE       "W5x00 using Ethernet_Generic Library on SPI2"
-    
+
   #else
-  
+
     #define PIN_MISO          MISO
     #define PIN_MOSI          MOSI
     #define PIN_SCK           SCK
     #define PIN_SS            SS
-  
+
     #define SHIELD_TYPE       "W5x00 using Ethernet_Generic Library on SPI"
-    
+
   #endif
 
 #else
@@ -72,18 +72,18 @@
     #define PIN_MOSI          MOSI
     #define PIN_SCK           SCK
     #define PIN_SS            SS
-  
+
     #define SHIELD_TYPE       "W5x00 using Ethernet_Generic Library on SPI2"
-    
+
   #else
-  
+
     #define PIN_MISO          MISO
     #define PIN_MOSI          MOSI
     #define PIN_SCK           SCK
     #define PIN_SS            SS
-  
+
     #define SHIELD_TYPE       "W5x00 using Ethernet_Generic Library on SPI"
-    
+
   #endif
 
 #endif

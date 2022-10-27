@@ -1,9 +1,9 @@
 /****************************************************************************************************************************
   WebClientRepeating.ino
-  
+
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Generic
  *****************************************************************************************************************************/
 /*
@@ -55,23 +55,26 @@ void httpRequest()
 void setup()
 {
   SerialDebug.begin(115200);
+
   while (!Serial && millis() < 5000);
 
   delay(500);
 
-  SerialDebug.print("\nStarting WebClientRepeating on "); SerialDebug.print(BOARD_NAME);
-  SerialDebug.print(F(" with ")); SerialDebug.println(SHIELD_TYPE);
+  SerialDebug.print("\nStarting WebClientRepeating on ");
+  SerialDebug.print(BOARD_NAME);
+  SerialDebug.print(F(" with "));
+  SerialDebug.println(SHIELD_TYPE);
   SerialDebug.println(ETHERNET_GENERIC_VERSION);
 
 #if (USING_SPI2)
-  #if defined(CUR_PIN_MISO)
-    ETG_LOGWARN(F("Default SPI pinout:"));
-    ETG_LOGWARN1(F("MOSI:"), CUR_PIN_MOSI);
-    ETG_LOGWARN1(F("MISO:"), CUR_PIN_MISO);
-    ETG_LOGWARN1(F("SCK:"),  CUR_PIN_SCK);
-    ETG_LOGWARN1(F("SS:"),   CUR_PIN_SS);
-    ETG_LOGWARN(F("========================="));
-  #endif
+#if defined(CUR_PIN_MISO)
+  ETG_LOGWARN(F("Default SPI pinout:"));
+  ETG_LOGWARN1(F("MOSI:"), CUR_PIN_MOSI);
+  ETG_LOGWARN1(F("MISO:"), CUR_PIN_MISO);
+  ETG_LOGWARN1(F("SCK:"),  CUR_PIN_SCK);
+  ETG_LOGWARN1(F("SS:"),   CUR_PIN_SS);
+  ETG_LOGWARN(F("========================="));
+#endif
 #else
   ETG_LOGWARN(F("Default SPI pinout:"));
   ETG_LOGWARN1(F("MOSI:"), MOSI);
@@ -83,9 +86,9 @@ void setup()
 
 #if defined(ESP8266)
   // For ESP8266, change for other boards if necessary
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   D2    // For ESP8266
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   D2    // For ESP8266
+#endif
 
   ETG_LOGWARN1(F("ESP8266 setCsPin:"), USE_THIS_SS_PIN);
 
@@ -106,9 +109,9 @@ void setup()
   //Ethernet.init(15);  // ESP8266 with Adafruit Featherwing Ethernet
   //Ethernet.init(33);  // ESP32 with Adafruit Featherwing Ethernet
 
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   5   //22    // For ESP32
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   5   //22    // For ESP32
+#endif
 
   ETG_LOGWARN1(F("ESP32 setCsPin:"), USE_THIS_SS_PIN);
 
@@ -118,20 +121,20 @@ void setup()
 
   //Ethernet.setCsPin (USE_THIS_SS_PIN);
   Ethernet.init (USE_THIS_SS_PIN);
-  
+
 #elif ETHERNET_USE_RPIPICO
 
   pinMode(USE_THIS_SS_PIN, OUTPUT);
   digitalWrite(USE_THIS_SS_PIN, HIGH);
-  
+
   // ETHERNET_USE_RPIPICO, use default SS = 5 or 17
-  #ifndef USE_THIS_SS_PIN
-    #if defined(ARDUINO_ARCH_MBED)
-      #define USE_THIS_SS_PIN   17     // For Arduino Mbed core
-    #else  
-      #define USE_THIS_SS_PIN   17    // For E.Philhower core
-    #endif
-  #endif
+#ifndef USE_THIS_SS_PIN
+#if defined(ARDUINO_ARCH_MBED)
+#define USE_THIS_SS_PIN   17     // For Arduino Mbed core
+#else
+#define USE_THIS_SS_PIN   17    // For E.Philhower core
+#endif
+#endif
 
   ETG_LOGWARN1(F("RPIPICO setCsPin:"), USE_THIS_SS_PIN);
 
@@ -144,20 +147,20 @@ void setup()
 
   //Ethernet.setCsPin (USE_THIS_SS_PIN);
   Ethernet.init (USE_THIS_SS_PIN);
-  
+
 #else   //defined(ESP8266)
   // unknown board, do nothing, use default SS = 10
-  #ifndef USE_THIS_SS_PIN
-    #define USE_THIS_SS_PIN   10    // For other boards
-  #endif
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   10    // For other boards
+#endif
 
-  #if defined(BOARD_NAME)
-    ETG_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
-  #else
-    ETG_LOGWARN1(F("Unknown board setCsPin:"), USE_THIS_SS_PIN);
-  #endif
+#if defined(BOARD_NAME)
+  ETG_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
+#else
+  ETG_LOGWARN1(F("Unknown board setCsPin:"), USE_THIS_SS_PIN);
+#endif
 
-  // For other boards, to change if necessary 
+  // For other boards, to change if necessary
   Ethernet.init (USE_THIS_SS_PIN);
 
 #endif    // defined(ESP8266)
@@ -197,13 +200,18 @@ void setup()
   SerialDebug.println(Ethernet.localIP());
 
 #if !(USING_CUSTOM_SPI)
+
   if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
   {
-    SerialDebug.print(F("Speed: "));    SerialDebug.print(Ethernet.speedReport());
-    SerialDebug.print(F(", Duplex: ")); SerialDebug.print(Ethernet.duplexReport());
-    SerialDebug.print(F(", Link status: ")); SerialDebug.println(Ethernet.linkReport());
+    SerialDebug.print(F("Speed: "));
+    SerialDebug.print(Ethernet.speedReport());
+    SerialDebug.print(F(", Duplex: "));
+    SerialDebug.print(Ethernet.duplexReport());
+    SerialDebug.print(F(", Link status: "));
+    SerialDebug.println(Ethernet.linkReport());
   }
-#endif  
+
+#endif
 }
 
 void loop()

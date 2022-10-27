@@ -3,18 +3,18 @@
 
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
-  Based on and modified from 
-  
+
+  Based on and modified from
+
   1) Ethernet Library         https://github.com/arduino-libraries/Ethernet
   2) EthernetLarge Library    https://github.com/OPEnSLab-OSU/EthernetLarge
   3) Ethernet2 Library        https://github.com/adafruit/Ethernet2
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
-    
+
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  
-  Version: 2.6.1
-    
+
+  Version: 2.6.2
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
@@ -30,6 +30,7 @@
   2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
+  2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
  *****************************************************************************************************************************/
 
 #pragma once
@@ -61,87 +62,87 @@
   #if !defined(SS_PIN_DEFAULT)
     #define SS_PIN_DEFAULT  PIN_SPI_SS_ETHERNET_LIB
   #endif
-  
+
   #if (_ETG_LOGLEVEL_ > 3)
     #warning w5100_Impl.h : Use PIN_SPI_SS_ETHERNET_LIB defined, change SS_PIN_DEFAULT to PIN_SPI_SS_ETHERNET_LIB
   #endif
 
-///////////////////////////
+  ///////////////////////////
 
-// MKR boards default to pin 5 for MKR ETH
-// Pins 8-10 are MOSI/SCK/MISO on MRK, so don't use pin 10
+  // MKR boards default to pin 5 for MKR ETH
+  // Pins 8-10 are MOSI/SCK/MISO on MRK, so don't use pin 10
 #elif defined(USE_ARDUINO_MKR_PIN_LAYOUT) || defined(ARDUINO_SAMD_MKRZERO) || defined(ARDUINO_SAMD_MKR1000) || \
-      defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRWAN1300) || \
-      defined(ARDUINO_SAMD_MKRVIDOR4000)
+  defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRWAN1300) || \
+  defined(ARDUINO_SAMD_MKRVIDOR4000)
 
   #if !defined(SS_PIN_DEFAULT)
     #define SS_PIN_DEFAULT  5
   #endif
-  
+
   #if (_ETG_LOGLEVEL_ > 3)
     #warning w5100_Impl.h : Use MKR, change SS_PIN_DEFAULT to 5
   #endif
 
-///////////////////////////
+  ///////////////////////////
 
-// For boards using AVR, assume shields with SS on pin 10
-// will be used.  This allows for Arduino Mega (where
-// SS is pin 53) and Arduino Leonardo (where SS is pin 17)
-// to work by default with Arduino Ethernet Shield R2 & R3.
+  // For boards using AVR, assume shields with SS on pin 10
+  // will be used.  This allows for Arduino Mega (where
+  // SS is pin 53) and Arduino Leonardo (where SS is pin 17)
+  // to work by default with Arduino Ethernet Shield R2 & R3.
 #elif defined(__AVR__)
 
   #if !defined(SS_PIN_DEFAULT)
     #define SS_PIN_DEFAULT  10
   #endif
-  
+
   #if (_ETG_LOGLEVEL_ > 3)
     #warning w5100_Impl.h : Use __AVR__, change SS_PIN_DEFAULT to 10
   #endif
 
-///////////////////////////
+  ///////////////////////////
 
-// If variant.h or other headers define these names
-// use them if none of the other cases match
+  // If variant.h or other headers define these names
+  // use them if none of the other cases match
 #elif defined(PIN_SPI_SS)
 
   #if defined(__SAMD21G18A__)
-  
+
     #if (_ETG_LOGLEVEL_ > 3)
       //10 - 2 (6 conflict) all not OK for Nano 33 IoT !!! SPI corrupted???
       #warning w5100_Impl.h : Use __SAMD21G18A__, change SS_PIN_DEFAULT to 10
     #endif
-      
+
     #if !defined(SS_PIN_DEFAULT)
       #define SS_PIN_DEFAULT  10
     #endif
-    
+
   #else
-  
+
     #if !defined(SS_PIN_DEFAULT)
       #define SS_PIN_DEFAULT  PIN_SPI_SS
     #endif
-  
+
     #if (_ETG_LOGLEVEL_ > 3)
       #warning w5100_Impl.h : Use PIN_SPI_SS defined, change SS_PIN_DEFAULT to PIN_SPI_SS
     #endif
-  
+
   #endif
 
-///////////////////////////
+  ///////////////////////////
 
 #elif defined(CORE_SS0_PIN)
-  
+
   #if !defined(SS_PIN_DEFAULT)
     #define SS_PIN_DEFAULT  CORE_SS0_PIN
   #endif
-  
+
   #if (_ETG_LOGLEVEL_ > 3)
     #warning w5100_Impl.h : Use CORE_SS0_PIN defined, change SS_PIN_DEFAULT to CORE_SS0_PIN
   #endif
 
-///////////////////////////
+  ///////////////////////////
 
-//KH for ESP32
+  //KH for ESP32
 #elif defined(ESP32)
 
   #if (_ETG_LOGLEVEL_ > 3)
@@ -149,34 +150,34 @@
     // Use in GPIO22
     #warning w5100_Impl.h : Use ESP32, change SS_PIN_DEFAULT to GPIO22, MOSI(23), MISO(19), SCK(18)
   #endif
-  
+
   #if !defined(SS_PIN_DEFAULT)
     #define SS_PIN_DEFAULT  22    //SS
   #endif
 
-///////////////////////////
+  ///////////////////////////
 
-//KH for ESP8266
+  //KH for ESP8266
 #elif defined(ESP8266)
 
   #if (_ETG_LOGLEVEL_ > 3)
     //pin SS already defined in ESP8266 as pin 15. Conflict => Move to pin GPIO4 (D2)
     #warning w5100_Impl.h : Use ESP8266, change SS_PIN_DEFAULT to SS(4), MOSI(13), MISO(12), SCK(14)
   #endif
-  
+
   #if !defined(SS_PIN_DEFAULT)
     #define SS_PIN_DEFAULT  D2      // GPIO4, SS
   #endif
 
-///////////////////////////
+  ///////////////////////////
 
-// As a final fallback, use pin 10
+  // As a final fallback, use pin 10
 #else
 
   #if !defined(SS_PIN_DEFAULT)
     #define SS_PIN_DEFAULT  10
   #endif
-  
+
   #if (_ETG_LOGLEVEL_ > 3)
     //KH
     #warning w5100_Impl.h : Use fallback, change SS_PIN_DEFAULT to 10
@@ -213,31 +214,31 @@ W5100Class W5100;
     #warning ETHERNET_GENERIC_USING_SPI2 in w5100_Impl.h
   #endif
 
-  #if defined(ESP32)    
+  #if defined(ESP32)
     SPIClass SPI2(HSPI);
     SPIClass* pCUR_SPI = &SPI2;
   #elif (ETHERNET_USE_RPIPICO && !defined(ARDUINO_ARCH_MBED))
     // For arduino-pico core
     // SPIClassRP2040(spi_inst_t *spi, pin_size_t rx, pin_size_t cs, pin_size_t sck, pin_size_t tx);
     SPIClass* pCUR_SPI = (SPIClass*) &SPI1;
-    
+
     #define CUR_PIN_MISO      PIN_SPI1_MISO
     #define CUR_PIN_MOSI      PIN_SPI1_MOSI
     #define CUR_PIN_SCK       PIN_SPI1_SCK
     #define CUR_PIN_SS        PIN_SPI1_SS
-       
+
   #elif (USING_CUSTOM_SPI)
-    
+
     #if ( defined(CUR_PIN_MOSI) && defined(CUR_PIN_MISO) && defined(CUR_PIN_SCK) && defined(CUR_PIN_SS) )
       #if (SPI_NEW_INITIALIZED)
         #if(_ETG_LOGLEVEL_> 2)
-          #warning ETHERNET_GENERIC_USING_SPI2 with SPI_NEW_INITIALIZED in w5100_Impl.h 
-        #endif    
+          #warning ETHERNET_GENERIC_USING_SPI2 with SPI_NEW_INITIALIZED in w5100_Impl.h
+        #endif
       #else
-        #if(_ETG_LOGLEVEL_> 2)    
+        #if(_ETG_LOGLEVEL_> 2)
           #warning ETHERNET_GENERIC_USING_SPI2 without SPI_NEW_INITIALIZED in w5100_Impl.h
         #endif
-        
+
         #if defined(ARDUINO_ARCH_MBED)
           // Don't create the instance with CUR_PIN_SS, or Ethernet not working
           // Be careful, Mbed SPI ctor is so weird, reversing the order => MISO, MOSI, SCK
@@ -248,20 +249,20 @@ W5100Class W5100;
           SPIClass SPI_New(CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK);
         #endif
       #endif
-      
+
       SPIClass* pCUR_SPI = (SPIClass*) &SPI_New;
-      
+
     #else
-      #error You must define CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK and CUR_PIN_SS   
-    #endif  
-     
-  #endif  
-      
+      #error You must define CUR_PIN_MOSI, CUR_PIN_MISO, CUR_PIN_SCK and CUR_PIN_SS
+    #endif
+
+  #endif
+
 #else
   #if(_ETG_LOGLEVEL_> 2)
     #warning ETHERNET_GENERIC_USING_SPI in w5100_Impl.h
   #endif
-  
+
   SPIClass* pCUR_SPI = &SPI;
 #endif
 
@@ -291,7 +292,7 @@ W5100Class W5100;
 #elif defined(__SAMD21G18A__)
   volatile uint32_t * W5100Class::ss_pin_reg;
   uint32_t W5100Class::ss_pin_mask;
-  
+
   #if (_ETG_LOGLEVEL_ > 3)
     #warning w5100_Impl.h : Use __SAMD21G18A__
   #endif
@@ -305,9 +306,9 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
 
   uint8_t i;
 
-  if (initialized) 
+  if (initialized)
     return 1;
-    
+
   // Many Ethernet shields have a CAT811 or similar reset chip
   // connected to W5100 or W5200 chips.  The W5200 will not work at
   // all, and may even drive its MISO pin, until given an active low
@@ -318,22 +319,22 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
   // reset time, this can be edited or removed.
   delay(560);
 
-  //ETG_LOGWARN5("W5100 init, using SS_PIN_DEFAULT =", SS_PIN_DEFAULT, ", new ss_pin = ", new_ss_pin, 
+  //ETG_LOGWARN5("W5100 init, using SS_PIN_DEFAULT =", SS_PIN_DEFAULT, ", new ss_pin = ", new_ss_pin,
   //              ", W5100Class::ss_pin = ", W5100Class::ss_pin);
-  ETG_LOGWARN5("W5100 init, using W5100Class::ss_pin = ", W5100Class::ss_pin, ", whereas new ss_pin = ", new_ss_pin, 
-                ", SS_PIN_DEFAULT =", SS_PIN_DEFAULT);              
+  ETG_LOGWARN5("W5100 init, using W5100Class::ss_pin = ", W5100Class::ss_pin, ", whereas new ss_pin = ", new_ss_pin,
+               ", SS_PIN_DEFAULT =", SS_PIN_DEFAULT);
 
   pCUR_SPI->begin();
 
   initSS();
   resetSS();
-  
+
   // Removed from v2.6.1 for W5200. Tested OK with W5500, W5100S, W5100
   // Check https://github.com/khoih-prog/Ethernet_Generic/discussions/13
   //softReset();
   //////
-  
-  // From #define SPI_ETHERNET_SETTINGS SPISettings(14000000, MSBFIRST, SPI_MODE0)  
+
+  // From #define SPI_ETHERNET_SETTINGS SPISettings(14000000, MSBFIRST, SPI_MODE0)
   beginSPITransaction();
 
   // Attempt W5200 detection first, because W5200 does not properly
@@ -344,26 +345,26 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
   if (isW5200())
   {
     CH_BASE_MSB = 0x40;
-    
+
 #ifdef ETHERNET_LARGE_BUFFERS
-  #if MAX_SOCK_NUM <= 1
-      SSIZE = 16384;
-  #elif MAX_SOCK_NUM <= 2
-      SSIZE = 8192;
-  #elif MAX_SOCK_NUM <= 4
-      SSIZE = 4096;
-  #else
-      SSIZE = 2048;
-  #endif
-      SMASK = SSIZE - 1;
+#if MAX_SOCK_NUM <= 1
+    SSIZE = 16384;
+#elif MAX_SOCK_NUM <= 2
+    SSIZE = 8192;
+#elif MAX_SOCK_NUM <= 4
+    SSIZE = 4096;
+#else
+    SSIZE = 2048;
 #endif
-  
+    SMASK = SSIZE - 1;
+#endif
+
     for (i = 0; i < MAX_SOCK_NUM; i++)
     {
       writeSnRX_SIZE(i, SSIZE >> 10);
       writeSnTX_SIZE(i, SSIZE >> 10);
     }
-    
+
     for (; i < 8; i++)
     {
       writeSnRX_SIZE(i, 0);
@@ -375,35 +376,36 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
     // Try W5500 next.  WIZnet finally seems to have implemented
     // SPI well with this chip.  It appears to be very resilient,
     // so try it after the fragile W5200
-  }  
+  }
   else if (isW5500())
   {
     CH_BASE_MSB = 0x10;
-    
+
 #ifdef ETHERNET_LARGE_BUFFERS
-  #if MAX_SOCK_NUM <= 1
-      SSIZE = 16384;
-  #elif MAX_SOCK_NUM <= 2
-      SSIZE = 8192;
-  #elif MAX_SOCK_NUM <= 4
-      SSIZE = 4096;
-  #else
-      SSIZE = 2048;
-  #endif
-  
+#if MAX_SOCK_NUM <= 1
+    SSIZE = 16384;
+#elif MAX_SOCK_NUM <= 2
+    SSIZE = 8192;
+#elif MAX_SOCK_NUM <= 4
+    SSIZE = 4096;
+#else
+    SSIZE = 2048;
+#endif
+
     SMASK = SSIZE - 1;
-    
+
     for (i = 0; i < MAX_SOCK_NUM; i++)
     {
       writeSnRX_SIZE(i, SSIZE >> 10);
       writeSnTX_SIZE(i, SSIZE >> 10);
     }
-    
+
     for (; i < 8; i++)
     {
       writeSnRX_SIZE(i, 0);
       writeSnTX_SIZE(i, 0);
     }
+
 #endif
 
     ETG_LOGWARN1("W5100::init: W5500, SSIZE =", SSIZE);
@@ -413,24 +415,24 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
     // it recovers from "hearing" unsuccessful W5100 or W5200
     // communication.  W5100 is also the only chip without a VERSIONR
     // register for identification, so we check this last.
-  } 
+  }
   else if (isW5100())
   {
     CH_BASE_MSB = 0x04;
 
 #ifdef ETHERNET_LARGE_BUFFERS
 
-  #if MAX_SOCK_NUM <= 1
-      SSIZE = 8192;
-      writeTMSR(0x03);
-      writeRMSR(0x03);
-  #else
-      SSIZE = 4096;
-      writeTMSR(0x0A);
-      writeRMSR(0x0A);
-  #endif
-  
-      SMASK = SSIZE - 1;
+#if MAX_SOCK_NUM <= 1
+    SSIZE = 8192;
+    writeTMSR(0x03);
+    writeRMSR(0x03);
+#else
+    SSIZE = 4096;
+    writeTMSR(0x0A);
+    writeRMSR(0x0A);
+#endif
+
+    SMASK = SSIZE - 1;
 #else
 
     writeTMSR(0x55);
@@ -449,17 +451,17 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
 
 #ifdef ETHERNET_LARGE_BUFFERS
 
-  #if MAX_SOCK_NUM <= 1
-      SSIZE = 8192;
-      writeTMSR(0x03);
-      writeRMSR(0x03);
-  #else
-      SSIZE = 4096;
-      writeTMSR(0x0A);
-      writeRMSR(0x0A);
-  #endif
-  
-      SMASK = SSIZE - 1;
+#if MAX_SOCK_NUM <= 1
+    SSIZE = 8192;
+    writeTMSR(0x03);
+    writeRMSR(0x03);
+#else
+    SSIZE = 4096;
+    writeTMSR(0x0A);
+    writeRMSR(0x0A);
+#endif
+
+    SMASK = SSIZE - 1;
 #else
 
     writeTMSR(0x55);
@@ -471,22 +473,22 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
     // Try W5500 next.  WIZnet finally seems to have implemented
     // SPI well with this chip.  It appears to be very resilient,
     // so try it after the fragile W5200
-  }  
+  }
   else
   {
     ETG_LOGERROR("W5100::init: no chip :-(");
 
     chip = noChip;
-    
+
     endSPITransaction();
-    
+
     return 0; // no known chip is responding :-(
   }
 
   endSPITransaction();
-  
+
   initialized = true;
-  
+
   return 1; // successful init
 }
 
@@ -501,7 +503,7 @@ uint8_t W5100Class::softReset()
 
   // write to reset bit
   writeMR(0x80);
-  
+
   // then wait for soft reset to complete
   do
   {
@@ -514,7 +516,7 @@ uint8_t W5100Class::softReset()
 
     delay(1);
   } while (++count < 20);
-  
+
   return 0;
 }
 
@@ -530,16 +532,17 @@ uint8_t W5100Class::isW5100()
     return 0;
 
   writeMR(0x10);
-  
+
   if (readMR() != 0x10)
     return 0;
 
   writeMR(0x12);
-  
+
   if (readMR() != 0x12)
     return 0;
 
   writeMR(0x00);
+
   if (readMR() != 0x00)
     return 0;
 
@@ -553,7 +556,7 @@ uint8_t W5100Class::isW5100()
 uint8_t W5100Class::isW5100S()
 {
   chip = w5100s;  // Must use w5100s before softReset()
-  
+
   // For other functions specific to W5100S, such as LinkStatus. etc
   altChip = w5100s;
 
@@ -561,42 +564,42 @@ uint8_t W5100Class::isW5100S()
 
   if (!softReset())
     return 0;
-    
+
   chip = w5100;   // using w5100 after softReset() => read correct registers
-    
+
   writeMR(0x13);
-  
+
   if (readMR() != 0x13)
   {
-    ETG_LOGDEBUG1("readMR (19) =", readMR()); 
+    ETG_LOGDEBUG1("readMR (19) =", readMR());
     return 0;
   }
 
   writeMR(0x1B);
-  
+
   if (readMR() != 0x1B)
   {
-    ETG_LOGDEBUG1("readMR (27) =", readMR()); 
+    ETG_LOGDEBUG1("readMR (27) =", readMR());
     return 0;
   }
 
   writeMR(0x03);
-  
+
   if (readMR() != 0x03)
   {
-    ETG_LOGDEBUG1("readMR (03) =", readMR()); 
+    ETG_LOGDEBUG1("readMR (03) =", readMR());
     return 0;
   }
-    
+
   int ver = readVERSIONR_W5100S();
 
   ETG_LOGDEBUG1("Version =", ver);
-  
+
   if (ver != 81)
-    return 0; 
+    return 0;
 
   ETG_LOGWARN("Chip is W5100S");
-  
+
   return 1;
 }
 
@@ -612,17 +615,17 @@ uint8_t W5100Class::isW5200()
     return 0;
 
   writeMR(0x08);
-  
+
   if (readMR() != 0x08)
     return 0;
 
   writeMR(0x10);
-  
+
   if (readMR() != 0x10)
     return 0;
 
   writeMR(0x00);
-  
+
   if (readMR() != 0x00)
     return 0;
 
@@ -650,17 +653,17 @@ uint8_t W5100Class::isW5500()
     return 0;
 
   writeMR(0x08);
-  
+
   if (readMR() != 0x08)
     return 0;
 
   writeMR(0x10);
-  
+
   if (readMR() != 0x10)
     return 0;
 
   writeMR(0x00);
-  
+
   if (readMR() != 0x00)
     return 0;
 
@@ -682,26 +685,26 @@ W5100Linkstatus W5100Class::getLinkStatus()
 {
   uint8_t phystatus;
 
-  if (!initialized) 
+  if (!initialized)
     return UNKNOWN;
 
   switch (chip)
   {
     case w5200:
-      beginSPITransaction();     
+      beginSPITransaction();
       phystatus = readPSTATUS_W5200();
       endSPITransaction();
-      
+
       if (phystatus & 0x20)
         return LINK_ON;
 
       return LINK_OFF;
 
     case w5500:
-      beginSPITransaction();      
+      beginSPITransaction();
       phystatus = readPHYCFGR_W5500();
       endSPITransaction();
-      
+
       if (phystatus & 0x01)
         return LINK_ON;
 
@@ -743,14 +746,16 @@ uint16_t W5100Class::write(uint16_t addr, const uint8_t *buf, uint16_t len)
 #ifdef SPI_HAS_TRANSFER_BUF
     pCUR_SPI->transfer(buf, NULL, len);
 #else
+
     // TODO: copy 8 bytes at a time to cmd[] and block transfer
     for (uint16_t i = 0; i < len; i++)
     {
       pCUR_SPI->transfer(buf[i]);
     }
+
 #endif
     resetSS();
-  }  
+  }
   else if (chip == w5200)
   {
     setSS();
@@ -763,11 +768,13 @@ uint16_t W5100Class::write(uint16_t addr, const uint8_t *buf, uint16_t len)
 #ifdef SPI_HAS_TRANSFER_BUF
     pCUR_SPI->transfer(buf, NULL, len);
 #else
+
     // TODO: copy 8 bytes at a time to cmd[] and block transfer
     for (uint16_t i = 0; i < len; i++)
     {
       pCUR_SPI->transfer(buf[i]);
     }
+
 #endif
     resetSS();
   }
@@ -775,7 +782,7 @@ uint16_t W5100Class::write(uint16_t addr, const uint8_t *buf, uint16_t len)
   {
     // chip == w5500
     setSS();
-    
+
     if (addr < 0x100)
     {
       // common registers 00nn
@@ -796,7 +803,7 @@ uint16_t W5100Class::write(uint16_t addr, const uint8_t *buf, uint16_t len)
       //  10## #nnn nnnn nnnn
       cmd[0] = addr >> 8;
       cmd[1] = addr & 0xFF;
-      
+
 #if defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 1
       cmd[2] = 0x14;                       // 16K buffers
 #elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 2
@@ -838,17 +845,19 @@ uint16_t W5100Class::write(uint16_t addr, const uint8_t *buf, uint16_t len)
 #ifdef SPI_HAS_TRANSFER_BUF
       pCUR_SPI->transfer(buf, NULL, len);
 #else
+
       // TODO: copy 8 bytes at a time to cmd[] and block transfer
       for (uint16_t i = 0; i < len; i++)
       {
         pCUR_SPI->transfer(buf[i]);
       }
+
 #endif
     }
-    
+
     resetSS();
   }
-  
+
   return len;
 }
 
@@ -863,7 +872,7 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
     for (uint16_t i = 0; i < len; i++)
     {
       setSS();
-      
+
       pCUR_SPI->transfer(0x0F);
       pCUR_SPI->transfer(addr >> 8);
       pCUR_SPI->transfer(addr & 0xFF);
@@ -883,8 +892,8 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
     pCUR_SPI->transfer(cmd, 4);
     memset(buf, 0, len);
     pCUR_SPI->transfer(buf, len);
-    resetSS();  
-  }  
+    resetSS();
+  }
   else if (chip == w5200)
   {
     setSS();
@@ -922,7 +931,7 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
       //  10## #nnn nnnn nnnn
       cmd[0] = addr >> 8;
       cmd[1] = addr & 0xFF;
-      
+
 #if defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 1
       cmd[2] = 0x10;                       // 16K buffers
 #elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 2
@@ -932,7 +941,7 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
 #else
       cmd[2] = ((addr >> 6) & 0xE0) | 0x10; // 2K buffers
 #endif
-    } 
+    }
     else
     {
       // receive buffers
@@ -948,13 +957,13 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
       cmd[2] = ((addr >> 6) & 0xE0) | 0x18; // 2K buffers
 #endif
     }
-    
+
     pCUR_SPI->transfer(cmd, 3);
     memset(buf, 0, len);
     pCUR_SPI->transfer(buf, len);
     resetSS();
   }
-  
+
   return len;
 }
 
@@ -962,65 +971,65 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
 
 // From Ethernet3
 
-void W5100Class::phyMode(phyMode_t mode) 
+void W5100Class::phyMode(phyMode_t mode)
 {
   // Valid only for W5500
   if (chip != w5500)
     return;
-    
+
   uint8_t val = getPHYCFGR();
   bitWrite(val, 6, 1);
-  
-  if (mode == HALF_DUPLEX_10) 
+
+  if (mode == HALF_DUPLEX_10)
   {
     bitWrite(val, 3, 0);
     bitWrite(val, 4, 0);
     bitWrite(val, 5, 0);
     setPHYCFGR(val);
   }
-  else if (mode == FULL_DUPLEX_10) 
+  else if (mode == FULL_DUPLEX_10)
   {
     bitWrite(val, 3, 1);
     bitWrite(val, 4, 0);
     bitWrite(val, 5, 0);
     setPHYCFGR(val);
   }
-  else if (mode == HALF_DUPLEX_100) 
+  else if (mode == HALF_DUPLEX_100)
   {
     bitWrite(val, 3, 0);
     bitWrite(val, 4, 1);
     bitWrite(val, 5, 0);
     setPHYCFGR(val);
   }
-  else if (mode == FULL_DUPLEX_100) 
+  else if (mode == FULL_DUPLEX_100)
   {
     bitWrite(val, 3, 1);
     bitWrite(val, 4, 1);
     bitWrite(val, 5, 0);
     setPHYCFGR(val);
   }
-  else if (mode == FULL_DUPLEX_100_AUTONEG) 
+  else if (mode == FULL_DUPLEX_100_AUTONEG)
   {
     bitWrite(val, 3, 0);
     bitWrite(val, 4, 0);
     bitWrite(val, 5, 1);
     setPHYCFGR(val);
   }
-  else if (mode == POWER_DOWN) 
+  else if (mode == POWER_DOWN)
   {
     bitWrite(val, 3, 0);
     bitWrite(val, 4, 1);
     bitWrite(val, 5, 1);
     setPHYCFGR(val);
   }
-  else if (mode == ALL_AUTONEG) 
+  else if (mode == ALL_AUTONEG)
   {
     bitWrite(val, 3, 1);
     bitWrite(val, 4, 1);
     bitWrite(val, 5, 1);
     setPHYCFGR(val);
   }
-  
+
   bitWrite(val, 7, 0);
   setPHYCFGR(val);
   bitWrite(val, 7, 1);
@@ -1044,9 +1053,9 @@ const char* W5100Class::linkReport()
       return "LINK";
     else
       return "NO LINK";
-  }   
-  
-  return "NOT SUPPORTED";  
+  }
+
+  return "NOT SUPPORTED";
 }
 
 ////////////////////////////////////////////////////////////
@@ -1060,9 +1069,9 @@ const char* W5100Class::speedReport()
       if (bitRead(readPSTATUS_W5100S(), 1) == 1)
         return "10 MB";
       else
-        return "100 MB";      
+        return "100 MB";
     }
-    
+
     return "NO LINK";
   }
   else if (chip == w5500)
@@ -1074,11 +1083,11 @@ const char* W5100Class::speedReport()
       else
         return "10 MB";
     }
-    
+
     return "NO LINK";
-  }   
-  
-  return "NOT SUPPORTED"; 
+  }
+
+  return "NOT SUPPORTED";
 }
 
 ////////////////////////////////////////////////////////////
@@ -1094,7 +1103,7 @@ const char* W5100Class::duplexReport()
       else
         return "FULL DUPLEX";
     }
-    
+
     return "NO LINK";
   }
   else if (chip == w5500)
@@ -1109,8 +1118,8 @@ const char* W5100Class::duplexReport()
     }
 
     return "NO LINK";
-  }   
-  
+  }
+
   return "NOT SUPPORTED";
 }
 

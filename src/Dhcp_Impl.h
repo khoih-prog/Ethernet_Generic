@@ -3,37 +3,37 @@
 
   Ethernet_Generic is a library for the W5x00 Ethernet shields trying to merge the good features of
   previous Ethernet libraries
-  
-  Based on and modified from 
-  
+
+  Based on and modified from
+
   1) Ethernet Library         https://github.com/arduino-libraries/Ethernet
   2) EthernetLarge Library    https://github.com/OPEnSLab-OSU/EthernetLarge
   3) Ethernet2 Library        https://github.com/adafruit/Ethernet2
   4) Ethernet3 Library        https://github.com/sstaub/Ethernet3
-    
+
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
-  
+
   Copyright 2018 Paul Stoffregen
-  
+
   Permission is hereby granted, free of charge, to any person obtaining a copy of this
   software and associated documentation files (the "Software"), to deal in the Software
   without restriction, including without limitation the rights to use, copy, modify,
   merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
   permit persons to whom the Software is furnished to do so, subject to the following
   conditions:
-  
+
   The above copyright notice and this permission notice shall be included in all
   copies or substantial portions of the Software.
-  
+
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
   INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
   PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  
-  Version: 2.6.1
-    
+
+  Version: 2.6.2
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
@@ -49,6 +49,7 @@
   2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
+  2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
  *****************************************************************************************************************************/
 
 // DHCP Library v0.3 - April 25, 2009
@@ -312,6 +313,7 @@ void DhcpClass::send_DHCP_MESSAGE(uint8_t messageType, uint16_t secondsElapsed)
     _dhcpUdpSocket.write(buffer, 18);
     _dhcpUdpSocket.write(_dhcpHostName, strlen(_dhcpHostName));
   }
+
   //////
 
   if (messageType == DHCP_REQUEST)
@@ -397,6 +399,7 @@ uint8_t DhcpClass::parseDHCPResponse(unsigned long responseTimeout, uint32_t& tr
     {
       _dhcpUdpSocket.read(); // we don't care about the returned byte
     }
+
     //////
 
     while (_dhcpUdpSocket.available() > 0)
@@ -428,6 +431,7 @@ uint8_t DhcpClass::parseDHCPResponse(unsigned long responseTimeout, uint32_t& tr
           {
             _dhcpUdpSocket.read();
           }
+
           //////
 
           break;
@@ -441,6 +445,7 @@ uint8_t DhcpClass::parseDHCPResponse(unsigned long responseTimeout, uint32_t& tr
           {
             _dhcpUdpSocket.read();
           }
+
           //////
 
           break;
@@ -459,6 +464,7 @@ uint8_t DhcpClass::parseDHCPResponse(unsigned long responseTimeout, uint32_t& tr
           _dhcpUdpSocket.read(_dhcpHostName, opt_len);
           _dhcpHostName[opt_len] = '\0';
           break;
+
         //////
 
         case dhcpServerIdentifier :
@@ -477,6 +483,7 @@ uint8_t DhcpClass::parseDHCPResponse(unsigned long responseTimeout, uint32_t& tr
             {
               _dhcpUdpSocket.read();
             }
+
             //////
           }
 
