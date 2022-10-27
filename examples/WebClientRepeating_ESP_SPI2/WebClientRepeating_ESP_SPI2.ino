@@ -58,8 +58,10 @@ void setup()
 
   delay(200);
 
-  Serial.print("\nStarting WebClientRepeating_ESP_SPI2 on " + String(ARDUINO_BOARD));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print("\nStarting WebClientRepeating_ESP_SPI2 on on ");
+  Serial.print(ARDUINO_BOARD);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_GENERIC_VERSION);
 
 #if defined(ESP8266)

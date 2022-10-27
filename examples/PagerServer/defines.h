@@ -38,9 +38,11 @@
 #define ETHERNET_USE_SAMD      true
 #endif
 
-#if ( defined(NRF52840_FEATHER) || defined(NRF52832_FEATHER) || defined(NRF52_SERIES) || defined(ARDUINO_NRF52_ADAFRUIT) || \
-        defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || defined(NRF52840_CLUE) || \
-        defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) || defined(NINA_B302_ublox) || defined(NINA_B112_ublox) )
+#if (defined(NRF52840_FEATHER) || defined(NRF52832_FEATHER) || defined(NRF52_SERIES) || defined(ARDUINO_NRF52_ADAFRUIT) || \
+      defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || \
+      defined(NRF52840_CLUE) || defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) || \
+      defined(NRF52840_LED_GLASSES) || defined(MDBT50Q_RX) || defined(NINA_B302_ublox) || defined(NINA_B112_ublox) || \
+      defined(ARDUINO_Seeed_XIAO_nRF52840) || defined(ARDUINO_Seeed_XIAO_nRF52840_Sense) )
 #if defined(ETHERNET_USE_NRF528XX)
   #undef ETHERNET_USE_NRF528XX
 #endif
@@ -81,7 +83,10 @@
     // Use this for ARDUINO_SAMD_ZERO, etc. if can't print to terminal with Serial.print
     #if defined(SERIAL_PORT_USBVIRTUAL)
       #define Serial          SERIAL_PORT_USBVIRTUAL
-      #warning Using SAMD Zero SerialUSB
+
+      #if (_ETG_LOGLEVEL_ > 3)
+        #warning Using SAMD Zero SerialUSB
+      #endif
     #endif
 
   #elif defined(ARDUINO_SAMD_MKR1000)
@@ -155,7 +160,10 @@
       #undef USE_THIS_SS_PIN
     #endif
     #define USE_THIS_SS_PIN       A1
-    #warning define SEEED_XIAO_M0 USE_THIS_SS_PIN == A1
+
+    #if (_ETG_LOGLEVEL_ > 3)
+      #warning define SEEED_XIAO_M0 USE_THIS_SS_PIN == A1
+    #endif
   #elif defined(Wio_Lite_MG126)
     #define BOARD_TYPE      "SAMD SEEED Wio_Lite_MG126"
   #elif defined(WIO_GPS_BOARD)
@@ -195,13 +203,23 @@
   // For Adafruit nRF52
   // Default pin SS/CS,if no SS pin, use pin 10
   #if defined(PIN_SPI_MOSI)
-    #warning Using SS pin
+    #if (_ETG_LOGLEVEL_ > 3)
+      #warning Using SS pin
+    #endif
     #define USE_THIS_SS_PIN       SS
   #else
     #define USE_THIS_SS_PIN       10
   #endif
 
-  #if defined(NRF52840_FEATHER)
+  #if defined(ARDUINO_Seeed_XIAO_nRF52840)
+    #define BOARD_TYPE      "Seeed_XIAO_nRF52840"
+  #elif defined(ARDUINO_Seeed_XIAO_nRF52840_Sense)
+    #define BOARD_TYPE      "Seeed_XIAO_nRF52840_Sense"
+  #elif defined(ARDUINO_SEEED_XIAO_NRF52840)
+    #define BOARD_TYPE      "SEEED_XIAO_NRF52840"
+  #elif defined(ARDUINO_SEEED_XIAO_NRF52840_SENSE)
+    #define BOARD_TYPE      "SEEED_XIAO_NRF52840_SENSE"
+  #elif defined(NRF52840_FEATHER)
     #define BOARD_TYPE      "NRF52840_FEATHER"
   #elif defined(NRF52832_FEATHER)
     #define BOARD_TYPE      "NRF52832_FEATHER"
@@ -266,14 +284,18 @@
 
 #elif ( defined(ESP8266) )
   // For ESP8266
-  #warning Use ESP8266 architecture
+  #if (_ETG_LOGLEVEL_ > 3)
+    #warning Use ESP8266 architecture
+  #endif
   #include <ESP8266mDNS.h>
   #define ETHERNET_USE_ESP8266
   #define BOARD_TYPE      "ESP8266"
 
 #elif ( defined(ESP32) )
   // For ESP32
-  #warning Use ESP32 architecture
+  #if (_ETG_LOGLEVEL_ > 3)
+    #warning Use ESP32 architecture
+  #endif
   #define ETHERNET_USE_ESP32
   #define BOARD_TYPE      "ESP32"
 
@@ -317,7 +339,9 @@
   #define SS_PIN_DEFAULT        USE_THIS_SS_PIN
 
   // For RPI Pico
-  #warning Use RPI-Pico RP2040 architecture
+  #if (_ETG_LOGLEVEL_ > 3)
+    #warning Use RPI-Pico RP2040 architecture
+  #endif
 
 #elif defined(DXCORE)
 
