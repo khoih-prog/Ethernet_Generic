@@ -116,7 +116,7 @@
 
 ### Important Note from v2.5.2
 
-The new [Ethernet_Generic v2.7.0+](https://github.com/khoih-prog/Ethernet_Generic/releases/tag/v2.7.0) fixes severe limitation to permit sending much larger data than total than **2/4/8/16K** buffer of **W5x00 Ethernet**.
+The new [Ethernet_Generic v2.7.1+](https://github.com/khoih-prog/Ethernet_Generic/releases/tag/v2.7.0) fixes severe limitation to permit sending much larger data than total than **2/4/8/16K** buffer of **W5x00 Ethernet**.
 
 ---
 
@@ -940,7 +940,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -1021,7 +1021,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -1103,7 +1103,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1181,7 +1181,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1261,7 +1261,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -1341,7 +1341,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1421,7 +1421,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1502,7 +1502,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1534,7 +1534,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1618,7 +1618,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1702,7 +1702,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1791,7 +1791,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1883,7 +1883,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1970,7 +1970,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Start WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -2056,7 +2056,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -2144,7 +2144,7 @@ The following are debug terminal output when running example [SetDHCPHostName](e
 
 ```
 Starting SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2242,7 +2242,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2331,7 +2331,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAMD_FEATHER_M0_EXPRESS with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 29
 [ETG] MISO: 28
@@ -2420,7 +2420,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on SAMD_ZERO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 23
 [ETG] MISO: 22
@@ -2464,7 +2464,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Starting WebClientRepeating on Curiosity AVR_AVR128DA48 with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.0
+Ethernet_Generic v2.7.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 4
 [ETG] MISO: 5
@@ -2555,34 +2555,39 @@ The following is debug terminal output when running example [EthernetWebServer_B
 
 ```
 Start EthernetWebServer_BigData on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library on SPI0/SPI
-EthernetWebServer v2.2.4
+EthernetWebServer v2.3.0
 [ETG] W5100 init, using W5100Class::ss_pin =  5 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 10
 [ETG] Chip is W5500
 [ETG] W5100::init: W5500, SSIZE = 8192
 Using mac index = 14
 Connected! IP address: 192.168.2.135
 String Len = 23712
-[ETG] EthernetClient::write: To write, size =  86
+[ETG] EthernetClient::write: chip =  55
+[ETG] EthernetClient::write: size =  86 , MAX_SIZE = 8192
 [ETG] EthernetClient::write: written =  86 , totalBytesSent = 86
 [ETG] EthernetClient::write: Done, written =  86 , totalBytesSent = 86
-[ETG] EthernetClient::write: To write, size =  23712
+[ETG] EthernetClient::write: chip =  55
+[ETG] EthernetClient::write: size =  23712 , MAX_SIZE = 8192
 [ETG] EthernetClient::write: written =  8192 , totalBytesSent = 8192
 [ETG] EthernetClient::write: Partially Done, written =  8192 , bytesRemaining = 15520
 [ETG] EthernetClient::write: written =  8192 , totalBytesSent = 16384
 [ETG] EthernetClient::write: Partially Done, written =  8192 , bytesRemaining = 7328
 [ETG] EthernetClient::write: written =  7328 , totalBytesSent = 23712
 [ETG] EthernetClient::write: Done, written =  7328 , totalBytesSent = 23712
-[ETG] EthernetClient::write: To write, size =  91
+[ETG] EthernetClient::write: chip =  55
+[ETG] EthernetClient::write: size =  91 , MAX_SIZE = 8192
 [ETG] EthernetClient::write: written =  91 , totalBytesSent = 91
 [ETG] EthernetClient::write: Done, written =  91 , totalBytesSent = 91
 [ETG] EthernetClient::write: To write, size =  59
 [ETG] EthernetClient::write: written =  59 , totalBytesSent = 59
 [ETG] EthernetClient::write: Done, written =  59 , totalBytesSent = 59
 String Len = 23712
-[ETG] EthernetClient::write: To write, size =  86
+[ETG] EthernetClient::write: chip =  55
+[ETG] EthernetClient::write: size =  86 , MAX_SIZE = 8192
 [ETG] EthernetClient::write: written =  86 , totalBytesSent = 86
 [ETG] EthernetClient::write: Done, written =  86 , totalBytesSent = 86
-[ETG] EthernetClient::write: To write, size =  23712
+[ETG] EthernetClient::write: chip =  55
+[ETG] EthernetClient::write: size =  23712 , MAX_SIZE = 8192
 [ETG] EthernetClient::write: written =  8192 , totalBytesSent = 8192
 [ETG] EthernetClient::write: Partially Done, written =  8192 , bytesRemaining = 15520
 [ETG] EthernetClient::write: written =  8192 , totalBytesSent = 16384
@@ -2595,53 +2600,57 @@ String Len = 23712
 
 #### 22. [EthernetWebServer_BigData](examples/EthernetWebServer_BigData) on RASPBERRY_PI_PICO
 
-The following is debug terminal output when running example [EthernetWebServer_BigData](examples/EthernetWebServer_BigData) on `RASPBERRY_PI_PICO` board, using W5500 Ethernet with this [Ethernet_Generic Library](https://github.com/khoih-prog/Ethernet_Generic), to demo how to send much larger data than total 8K
+The following is debug terminal output when running example [EthernetWebServer_BigData](examples/EthernetWebServer_BigData) on `WIZNET_5100S_EVB_PICO` board, using W5100S Ethernet with this [Ethernet_Generic Library](https://github.com/khoih-prog/Ethernet_Generic), to demo how to send much larger data than total 8K
 
 ##### MULTIPLY_FACTOR = 3.0f
 
 
 ```
-Start EthernetWebServer_BigData on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library on SPI0/SPI
-EthernetWebServer v2.2.4
+Start EthernetWebServer_BigData on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library on SPI0/SPI
+EthernetWebServer v2.3.0
 [ETG] W5100 init, using W5100Class::ss_pin =  17 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 17
 [ETG] Chip is W5100S
 [ETG] W5100::init: W5100S, SSIZE = 4096
 Using mac index = 7
 Connected! IP address: 192.168.2.111
-String Len = 23714
-[ETG] EthernetClient::write: To write, size =  86
+String Len = 23722
+[ETG] EthernetClient::write: chip =  51
+[ETG] EthernetClient::write: size =  86 , MAX_SIZE = 4096
 [ETG] EthernetClient::write: written =  86 , totalBytesSent = 86
 [ETG] EthernetClient::write: Done, written =  86 , totalBytesSent = 86
-[ETG] EthernetClient::write: To write, size =  23714
+[ETG] EthernetClient::write: chip =  51
+[ETG] EthernetClient::write: size =  23722 , MAX_SIZE = 4096
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 4096
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 19618
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 19626
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 8192
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 15522
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 15530
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 12288
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 11426
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 11434
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 16384
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 7330
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 7338
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 20480
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 3234
-[ETG] EthernetClient::write: written =  3234 , totalBytesSent = 23714
-[ETG] EthernetClient::write: Done, written =  3234 , totalBytesSent = 23714
-String Len = 23714
-[ETG] EthernetClient::write: To write, size =  86
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 3242
+[ETG] EthernetClient::write: written =  3242 , totalBytesSent = 23722
+[ETG] EthernetClient::write: Done, written =  3242 , totalBytesSent = 23722
+String Len = 23722
+[ETG] EthernetClient::write: chip =  51
+[ETG] EthernetClient::write: size =  86 , MAX_SIZE = 4096
 [ETG] EthernetClient::write: written =  86 , totalBytesSent = 86
 [ETG] EthernetClient::write: Done, written =  86 , totalBytesSent = 86
-[ETG] EthernetClient::write: To write, size =  23714
+[ETG] EthernetClient::write: chip =  51
+[ETG] EthernetClient::write: size =  23722 , MAX_SIZE = 4096
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 4096
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 19618
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 19626
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 8192
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 15522
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 15530
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 12288
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 11426
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 11434
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 16384
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 7330
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 7338
 [ETG] EthernetClient::write: written =  4096 , totalBytesSent = 20480
-[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 3234
-[ETG] EthernetClient::write: written =  3234 , totalBytesSent = 23714
-[ETG] EthernetClient::write: Done, written =  3234 , totalBytesSent = 23714
+[ETG] EthernetClient::write: Partially Done, written =  4096 , bytesRemaining = 3242
+[ETG] EthernetClient::write: written =  3242 , totalBytesSent = 23722
+[ETG] EthernetClient::write: Done, written =  3242 , totalBytesSent = 23722
 ```
 
 
@@ -2721,7 +2730,7 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 31. Update `Packages' Patches` to add Seeeduino `nRF52` core
 32. Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
 33. Add examples [EthernetWebServer_BigData](https://github.com/khoih-prog/Ethernet_Generic/tree/main/examples/EthernetWebServer_BigData) to demo how to send larger data than 2/4/8/16K buffer
-
+34. Auto-detect `W5x00` and settings (`ETHERNET_LARGE_BUFFERS`, `MAX_SOCK_NUM`) to set `MAX_SIZE` to send
 
 
 ---
@@ -2742,6 +2751,7 @@ Many thanks for everyone for bug reporting, new feature suggesting, testing and 
 5. [Stefan Staub](https://github.com/sstaub) for [Ethernet3](https://github.com/sstaub/Ethernet3) library
 6. [proasnet](https://github.com/proasnet) to report issue [AdvancedWebServer example give me wrong ip HTTP EthernetWebServer is @ IP : 0.0.0.0 #62](https://github.com/khoih-prog/EthernetWebServer/issues/62) leading to version v2.5.1 to fix the issue with `SAMD Zero` and `W5100` shield
 7. [victorsonntag](https://github.com/victorsonntag) to report issue [ESP32 - Wiznet W5200 problem #13](https://github.com/khoih-prog/Ethernet_Generic/discussions/13) leading to version v2.6.1 to fix the issue with `Wiznet W5200 / wiz820io` shield
+8. [Andrew Young](https://github.com/vaelen) to report issue ['ETHERNET_SERVER_SEND_MAX_SIZE' was not declared in this scope #16](https://github.com/khoih-prog/Ethernet_Generic/issues/16) leading to version v2.7.1 to fix the issue when not using `ETHERNET_LARGE_BUFFERS`
 
 Many thanks to so many authors as listed in [AUTHORS](AUTHORS)
 
@@ -2753,6 +2763,9 @@ Many thanks to so many authors as listed in [AUTHORS](AUTHORS)
     <td align="center"><a href="https://github.com/sstaub"><img src="https://github.com/sstaub.png" width="100px;" alt="sstaub"/><br /><sub><b>⭐️ Stefan Staub</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/proasnet"><img src="https://github.com/proasnet.png" width="100px;" alt="proasnet"/><br /><sub><b>proasnet</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/victorsonntag"><img src="https://github.com/victorsonntag.png" width="100px;" alt="victorsonntag"/><br /><sub><b>victorsonntag</b></sub></a><br /></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/vaelen"><img src="https://github.com/vaelen.png" width="100px;" alt="vaelen"/><br /><sub><b>Andrew Young</b></sub></a><br /></td>
   </tr> 
 </table>
 

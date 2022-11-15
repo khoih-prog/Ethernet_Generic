@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-  Version: 2.7.0
+  Version: 2.7.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -51,6 +51,7 @@
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
   2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
+  2.7.1   K Hoang      15/11/2022 Auto-detect W5x00 and settings to set MAX_SIZE to send
  *****************************************************************************************************************************/
 // Arduino DNS client for WizNet5100-based Ethernet shield
 // (c) Copyright 2009-2010 MCQN Ltd.

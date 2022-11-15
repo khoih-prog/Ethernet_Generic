@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-  Version: 2.7.0
+  Version: 2.7.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -51,6 +51,7 @@
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
   2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
+  2.7.1   K Hoang      15/11/2022 Auto-detect W5x00 and settings to set MAX_SIZE to send
  *****************************************************************************************************************************/
 
 #pragma once
@@ -172,19 +173,6 @@ size_t EthernetClient::write(uint8_t b)
 
 #define ETHERNET_CLIENT_MAX_WRITE_RETRY       100
 
-// Don't use larger size or hang, max is 16K for 1 socket
-#ifdef ETHERNET_LARGE_BUFFERS
-  #if MAX_SOCK_NUM <= 1
-    #define ETHERNET_CLIENT_SEND_MAX_SIZE         16384
-  #elif MAX_SOCK_NUM <= 2
-    #define ETHERNET_CLIENT_SEND_MAX_SIZE         8192
-  #elif MAX_SOCK_NUM <= 4
-    #define ETHERNET_CLIENT_SEND_MAX_SIZE         4096
-  #else
-    #define ETHERNET_CLIENT_SEND_MAX_SIZE         2048
-  #endif
-#endif
-
 ////////////////////////////////////////
 
 size_t EthernetClient::write(const uint8_t *buf, size_t size)
@@ -195,7 +183,10 @@ size_t EthernetClient::write(const uint8_t *buf, size_t size)
   size_t totalBytesSent = 0;
   size_t bytesRemaining = size;
 
-  ETG_LOGINFO1("EthernetClient::write: To write, size = ", size);
+  uint16_t ETHERNET_CLIENT_SEND_MAX_SIZE = W5100.SSIZE;
+
+  ETG_LOGINFO1("EthernetClient::write: chip = ", W5100.getChip());
+  ETG_LOGINFO3("EthernetClient::write: size = ", size, ", MAX_SIZE =", ETHERNET_CLIENT_SEND_MAX_SIZE);
 
   if (_sockindex >= MAX_SOCK_NUM)
     return 0;

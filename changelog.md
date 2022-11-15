@@ -17,6 +17,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.7.1](#releases-v271)
 	* [Releases v2.7.0](#releases-v270)
 	* [Releases v2.6.2](#releases-v262)
 	* [Releases v2.6.1](#releases-v261)
@@ -37,6 +38,11 @@
 ---
 
 ## Changelog
+
+### Releases v2.7.1
+
+1. Auto-detect `W5x00` and settings (`ETHERNET_LARGE_BUFFERS`, `MAX_SOCK_NUM`) to set `MAX_SIZE` to send. Check ['ETHERNET_SERVER_SEND_MAX_SIZE' was not declared in this scope #16](https://github.com/khoih-prog/Ethernet_Generic/issues/16)
+
 
 ### Releases v2.7.0
 
