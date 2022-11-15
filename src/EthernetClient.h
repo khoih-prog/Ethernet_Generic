@@ -13,7 +13,7 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
 
-  Version: 2.6.2
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -31,6 +31,7 @@
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
+  2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
  *****************************************************************************************************************************/
 // This file is in the public domain.  No copyright is claimed.
 

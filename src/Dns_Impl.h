@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-  Version: 2.6.2
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -50,6 +50,7 @@
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
+  2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
  *****************************************************************************************************************************/
 // Arduino DNS client for WizNet5100-based Ethernet shield
 // (c) Copyright 2009-2010 MCQN Ltd.
@@ -67,11 +68,11 @@
 
 #include "utility/w5100.h"
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #define SOCKET_NONE              255
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Various flags and header field values for a DNS message
 #define UDP_HEADER_SIZE          8
@@ -99,12 +100,12 @@
 #define CLASS_IN                 (0x0001)
 #define LABEL_COMPRESSION_MASK   (0xC0)
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Port number that DNS servers listen on
 #define DNS_PORT                  53
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Possible return codes from ProcessResponse
 #define SUCCESS                   1
@@ -113,7 +114,7 @@
 #define TRUNCATED                 -3
 #define INVALID_RESPONSE          -4
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 void DNSClient::begin(const IPAddress& aDNSServer)
 {
@@ -121,7 +122,7 @@ void DNSClient::begin(const IPAddress& aDNSServer)
   iRequestId = 0;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int DNSClient::inet_aton(const char* address, IPAddress& result)
 {
@@ -171,7 +172,7 @@ int DNSClient::inet_aton(const char* address, IPAddress& result)
   return 1;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int DNSClient::getHostByName(const char* aHostname, IPAddress& aResult, uint16_t timeout)
 {
@@ -235,7 +236,7 @@ int DNSClient::getHostByName(const char* aHostname, IPAddress& aResult, uint16_t
   return ret;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint16_t DNSClient::BuildRequest(const char* aName)
 {
@@ -320,7 +321,7 @@ uint16_t DNSClient::BuildRequest(const char* aName)
   return 1;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint16_t DNSClient::ProcessResponse(uint16_t aTimeout, IPAddress& aAddress)
 {
@@ -504,6 +505,6 @@ uint16_t DNSClient::ProcessResponse(uint16_t aTimeout, IPAddress& aAddress)
   return -10; //INVALID_RESPONSE;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #endif    // ETHERNET_GENERIC_DNS_IMPL_H

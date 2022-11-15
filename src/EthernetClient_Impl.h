@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-  Version: 2.6.2
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -50,6 +50,7 @@
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
+  2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
  *****************************************************************************************************************************/
 
 #pragma once
@@ -64,7 +65,7 @@
 
 #include "utility/w5100.h"
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int EthernetClient::connect(const char * host, uint16_t port)
 {
@@ -89,7 +90,7 @@ int EthernetClient::connect(const char * host, uint16_t port)
   return connect(remote_addr, port);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int EthernetClient::connect(IPAddress ip, uint16_t port)
 {
@@ -148,7 +149,7 @@ int EthernetClient::connect(IPAddress ip, uint16_t port)
   return 0;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int EthernetClient::availableForWrite()
 {
@@ -158,29 +159,101 @@ int EthernetClient::availableForWrite()
   return Ethernet.socketSendAvailable(_sockindex);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 size_t EthernetClient::write(uint8_t b)
 {
   return write(&b, 1);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
+
+// KH rewrite to enable chunk-sending for large file
+
+#define ETHERNET_CLIENT_MAX_WRITE_RETRY       100
+
+// Don't use larger size or hang, max is 16K for 1 socket
+#ifdef ETHERNET_LARGE_BUFFERS
+  #if MAX_SOCK_NUM <= 1
+    #define ETHERNET_CLIENT_SEND_MAX_SIZE         16384
+  #elif MAX_SOCK_NUM <= 2
+    #define ETHERNET_CLIENT_SEND_MAX_SIZE         8192
+  #elif MAX_SOCK_NUM <= 4
+    #define ETHERNET_CLIENT_SEND_MAX_SIZE         4096
+  #else
+    #define ETHERNET_CLIENT_SEND_MAX_SIZE         2048
+  #endif
+#endif
+
+////////////////////////////////////////
 
 size_t EthernetClient::write(const uint8_t *buf, size_t size)
 {
+  int written = 0;
+  int retry = ETHERNET_CLIENT_MAX_WRITE_RETRY;
+
+  size_t totalBytesSent = 0;
+  size_t bytesRemaining = size;
+
+  ETG_LOGINFO1("EthernetClient::write: To write, size = ", size);
+
   if (_sockindex >= MAX_SOCK_NUM)
     return 0;
 
-  if (Ethernet.socketSend(_sockindex, buf, size))
-    return size;
+  if (size == 0)
+  {
+    setWriteError();
+
+    ETG_LOGDEBUG("EthernetClient::write: size = 0");
+
+    return 0;
+  }
+
+  while (retry)
+  {
+    written =  Ethernet.socketSend(_sockindex, buf, min(bytesRemaining, (size_t) ETHERNET_CLIENT_SEND_MAX_SIZE) );
+
+    if (written > 0)
+    {
+      totalBytesSent += written;
+
+      ETG_LOGINFO3("EthernetClient::write: written = ", written, ", totalBytesSent =", totalBytesSent);
+
+      if (totalBytesSent >= size)
+      {
+        ETG_LOGINFO3("EthernetClient::write: Done, written = ", written, ", totalBytesSent =", totalBytesSent);
+
+        //completed successfully
+        retry = 0;
+      }
+      else
+      {
+        buf += written;
+        bytesRemaining -= written;
+        retry = ETHERNET_CLIENT_MAX_WRITE_RETRY;
+
+        ETG_LOGINFO3("EthernetClient::write: Partially Done, written = ", written, ", bytesRemaining =", bytesRemaining);
+      }
+    }
+    else if (written <= 0)
+    {
+      ETG_LOGERROR("EthernetClient::write: written error");
+
+      setWriteError();
+
+      written = 0;
+      retry = 0;
+    }
+
+    // Looping
+  }
 
   setWriteError();
 
   return 0;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int EthernetClient::available()
 {
@@ -196,7 +269,7 @@ int EthernetClient::available()
   // command to cause the WIZnet chip to resend the ACK packet.
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int EthernetClient::read(uint8_t *buf, size_t size)
 {
@@ -206,7 +279,7 @@ int EthernetClient::read(uint8_t *buf, size_t size)
   return Ethernet.socketRecv(_sockindex, buf, size);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int EthernetClient::peek()
 {
@@ -219,7 +292,7 @@ int EthernetClient::peek()
   return Ethernet.socketPeek(_sockindex);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int EthernetClient::read()
 {
@@ -231,7 +304,7 @@ int EthernetClient::read()
   return -1;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 void EthernetClient::flush()
 {
@@ -247,7 +320,7 @@ void EthernetClient::flush()
   }
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 void EthernetClient::stop()
 {
@@ -276,7 +349,7 @@ void EthernetClient::stop()
   _sockindex = MAX_SOCK_NUM;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint8_t EthernetClient::connected()
 {
@@ -288,7 +361,7 @@ uint8_t EthernetClient::connected()
   return !(s == SnSR::LISTEN || s == SnSR::CLOSED || s == SnSR::FIN_WAIT || (s == SnSR::CLOSE_WAIT && !available()));
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint8_t EthernetClient::status()
 {
@@ -298,7 +371,7 @@ uint8_t EthernetClient::status()
   return Ethernet.socketStatus(_sockindex);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // the next function allows us to use the client returned by
 // EthernetServer::available() as the condition in an if-statement.
@@ -316,7 +389,7 @@ bool EthernetClient::operator==(const EthernetClient& rhs)
   return true;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // https://github.com/per1234/EthernetMod
 // from: https://github.com/ntruchsess/Arduino-1/commit/937bce1a0bb2567f6d03b15df79525569377dabd
@@ -334,7 +407,7 @@ uint16_t EthernetClient::localPort()
   return port;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // https://github.com/per1234/EthernetMod
 // returns the remote IP address: http://forum.arduino.cc/index.php?topic=82416.0
@@ -352,7 +425,7 @@ IPAddress EthernetClient::remoteIP()
   return IPAddress(remoteIParray);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // https://github.com/per1234/EthernetMod
 // from: https://github.com/ntruchsess/Arduino-1/commit/ca37de4ba4ecbdb941f14ac1fe7dd40f3008af75
@@ -370,6 +443,6 @@ uint16_t EthernetClient::remotePort()
   return port;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #endif    // ETHERNET_CLIENT_GENERIC_IMPL_H

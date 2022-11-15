@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-  Version: 2.6.2
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -50,6 +50,7 @@
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
+  2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
  *****************************************************************************************************************************/
 
 #pragma once
@@ -62,7 +63,7 @@
 
 #include "utility/w5100.h"
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #if ARDUINO >= 156 && !defined(ARDUINO_ARCH_PIC32)
   extern void yield();
@@ -73,7 +74,7 @@
 // TODO: randomize this when not using DHCP, but how?
 static uint16_t local_port = 49152;  // 49152 to 65535
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 typedef struct
 {
@@ -93,7 +94,7 @@ static uint16_t getSnRX_RSR(uint8_t s);
 static void write_data(uint8_t s, uint16_t offset, const uint8_t *data, uint16_t len);
 static void read_data(uint8_t s, uint16_t src, uint8_t *dst, uint16_t len);
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 /*****************************************/
 /*          Socket management            */
@@ -107,7 +108,7 @@ void EthernetClass::socketPortRand(uint16_t n)
   ETG_LOGDEBUG3("socketPortRand, socketPortRand =", n, ", srcport =", local_port);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint8_t EthernetClass::socketBegin(uint8_t protocol, uint16_t port)
 {
@@ -162,21 +163,6 @@ uint8_t EthernetClass::socketBegin(uint8_t protocol, uint16_t port)
       goto closemakesocket;
   }
 
-#if 0
-  ETG_LOGDEBUG("socketBegin step3");
-
-  // next, use any that are effectively closed
-  for (s = 0; s < MAX_SOCK_NUM; s++)
-  {
-    uint8_t stat = status[s];
-
-    // TODO: this also needs to check if no more data
-    if (stat == SnSR::CLOSE_WAIT)
-      goto closemakesocket;
-  }
-
-#endif
-
   W5100.endSPITransaction();
 
   return MAX_SOCK_NUM; // all sockets are in use
@@ -222,7 +208,7 @@ makesocket:
   return s;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // multicast version to set fields before open  thd
 uint8_t EthernetClass::socketBeginMulticast(uint8_t protocol, IPAddress ip, uint16_t port)
@@ -278,21 +264,6 @@ uint8_t EthernetClass::socketBeginMulticast(uint8_t protocol, IPAddress ip, uint
       goto closemakesocket;
   }
 
-#if 0
-  ETG_LOGDEBUG("socketBeginMulticast: step3");
-
-  // next, use any that are effectively closed
-  for (s = 0; s < MAX_SOCK_NUM; s++)
-  {
-    uint8_t stat = status[s];
-
-    // TODO: this also needs to check if no more data
-    if (stat == SnSR::CLOSE_WAIT)
-      goto closemakesocket;
-  }
-
-#endif
-
   W5100.endSPITransaction();
 
   return MAX_SOCK_NUM; // all sockets are in use
@@ -346,7 +317,7 @@ makesocket:
   return s;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Return the socket's status
 //
@@ -359,7 +330,7 @@ uint8_t EthernetClass::socketStatus(uint8_t s)
   return status;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Immediately close.  If a TCP connection is established, the
 // remote host is left unaware we closed.
@@ -371,7 +342,7 @@ void EthernetClass::socketClose(uint8_t s)
   W5100.endSPITransaction();
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Place the socket in listening (server) mode
 //
@@ -393,7 +364,7 @@ uint8_t EthernetClass::socketListen(uint8_t s)
   return 1;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // establish a TCP connection in Active (client) mode.
 //
@@ -407,7 +378,7 @@ void EthernetClass::socketConnect(uint8_t s, uint8_t * addr, uint16_t port)
   W5100.endSPITransaction();
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Gracefully disconnect a TCP connection.
 //
@@ -418,7 +389,7 @@ void EthernetClass::socketDisconnect(uint8_t s)
   W5100.endSPITransaction();
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 /*****************************************/
 /*    Socket Data Receive Functions      */
@@ -444,7 +415,7 @@ static uint16_t getSnRX_RSR(uint8_t s)
   }
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 static void read_data(uint8_t s, uint16_t src, uint8_t *dst, uint16_t len)
 {
@@ -470,7 +441,7 @@ static void read_data(uint8_t s, uint16_t src, uint8_t *dst, uint16_t len)
   }
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Receive data.  Returns size, or -1 for no data, or 0 if connection closed
 //
@@ -544,7 +515,7 @@ int EthernetClass::socketRecv(uint8_t s, uint8_t *buf, int16_t len)
   return ret;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint16_t EthernetClass::socketRecvAvailable(uint8_t s)
 {
@@ -567,7 +538,7 @@ uint16_t EthernetClass::socketRecvAvailable(uint8_t s)
   return ret;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // get the first byte in the receive queue (no checking)
 //
@@ -585,7 +556,7 @@ uint8_t EthernetClass::socketPeek(uint8_t s)
   return b;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 /*****************************************/
 /*    Socket Data Transmit Functions     */
@@ -612,7 +583,7 @@ static uint16_t getSnTX_FSR(uint8_t s)
   }
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 static void write_data(uint8_t s, uint16_t data_offset, const uint8_t *data, uint16_t len)
 {
@@ -637,7 +608,7 @@ static void write_data(uint8_t s, uint16_t data_offset, const uint8_t *data, uin
   W5100.writeSnTX_WR(s, ptr);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 /**
    @brief This function used to send the data in TCP mode
@@ -705,7 +676,7 @@ uint16_t EthernetClass::socketSend(uint8_t s, const uint8_t * buf, uint16_t len)
   return ret;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint16_t EthernetClass::socketSendAvailable(uint8_t s)
 {
@@ -725,7 +696,7 @@ uint16_t EthernetClass::socketSendAvailable(uint8_t s)
   return 0;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint16_t EthernetClass::socketBufferData(uint8_t s, uint16_t offset, const uint8_t* buf, uint16_t len)
 {
@@ -753,7 +724,7 @@ uint16_t EthernetClass::socketBufferData(uint8_t s, uint16_t offset, const uint8
   return ret;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 bool EthernetClass::socketStartUDP(uint8_t s, uint8_t* addr, uint16_t port)
 {
@@ -770,7 +741,7 @@ bool EthernetClass::socketStartUDP(uint8_t s, uint8_t* addr, uint16_t port)
   return true;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 bool EthernetClass::socketSendUDP(uint8_t s)
 {
@@ -809,6 +780,6 @@ bool EthernetClass::socketSendUDP(uint8_t s)
   return true;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #endif    // ETHERNET_SOCKET_GENERIC_IMPL_H

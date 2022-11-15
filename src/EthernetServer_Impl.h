@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-  Version: 2.6.2
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -50,6 +50,7 @@
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
+  2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
  *****************************************************************************************************************************/
 
 #pragma once
@@ -64,7 +65,7 @@
 
 uint16_t EthernetServer::server_port[MAX_SOCK_NUM];
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 void EthernetServer::begin()
 {
@@ -83,7 +84,7 @@ void EthernetServer::begin()
   }
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 EthernetClient EthernetServer::available()
 {
@@ -143,7 +144,7 @@ EthernetClient EthernetServer::available()
   return EthernetClient(sockindex);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 EthernetClient EthernetServer::accept()
 {
@@ -195,7 +196,7 @@ EthernetClient EthernetServer::accept()
   return EthernetClient(sockindex);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 EthernetServer::operator bool()
 {
@@ -225,7 +226,7 @@ EthernetServer::operator bool()
   return false;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 void EthernetServer::statusreport()
 {
@@ -310,14 +311,99 @@ void EthernetServer::statusreport()
   }
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 size_t EthernetServer::write(uint8_t b)
 {
   return write(&b, 1);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
+
+// KH rewrite to enable chunk-sending for large file
+
+#define ETHERNET_SERVER_MAX_WRITE_RETRY       100
+
+// Don't use larger size or hang, max is 16K for 1 socket
+#ifdef ETHERNET_LARGE_BUFFERS
+  #if MAX_SOCK_NUM <= 1
+    #define ETHERNET_SERVER_SEND_MAX_SIZE         16384
+  #elif MAX_SOCK_NUM <= 2
+    #define ETHERNET_SERVER_SEND_MAX_SIZE         8192
+  #elif MAX_SOCK_NUM <= 4
+    #define ETHERNET_SERVER_SEND_MAX_SIZE         4096
+  #else
+    #define ETHERNET_SERVER_SEND_MAX_SIZE         2048
+  #endif
+#endif
+
+////////////////////////////////////////
+
+// Private function
+size_t EthernetServer::_write(const uint8_t sockindex, const uint8_t *buf, size_t size)
+{
+  int written = 0;
+  int retry = ETHERNET_SERVER_MAX_WRITE_RETRY;
+
+  size_t totalBytesSent = 0;
+  size_t bytesRemaining = size;
+
+  ETG_LOGINFO1("EthernetServer::write: To write, size = ", size);
+
+  if (size == 0)
+  {
+    setWriteError();
+
+    ETG_LOGDEBUG("EthernetServer::write: size = 0");
+
+    return 0;
+  }
+
+  while (retry)
+  {
+    written =  Ethernet.socketSend(sockindex, buf, min(bytesRemaining, (size_t) ETHERNET_SERVER_SEND_MAX_SIZE) );
+
+    if (written > 0)
+    {
+      totalBytesSent += written;
+
+      ETG_LOGINFO3("EthernetServer::write: written = ", written, ", totalBytesSent =", totalBytesSent);
+
+      if (totalBytesSent >= size)
+      {
+        ETG_LOGINFO3("EthernetServer::write: Done, written = ", written, ", totalBytesSent =", totalBytesSent);
+
+        //completed successfully
+        retry = 0;
+      }
+      else
+      {
+        buf += written;
+        bytesRemaining -= written;
+        retry = ETHERNET_SERVER_MAX_WRITE_RETRY;
+
+        ETG_LOGINFO3("EthernetServer::write: Partially Done, written = ", written, ", bytesRemaining =", bytesRemaining);
+      }
+    }
+    else if (written <= 0)
+    {
+      ETG_LOGERROR("EthernetServer::write: written error");
+
+      setWriteError();
+
+      written = 0;
+      retry = 0;
+    }
+
+    // Looping
+  }
+
+  setWriteError();
+
+  return 0;
+}
+
+////////////////////////////////////////
 
 size_t EthernetServer::write(const uint8_t *buffer, size_t size)
 {
@@ -344,7 +430,8 @@ size_t EthernetServer::write(const uint8_t *buffer, size_t size)
     {
       if (Ethernet.socketStatus(i) == SnSR::ESTABLISHED)
       {
-        Ethernet.socketSend(i, buffer, size);
+        //Ethernet.socketSend(i, buffer, size);
+        _write(i, buffer, size);
       }
     }
   }
@@ -352,6 +439,6 @@ size_t EthernetServer::write(const uint8_t *buffer, size_t size)
   return size;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #endif    // ETHERNET_SERVER_GENERIC_IMPL_H

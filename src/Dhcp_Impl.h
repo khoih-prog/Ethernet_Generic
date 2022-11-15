@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-  Version: 2.6.2
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -50,6 +50,7 @@
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
+  2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
  *****************************************************************************************************************************/
 
 // DHCP Library v0.3 - April 25, 2009
@@ -67,7 +68,7 @@
 
 #include "utility/w5100.h"
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 int DhcpClass::beginWithDHCP(uint8_t *mac, unsigned long timeout, unsigned long responseTimeout)
 {
@@ -87,7 +88,7 @@ int DhcpClass::beginWithDHCP(uint8_t *mac, unsigned long timeout, unsigned long 
   return request_DHCP_lease();
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 void DhcpClass::reset_DHCP_lease()
 {
@@ -95,7 +96,7 @@ void DhcpClass::reset_DHCP_lease()
   memset(_dhcpLocalIp, 0, 20);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 //return:0 on error, 1 if request is sent and response is received
 int DhcpClass::request_DHCP_lease()
@@ -207,13 +208,13 @@ int DhcpClass::request_DHCP_lease()
   return result;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 void DhcpClass::presend_DHCP()
 {
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 void DhcpClass::send_DHCP_MESSAGE(uint8_t messageType, uint16_t secondsElapsed)
 {
@@ -352,7 +353,7 @@ void DhcpClass::send_DHCP_MESSAGE(uint8_t messageType, uint16_t secondsElapsed)
   _dhcpUdpSocket.endPacket();
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint8_t DhcpClass::parseDHCPResponse(unsigned long responseTimeout, uint32_t& transactionId)
 {
@@ -523,7 +524,7 @@ uint8_t DhcpClass::parseDHCPResponse(unsigned long responseTimeout, uint32_t& tr
   return type;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 /*
     returns:
@@ -589,42 +590,42 @@ int DhcpClass::checkLease()
   return rc;
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 IPAddress DhcpClass::getLocalIp()
 {
   return IPAddress(_dhcpLocalIp);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 IPAddress DhcpClass::getSubnetMask()
 {
   return IPAddress(_dhcpSubnetMask);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 IPAddress DhcpClass::getGatewayIp()
 {
   return IPAddress(_dhcpGatewayIp);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 IPAddress DhcpClass::getDhcpServerIp()
 {
   return IPAddress(_dhcpDhcpServerIp);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 IPAddress DhcpClass::getDnsServerIp()
 {
   return IPAddress(_dhcpDnsServerIp);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 void DhcpClass::printByte(char * buf, uint8_t n )
 {
@@ -640,6 +641,6 @@ void DhcpClass::printByte(char * buf, uint8_t n )
   } while (n);
 }
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #endif    // ETHERNET_GENERIC_DHCP_IMPL_H

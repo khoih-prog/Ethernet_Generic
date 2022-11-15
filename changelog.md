@@ -5,6 +5,11 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/Ethernet_Generic.svg)](http://github.com/khoih-prog/Ethernet_Generic/issues)
 
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
+<a href="https://profile-counter.glitch.me/khoih-prog/count.svg" title="Total khoih-prog Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog/count.svg" style="height: 30px;width: 200px;"></a>
+<a href="https://profile-counter.glitch.me/khoih-prog-Ethernet_Generic/count.svg" title="Ethernet_Generic Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog-Ethernet_Generic/count.svg" style="height: 30px;width: 200px;"></a>
+
 ---
 ---
 
@@ -12,6 +17,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.7.0](#releases-v270)
 	* [Releases v2.6.2](#releases-v262)
 	* [Releases v2.6.1](#releases-v261)
 	* [Releases v2.6.0](#releases-v260)
@@ -31,6 +37,14 @@
 ---
 
 ## Changelog
+
+### Releases v2.7.0
+
+1. Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
+2. Add examples [EthernetWebServer_BigData](https://github.com/khoih-prog/Ethernet_Generic/tree/main/examples/EthernetWebServer_BigData) to demo how to send larger data than 2/4/8/16K buffer
+3. Optimize code
+4. Clean up
+5. Update `Packages' Patches`
 
 ### Releases v2.6.2
 

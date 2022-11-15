@@ -32,7 +32,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
-  Version: 2.6.2
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -50,6 +50,7 @@
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
+  2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
  *****************************************************************************************************************************/
 
 #pragma once
@@ -79,7 +80,7 @@
   #define MAX_SOCK_NUM 8
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Not using private data, such as _address.bytes to be compatible with new IPv6 + IPv4
 // Default to false to be sure compatible with old cores. From v2.5.0
@@ -87,7 +88,7 @@
   #define USING_RAW_ADDRESS       false		//true
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // By default, each socket uses 2K buffers inside the WIZnet chip.  If
 // MAX_SOCK_NUM is set to fewer than the chip's maximum, uncommenting
@@ -123,7 +124,7 @@
 
 #include "Ethernet_Generic_Debug.h"
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 enum EthernetChip_t
 {
@@ -174,7 +175,7 @@ class EthernetClient;
 class EthernetServer;
 class DhcpClass;
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // DHCP Hostname size max size is 32
 #define HOSTNAME_SIZE       32
@@ -355,7 +356,7 @@ extern EthernetClass Ethernet;
 
 #define ETHERNET_UDP_TX_PACKET_MAX_SIZE       24
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 class EthernetUDP : public UDP 
 {
@@ -446,7 +447,7 @@ class EthernetUDP : public UDP
     }
 };
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 class EthernetClient : public Client 
 {
@@ -516,13 +517,17 @@ class EthernetClient : public Client
     uint16_t _timeout;
 };
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 class EthernetServer : public Server 
 {
   private:
     uint16_t _port;
     
+    // KH
+    virtual size_t _write(const uint8_t sockindex, const uint8_t *buf, size_t size);
+    //////
+        
   public:
     EthernetServer(uint16_t port) : _port(port) { }
     
@@ -530,6 +535,9 @@ class EthernetServer : public Server
     EthernetClient accept();
     virtual void begin();
     virtual size_t write(uint8_t);
+    
+
+    
     virtual size_t write(const uint8_t *buf, size_t size);
     virtual operator bool();
     using Print::write;
@@ -539,7 +547,7 @@ class EthernetServer : public Server
     static uint16_t server_port[MAX_SOCK_NUM];
 };
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 class DhcpClass 
 {
@@ -615,6 +623,6 @@ class DhcpClass
     }
 };
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #endif    // ETHERNET_GENERIC_HPP

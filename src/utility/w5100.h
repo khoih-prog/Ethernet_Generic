@@ -13,7 +13,7 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
 
-  Version: 2.6.2
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -31,6 +31,7 @@
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
+  2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
  *****************************************************************************************************************************/
 
 // w5100.h contains private W5x00 hardware "driver" level definitions
@@ -50,7 +51,7 @@
 
 extern SPIClass* pCUR_SPI;
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #ifndef USE_W5100
   #define USE_W5100     false
@@ -82,14 +83,14 @@ extern SPIClass* pCUR_SPI;
 
 #endif
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Require Ethernet_Generic.hpp, because we need MAX_SOCK_NUM
 #ifndef ETHERNET_GENERIC_HPP
   #error "Ethernet_Generic.hpp must be included before w5100.h"
 #endif
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Arduino 101's SPI can not run faster than 8 MHz.
 #if defined(ARDUINO_ARCH_ARC32)
@@ -97,7 +98,7 @@ extern SPIClass* pCUR_SPI;
   #define SPI_ETHERNET_SETTINGS SPISettings(8000000, MSBFIRST, SPI_MODE0)
 #endif
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Arduino Zero can't use W5100-based shields faster than 8 MHz
 // https://github.com/arduino-libraries/Ethernet/issues/37#issuecomment-408036848
@@ -123,7 +124,7 @@ extern SPIClass* pCUR_SPI;
 
 #endif
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 typedef uint8_t SOCKET;
 
@@ -144,6 +145,8 @@ class SnMR
     static const uint8_t MULTI  = 0x80;
 };
 
+////////////////////////////////////////
+
 enum SockCMD
 {
   Sock_OPEN      = 0x01,
@@ -157,6 +160,8 @@ enum SockCMD
   Sock_RECV      = 0x40
 };
 
+////////////////////////////////////////
+
 class SnIR
 {
   public:
@@ -166,6 +171,8 @@ class SnIR
     static const uint8_t DISCON  = 0x02;
     static const uint8_t CON     = 0x01;
 };
+
+////////////////////////////////////////
 
 class SnSR
 {
@@ -187,6 +194,8 @@ class SnSR
     static const uint8_t PPPOE       = 0x5F;
 };
 
+////////////////////////////////////////
+
 class IPPROTO
 {
   public:
@@ -202,6 +211,8 @@ class IPPROTO
     static const uint8_t RAW  = 255;
 };
 
+////////////////////////////////////////
+
 enum W5100Linkstatus
 {
   UNKNOWN,
@@ -209,7 +220,8 @@ enum W5100Linkstatus
   LINK_OFF
 };
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
+////////////////////////////////////////
 
 class W5100Class
 {
@@ -217,55 +229,77 @@ class W5100Class
     // KH
     uint8_t init(uint8_t socketNumbers = MAX_SOCK_NUM, uint8_t new_ss_pin = 10);
 
+    ////////////////////////////////////////
+
     inline void setGatewayIp(const uint8_t * addr)
     {
       writeGAR(addr);
     }
+
+    ////////////////////////////////////////
 
     inline void getGatewayIp(uint8_t * addr)
     {
       readGAR(addr);
     }
 
+    ////////////////////////////////////////
+
     inline void setSubnetMask(const uint8_t * addr)
     {
       writeSUBR(addr);
     }
+
+    ////////////////////////////////////////
 
     inline void getSubnetMask(uint8_t * addr)
     {
       readSUBR(addr);
     }
 
+    ////////////////////////////////////////
+
     inline void setMACAddress(const uint8_t * addr)
     {
       writeSHAR(addr);
     }
+
+    ////////////////////////////////////////
 
     inline void getMACAddress(uint8_t * addr)
     {
       readSHAR(addr);
     }
 
+    ////////////////////////////////////////
+
     inline void setIPAddress(const uint8_t * addr)
     {
       writeSIPR(addr);
     }
+
+    ////////////////////////////////////////
 
     inline void getIPAddress(uint8_t * addr)
     {
       readSIPR(addr);
     }
 
+    ////////////////////////////////////////
+
     inline void setRetransmissionTime(uint16_t timeout)
     {
       writeRTR(timeout);
     }
 
+    ////////////////////////////////////////
+
     inline void setRetransmissionCount(uint8_t retry)
     {
       writeRCR(retry);
     }
+
+    ////////////////////////////////////////
 
     static inline void execCmdSn(SOCKET s, SockCMD _cmd)
     {
@@ -276,18 +310,26 @@ class W5100Class
       while (readSnCR(s));
     }
 
+    ////////////////////////////////////////
+
     // W5100 Registers
     // ---------------
     //private:
   public:
     static uint16_t write(uint16_t addr, const uint8_t *buf, uint16_t len);
 
+    ////////////////////////////////////////
+
     static inline uint8_t write(uint16_t addr, uint8_t data)
     {
       return write(addr, &data, 1);
     }
 
+    ////////////////////////////////////////
+
     static uint16_t read(uint16_t addr, uint8_t *buf, uint16_t len);
+
+    ////////////////////////////////////////
 
     static inline uint8_t read(uint16_t addr)
     {
@@ -298,6 +340,8 @@ class W5100Class
       return data;
     }
 
+    ////////////////////////////////////////
+
 #define __GP_REGISTER8(name, address)             \
   static inline void write##name(uint8_t _data) { \
     write(address, _data);                        \
@@ -305,6 +349,9 @@ class W5100Class
   static inline uint8_t read##name() {            \
     return read(address);                         \
   }
+
+    ////////////////////////////////////////
+
 #define __GP_REGISTER16(name, address)            \
   static void write##name(uint16_t _data) {       \
     uint8_t buf[2];                               \
@@ -317,6 +364,9 @@ class W5100Class
     read(address, buf, 2);                        \
     return (buf[0] << 8) | buf[1];                \
   }
+
+    ////////////////////////////////////////
+
 #define __GP_REGISTER_N(name, address, size)      \
   static uint16_t write##name(const uint8_t *_buff) {   \
     return write(address, _buff, size);           \
@@ -325,7 +375,11 @@ class W5100Class
     return read(address, _buff, size);            \
   }
 
+    ////////////////////////////////////////
+
     W5100Linkstatus getLinkStatus();
+
+    ////////////////////////////////////////
 
   public:
     __GP_REGISTER8 (MR,     0x0000);              // Mode
@@ -356,13 +410,20 @@ class W5100Class
     __GP_REGISTER8 (PHYCFGR_W5500,     0x002E);   // PHY Configuration register, default: 10111xxx
 
 
+    ////////////////////////////////////////
+
 #undef __GP_REGISTER8
 #undef __GP_REGISTER16
 #undef __GP_REGISTER_N
 
+    ////////////////////////////////////////
+
     // W5100 Socket registers
     // ----------------------
   private:
+
+    ////////////////////////////////////////
+
     static inline uint16_t CH_BASE()
     {
       //if (chip == w5500) return 0x1000;
@@ -371,28 +432,40 @@ class W5100Class
       return CH_BASE_MSB << 8;
     }
 
+    ////////////////////////////////////////
+
     static uint8_t CH_BASE_MSB; // 1 redundant byte, saves ~80 bytes code on AVR
     static const uint16_t CH_SIZE = 0x0100;
+
+    ////////////////////////////////////////
 
     static inline uint8_t readSn(SOCKET s, uint16_t addr)
     {
       return read(CH_BASE() + s * CH_SIZE + addr);
     }
 
+    ////////////////////////////////////////
+
     static inline uint8_t writeSn(SOCKET s, uint16_t addr, uint8_t data)
     {
       return write(CH_BASE() + s * CH_SIZE + addr, data);
     }
+
+    ////////////////////////////////////////
 
     static inline uint16_t readSn(SOCKET s, uint16_t addr, uint8_t *buf, uint16_t len)
     {
       return read(CH_BASE() + s * CH_SIZE + addr, buf, len);
     }
 
+    ////////////////////////////////////////
+
     static inline uint16_t writeSn(SOCKET s, uint16_t addr, uint8_t *buf, uint16_t len)
     {
       return write(CH_BASE() + s * CH_SIZE + addr, buf, len);
     }
+
+    ////////////////////////////////////////
 
 #define __SOCKET_REGISTER8(name, address)                    \
   static inline void write##name(SOCKET _s, uint8_t _data) { \
@@ -401,6 +474,9 @@ class W5100Class
   static inline uint8_t read##name(SOCKET _s) {              \
     return readSn(_s, address);                              \
   }
+
+    ////////////////////////////////////////
+
 #define __SOCKET_REGISTER16(name, address)                   \
   static void write##name(SOCKET _s, uint16_t _data) {       \
     uint8_t buf[2];                                          \
@@ -413,6 +489,9 @@ class W5100Class
     readSn(_s, address, buf, 2);                             \
     return (buf[0] << 8) | buf[1];                           \
   }
+
+    ////////////////////////////////////////
+
 #define __SOCKET_REGISTER_N(name, address, size)             \
   static uint16_t write##name(SOCKET _s, uint8_t *_buff) {   \
     return writeSn(_s, address, _buff, size);                \
@@ -420,6 +499,8 @@ class W5100Class
   static uint16_t read##name(SOCKET _s, uint8_t *_buff) {    \
     return readSn(_s, address, _buff, size);                 \
   }
+
+    ////////////////////////////////////////
 
   public:
     __SOCKET_REGISTER8(SnMR,        0x0000)        // Mode
@@ -443,10 +524,13 @@ class W5100Class
     __SOCKET_REGISTER16(SnRX_RD,    0x0028)        // RX Read Pointer
     __SOCKET_REGISTER16(SnRX_WR,    0x002A)        // RX Write Pointer (supported?)
 
+    ////////////////////////////////////////
+
 #undef __SOCKET_REGISTER8
 #undef __SOCKET_REGISTER16
 #undef __SOCKET_REGISTER_N
 
+    ////////////////////////////////////////
 
   private:
     // KH
@@ -467,12 +551,16 @@ class W5100Class
 
   public:
 
+    ////////////////////////////////////////
+
     // From Ethernet3
     inline void setPHYCFGR(uint8_t _val)
     {
       if (chip == w5500)
         writePHYCFGR_W5500(_val);
     }
+
+    ////////////////////////////////////////
 
     inline uint8_t getPHYCFGR()
     {
@@ -482,12 +570,16 @@ class W5100Class
         return 0;
     }
 
+    ////////////////////////////////////////
+
     inline void WoL(bool wol)
     {
       uint8_t val = readMR();
       bitWrite(val, 5, wol);
       writeMR(val);
     }
+
+    ////////////////////////////////////////
 
     inline bool WoL()
     {
@@ -496,13 +588,19 @@ class W5100Class
       return bitRead(val, 5);
     }
 
+    ////////////////////////////////////////
+
     void phyMode(phyMode_t mode);  // set PHYCFGR
+
+    ////////////////////////////////////////
 
     // returns the PHYCFGR
     inline uint8_t phyState()
     {
       return getPHYCFGR();
     }
+
+    ////////////////////////////////////////
 
     // returns the linkstate, 1 = linked, 0 = no link
     inline uint8_t link()
@@ -512,6 +610,8 @@ class W5100Class
       else
         return 0;
     }
+
+    ////////////////////////////////////////
 
     // returns speed in MB/s
     inline uint8_t speed()
@@ -531,6 +631,8 @@ class W5100Class
       return 0;
     }
 
+    ////////////////////////////////////////
+
     // returns duplex mode 0 = no link, 1 = Half Duplex, 2 = Full Duplex
     inline uint8_t duplex()
     {
@@ -549,24 +651,31 @@ class W5100Class
       return 0;
     }
 
+    ////////////////////////////////////////
+
     const char* linkReport();      // returns the linkstate as a string
     const char* speedReport();     // returns speed as a string
     const char* duplexReport();    // returns duplex mode as a string
 
-    //////
+    ////////////////////////////////////////
 
     static inline void beginSPITransaction()
     {
       pCUR_SPI->beginTransaction(SPI_ETHERNET_SETTINGS);
     }
 
+    ////////////////////////////////////////
+
     static inline void endSPITransaction()
     {
       pCUR_SPI->endTransaction();
     }
 
-    // KH
+    ////////////////////////////////////////
+
     static uint8_t softReset();
+
+    ////////////////////////////////////////
 
     // w5100, w5200 or w5500
     static inline EthernetChip_t getChip()
@@ -574,11 +683,15 @@ class W5100Class
       return chip;
     }
 
+    ////////////////////////////////////////
+
     // w5100S
     static inline EthernetChip_t getAltChip()
     {
       return altChip;
     }
+
+    ////////////////////////////////////////
 
 #ifdef ETHERNET_LARGE_BUFFERS
     static uint16_t SSIZE;
@@ -587,6 +700,8 @@ class W5100Class
     static const uint16_t SSIZE = 2048;
     static const uint16_t SMASK = 0x07FF;
 #endif
+
+    ////////////////////////////////////////
 
     static inline uint16_t SBASE(uint8_t socknum)
     {
@@ -600,6 +715,8 @@ class W5100Class
       }
     }
 
+    ////////////////////////////////////////
+
     static inline uint16_t RBASE(uint8_t socknum)
     {
       if ( (chip == w5100) )
@@ -612,6 +729,8 @@ class W5100Class
       }
     }
 
+    ////////////////////////////////////////
+
     static inline bool hasOffsetAddressMapping()
     {
       if (chip == w5500)
@@ -620,15 +739,18 @@ class W5100Class
       return false;
     }
 
+    ////////////////////////////////////////
+
     static inline void setSS(uint8_t pin)
     {
       ss_pin = pin;
     }
 
+    ////////////////////////////////////////
+
   private:
 
-
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 #if defined(__AVR__)
 
@@ -639,6 +761,8 @@ class W5100Class
     static volatile uint8_t *ss_pin_reg;
     static uint8_t ss_pin_mask;
 
+    ////////////////////////////////////////
+
     inline static void initSS()
     {
       ss_pin_reg = portOutputRegister(digitalPinToPort(ss_pin));
@@ -646,17 +770,21 @@ class W5100Class
       pinMode(ss_pin, OUTPUT);
     }
 
+    ////////////////////////////////////////
+
     inline static void setSS()
     {
       *(ss_pin_reg) &= ~ss_pin_mask;
     }
+
+    ////////////////////////////////////////
 
     inline static void resetSS()
     {
       *(ss_pin_reg) |= ss_pin_mask;
     }
 
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK66FX1M0__) || defined(__MK64FX512__)
 
@@ -664,7 +792,11 @@ class W5100Class
 #warning Use MK architecture
 #endif
 
+    ////////////////////////////////////////
+
     static volatile uint8_t *ss_pin_reg;
+
+    ////////////////////////////////////////
 
     inline static void initSS()
     {
@@ -672,17 +804,21 @@ class W5100Class
       pinMode(ss_pin, OUTPUT);
     }
 
+    ////////////////////////////////////////
+
     inline static void setSS()
     {
       *(ss_pin_reg + 256) = 1;
     }
+
+    ////////////////////////////////////////
 
     inline static void resetSS()
     {
       *(ss_pin_reg + 128) = 1;
     }
 
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 #elif defined(__IMXRT1062__)
 
@@ -693,6 +829,8 @@ class W5100Class
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
 
+    ////////////////////////////////////////
+
     inline static void initSS()
     {
       ss_pin_reg = portOutputRegister(digitalPinToPort(ss_pin));
@@ -700,10 +838,14 @@ class W5100Class
       pinMode(ss_pin, OUTPUT);
     }
 
+    ////////////////////////////////////////
+
     inline static void setSS()
     {
       *(ss_pin_reg + 34) = ss_pin_mask;
     }
+
+    ////////////////////////////////////////
 
     inline static void resetSS()
     {
@@ -716,12 +858,14 @@ class W5100Class
         delayNanoseconds(10); // <-- fixes W5100 on Teensy 4
     }
 
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 #elif defined(__MKL26Z64__)
 
     static volatile uint8_t *ss_pin_reg;
     static uint8_t ss_pin_mask;
+
+    ////////////////////////////////////////
 
     inline static void initSS()
     {
@@ -730,17 +874,21 @@ class W5100Class
       pinMode(ss_pin, OUTPUT);
     }
 
+    ////////////////////////////////////////
+
     inline static void setSS()
     {
       *(ss_pin_reg + 8) = ss_pin_mask;
     }
+
+    ////////////////////////////////////////
 
     inline static void resetSS()
     {
       *(ss_pin_reg + 4) = ss_pin_mask;
     }
 
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 #elif defined(__SAM3X8E__) || defined(__SAM3A8C__) || defined(__SAM3A4C__)
 
@@ -751,6 +899,8 @@ class W5100Class
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
 
+    ////////////////////////////////////////
+
     inline static void initSS()
     {
       ss_pin_reg = &(digitalPinToPort(ss_pin)->PIO_PER);
@@ -758,21 +908,27 @@ class W5100Class
       pinMode(ss_pin, OUTPUT);
     }
 
+    ////////////////////////////////////////
+
     inline static void setSS()
     {
       *(ss_pin_reg + 13) = ss_pin_mask;
     }
+
+    ////////////////////////////////////////
 
     inline static void resetSS()
     {
       *(ss_pin_reg + 12) = ss_pin_mask;
     }
 
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 #elif defined(__PIC32MX__)
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
+
+    ////////////////////////////////////////
 
     inline static void initSS()
     {
@@ -781,17 +937,21 @@ class W5100Class
       pinMode(ss_pin, OUTPUT);
     }
 
+    ////////////////////////////////////////
+
     inline static void setSS()
     {
       *(ss_pin_reg + 8 + 1) = ss_pin_mask;
     }
+
+    ////////////////////////////////////////
 
     inline static void resetSS()
     {
       *(ss_pin_reg + 8 + 2) = ss_pin_mask;
     }
 
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 #elif defined(ARDUINO_ARCH_ESP8266)
 
@@ -802,6 +962,8 @@ class W5100Class
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
 
+    ////////////////////////////////////////
+
     inline static void initSS()
     {
       ss_pin_reg = (volatile uint32_t*)GPO;
@@ -809,17 +971,21 @@ class W5100Class
       pinMode(ss_pin, OUTPUT);
     }
 
+    ////////////////////////////////////////
+
     inline static void setSS()
     {
       GPOC = ss_pin_mask;
     }
+
+    ////////////////////////////////////////
 
     inline static void resetSS()
     {
       GPOS = ss_pin_mask;
     }
 
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 #elif defined(__SAMD21G18A__)
 
@@ -830,6 +996,8 @@ class W5100Class
     static volatile uint32_t *ss_pin_reg;
     static uint32_t ss_pin_mask;
 
+    ////////////////////////////////////////
+
     inline static void initSS()
     {
       ss_pin_reg = portModeRegister(digitalPinToPort(ss_pin));
@@ -837,17 +1005,21 @@ class W5100Class
       pinMode(ss_pin, OUTPUT);
     }
 
+    ////////////////////////////////////////
+
     inline static void setSS()
     {
       *(ss_pin_reg + 5) = ss_pin_mask;
     }
+
+    ////////////////////////////////////////
 
     inline static void resetSS()
     {
       *(ss_pin_reg + 6) = ss_pin_mask;
     }
 
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 #else
 
@@ -855,15 +1027,21 @@ class W5100Class
 #warning Use Default architecture
 #endif
 
+    ////////////////////////////////////////
+
     inline static void initSS()
     {
       pinMode(ss_pin, OUTPUT);
     }
 
+    ////////////////////////////////////////
+
     inline static void setSS()
     {
       digitalWrite(ss_pin, LOW);
     }
+
+    ////////////////////////////////////////
 
     inline static void resetSS()
     {
@@ -871,18 +1049,22 @@ class W5100Class
     }
 #endif
 
-    /////////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 };
+
+////////////////////////////////////////
 
 extern W5100Class W5100;
 
 #endif    // W5100_H_INCLUDED
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #ifndef UTIL_H
 #define UTIL_H
+
+////////////////////////////////////////
 
 // The host order of the Arduino platform is little endian.
 // Sometimes it is desired to convert to big endian (or network order)
@@ -893,10 +1075,14 @@ extern W5100Class W5100;
   #define htons(x) ( (((x)&0xFF)<<8) | (((x)>>8)&0xFF) )
 #endif
 
+////////////////////////////////////////
+
 #ifndef ntohs
   // Network to Host short
   #define ntohs(x) htons(x)
 #endif
+
+////////////////////////////////////////
 
 // Host to Network long
 #ifndef htonl
@@ -906,9 +1092,13 @@ extern W5100Class W5100;
                      ((x)>>24 & 0x000000FFUL) )
 #endif
 
+////////////////////////////////////////
+
 #ifndef ntohl
   // Network to Host long
   #define ntohl(x) htonl(x)
 #endif
+
+////////////////////////////////////////
 
 #endif    // UTIL_H

@@ -13,7 +13,7 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
 
-  Version: 2.6.2
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -31,6 +31,7 @@
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
+  2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
  *****************************************************************************************************************************/
 
 #pragma once
@@ -67,7 +68,7 @@
     #warning w5100_Impl.h : Use PIN_SPI_SS_ETHERNET_LIB defined, change SS_PIN_DEFAULT to PIN_SPI_SS_ETHERNET_LIB
   #endif
 
-  ///////////////////////////
+  ////////////////////////////////////////
 
   // MKR boards default to pin 5 for MKR ETH
   // Pins 8-10 are MOSI/SCK/MISO on MRK, so don't use pin 10
@@ -83,7 +84,7 @@
     #warning w5100_Impl.h : Use MKR, change SS_PIN_DEFAULT to 5
   #endif
 
-  ///////////////////////////
+  ////////////////////////////////////////
 
   // For boards using AVR, assume shields with SS on pin 10
   // will be used.  This allows for Arduino Mega (where
@@ -99,7 +100,7 @@
     #warning w5100_Impl.h : Use __AVR__, change SS_PIN_DEFAULT to 10
   #endif
 
-  ///////////////////////////
+  ////////////////////////////////////////
 
   // If variant.h or other headers define these names
   // use them if none of the other cases match
@@ -128,7 +129,7 @@
 
   #endif
 
-  ///////////////////////////
+  ////////////////////////////////////////
 
 #elif defined(CORE_SS0_PIN)
 
@@ -140,7 +141,7 @@
     #warning w5100_Impl.h : Use CORE_SS0_PIN defined, change SS_PIN_DEFAULT to CORE_SS0_PIN
   #endif
 
-  ///////////////////////////
+  ////////////////////////////////////////
 
   //KH for ESP32
 #elif defined(ESP32)
@@ -155,7 +156,7 @@
     #define SS_PIN_DEFAULT  22    //SS
   #endif
 
-  ///////////////////////////
+  ////////////////////////////////////////
 
   //KH for ESP8266
 #elif defined(ESP8266)
@@ -169,7 +170,7 @@
     #define SS_PIN_DEFAULT  D2      // GPIO4, SS
   #endif
 
-  ///////////////////////////
+  ////////////////////////////////////////
 
   // As a final fallback, use pin 10
 #else
@@ -185,7 +186,7 @@
 
 #endif
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // W5100 controller instance
 EthernetChip_t  W5100Class::chip    = noChip;
@@ -202,11 +203,11 @@ uint8_t         W5100Class::ss_pin = SS_PIN_DEFAULT;
   uint16_t W5100Class::SMASK = 0x07FF;
 #endif
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 W5100Class W5100;
 
-/////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #if (ETHERNET_GENERIC_USING_SPI2)
 
@@ -266,7 +267,7 @@ W5100Class W5100;
   SPIClass* pCUR_SPI = &SPI;
 #endif
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // pointers and bitmasks for optimized SS pin
 #if defined(__AVR__)
@@ -298,7 +299,7 @@ W5100Class W5100;
   #endif
 #endif
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
 {
@@ -492,7 +493,7 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
   return 1; // successful init
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Soft reset the WIZnet chip, by writing to its MR register reset bit
 uint8_t W5100Class::softReset()
@@ -520,7 +521,7 @@ uint8_t W5100Class::softReset()
   return 0;
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint8_t W5100Class::isW5100()
 {
@@ -551,7 +552,7 @@ uint8_t W5100Class::isW5100()
   return 1;
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint8_t W5100Class::isW5100S()
 {
@@ -603,7 +604,7 @@ uint8_t W5100Class::isW5100S()
   return 1;
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint8_t W5100Class::isW5200()
 {
@@ -641,7 +642,7 @@ uint8_t W5100Class::isW5200()
   return 1;
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint8_t W5100Class::isW5500()
 {
@@ -679,7 +680,7 @@ uint8_t W5100Class::isW5500()
   return 1;
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 W5100Linkstatus W5100Class::getLinkStatus()
 {
@@ -715,7 +716,7 @@ W5100Linkstatus W5100Class::getLinkStatus()
   }
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint16_t W5100Class::write(uint16_t addr, const uint8_t *buf, uint16_t len)
 {
@@ -861,7 +862,7 @@ uint16_t W5100Class::write(uint16_t addr, const uint8_t *buf, uint16_t len)
   return len;
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
 {
@@ -967,7 +968,7 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
   return len;
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // From Ethernet3
 
@@ -1036,7 +1037,7 @@ void W5100Class::phyMode(phyMode_t mode)
   setPHYCFGR(val);
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 const char* W5100Class::linkReport()
 {
@@ -1058,7 +1059,7 @@ const char* W5100Class::linkReport()
   return "NOT SUPPORTED";
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 const char* W5100Class::speedReport()
 {
@@ -1090,7 +1091,7 @@ const char* W5100Class::speedReport()
   return "NOT SUPPORTED";
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 const char* W5100Class::duplexReport()
 {
@@ -1123,6 +1124,6 @@ const char* W5100Class::duplexReport()
   return "NOT SUPPORTED";
 }
 
-////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #endif    // W5100_IMPL_H_
