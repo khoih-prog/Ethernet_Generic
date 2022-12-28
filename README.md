@@ -2759,6 +2759,8 @@ Many thanks for everyone for bug reporting, new feature suggesting, testing and 
 7. [victorsonntag](https://github.com/victorsonntag) to report issue [ESP32 - Wiznet W5200 problem #13](https://github.com/khoih-prog/Ethernet_Generic/discussions/13) leading to version v2.6.1 to fix the issue with `Wiznet W5200 / wiz820io` shield
 8. [Andrew Young](https://github.com/vaelen) to report issue ['ETHERNET_SERVER_SEND_MAX_SIZE' was not declared in this scope #16](https://github.com/khoih-prog/Ethernet_Generic/issues/16) leading to version v2.7.1 to fix the issue when not using `ETHERNET_LARGE_BUFFERS`
 9. [WIZnet-ArduinoEthernet](https://github.com/WIZnet-ArduinoEthernet) for the library [WIZnet-ArduinoEthernet](https://github.com/WIZnet-ArduinoEthernet/Ethernet), leading to version v2.8.0 to support `WIZNet W6100`
+
+
 Many thanks to so many authors as listed in [AUTHORS](AUTHORS)
 
 <table>
