@@ -13,26 +13,18 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
 
-  Version: 2.7.1
+  Version: 2.8.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
-  2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
-  2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
-  2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
-  2.3.0   K Hoang      03/05/2022 Add support to custom SPI for RP2040, Portenta_H7, etc. using Arduino-mbed core
-  2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
-  2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
-  2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
-  2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
-  2.5.1   K Hoang      01/09/2022 Slow SPI clock for old W5100 shield using SAMD Zero
-  2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
+  ...
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
   2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
   2.7.1   K Hoang      15/11/2022 Auto-detect W5x00 and settings to set MAX_SIZE to send
+  2.8.0   K Hoang      27/12/2022 Add support to W6100 using IPv4
  *****************************************************************************************************************************/
 /*
     Udp.cpp: Library to send/receive UDP packets with the Arduino ethernet shield.
@@ -182,6 +174,78 @@ int EthernetUDP::parsePacket()
     read((uint8_t *) NULL, _remaining);
   }
 
+  ////////////////////////////////////////
+
+#if USING_W6100
+
+  if (Ethernet.socketRecvAvailable(_sockindex) > 0)
+  {
+    //HACK - hand-parse the UDP packet using TCP recv method
+    uint8_t tmpBuf[20];
+    int ret = 0;
+
+    if (W5100.getChip() == w6100)
+    {
+      //read 2 header bytes and get one IPv4 or IPv6
+      ret = Ethernet.socketRecv(_sockindex, tmpBuf, 2);
+
+      if (ret > 0)
+      {
+        _remaining = (tmpBuf[0] & (0x7)) << 8 | tmpBuf[1];
+
+        if ((tmpBuf[0] & W6100_UDP_HEADER_IPV) == W6100_UDP_HEADER_IPV6)
+        {
+          // IPv6 UDP Recived
+          // 0 1
+          // 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17
+          // 18 19
+
+          //read 16 header bytes and get IP and port from it
+          ret = Ethernet.socketRecv(_sockindex, &tmpBuf[2], 18);
+          _remoteIP = &tmpBuf[2];
+          _remotePort = (tmpBuf[18] << 8) | tmpBuf[19];
+        }
+        else
+        {
+          // IPv4 UDP Recived
+          // 0 1
+          // 2 3 4 5
+          // 6 7
+
+          //read 6 header bytes and get IP and port from it
+          ret = Ethernet.socketRecv(_sockindex, &tmpBuf[2], 6);
+          _remoteIP = &tmpBuf[2];
+          _remotePort = (tmpBuf[6] << 8) | tmpBuf[7];
+        }
+
+        ret = _remaining;
+      }
+    }
+    else
+    {
+      //read 8 header bytes and get IP and port from it
+      ret = Ethernet.socketRecv(_sockindex, tmpBuf, 8);
+
+      if (ret > 0)
+      {
+        _remoteIP = tmpBuf;
+        _remotePort = tmpBuf[4];
+        _remotePort = (_remotePort << 8) + tmpBuf[5];
+        _remaining = tmpBuf[6];
+        _remaining = (_remaining << 8) + tmpBuf[7];
+
+        // When we get here, any remaining bytes are the data
+        ret = _remaining;
+      }
+    }
+
+    return ret;
+  }
+
+  ////////////////////////////////////////
+
+#else   // USING_W6100
+
   if (Ethernet.socketRecvAvailable(_sockindex) > 0)
   {
     //HACK - hand-parse the UDP packet using TCP recv method
@@ -205,6 +269,8 @@ int EthernetUDP::parsePacket()
 
     return ret;
   }
+
+#endif    // USING_W6100
 
   // There aren't any packets available
   return 0;

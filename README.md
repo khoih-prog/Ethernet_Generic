@@ -8,6 +8,7 @@
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
 
+
 ---
 ---
 
@@ -114,7 +115,7 @@
 
 ### Important Note from v2.5.2
 
-The new [Ethernet_Generic v2.7.1+](https://github.com/khoih-prog/Ethernet_Generic/releases/tag/v2.7.0) fixes severe limitation to permit sending much larger data than total than **2/4/8/16K** buffer of **W5x00 Ethernet**.
+The new [Ethernet_Generic v2.8.0+](https://github.com/khoih-prog/Ethernet_Generic/releases/tag/v2.7.0) fixes severe limitation to permit sending much larger data than total than **2/4/8/16K** buffer of **W5x00 Ethernet**.
 
 ---
 
@@ -128,7 +129,7 @@ For `SAMD21 M0`, such as `SAMD Zero`, SPI clock speed of 8MHz and `SPI_MODE0` ar
 //#define USE_W5100                           true
 ```
 
-To use with shields different from `W5100`, such as `W5200, W5500, W5100S`, change to 
+To use with shields different from `W5100`, such as `W5200, W5500, W5100S, W6100`, change to 
 
 ```cpp
 // Default to use W5100. Must change to false for W5500, W5100S, for faster SPI clock
@@ -210,14 +211,14 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
 - **AVRDA-based boards (AVR128DA, AVR64DA, AVR32DA, etc.)**
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/raw/main/pics/Curiosity_AVR128DA48.png">
+    <img src="https://github.com/khoih-prog/Ethernet_Generic/raw/main/pics/Curiosity_AVR128DA48.png">
 </p>
 
 
 - **AVRDB-based boards (AVR128DB, AVR64DB, AVR32DB, etc.)**
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/raw/main/pics/Curiosity_AVR128DB48.png">
+    <img src="https://github.com/khoih-prog/Ethernet_Generic/raw/main/pics/Curiosity_AVR128DB48.png">
 </p>
 
 
@@ -228,6 +229,12 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
 
 1. W5x00 shield /module such as W5100, W5200, W5500 and W5100S
 2. W5100S shield /module, such as [**WIZnet Ethernet HAT**](https://docs.wiznet.io/Product/Open-Source-Hardware/wiznet_ethernet_hat) and [**W5100S-EVB-Pico**](https://docs.wiznet.io/Product/iEthernet/W5100S/w5100s-evb-pico)
+3. W6100 shield /module, such as [**WIZnet WIZ610MJ**](https://eshop.wiznet.io/shop/module/network-module/wiz610mj/) 
+
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Ethernet_Generic/raw/main/pics/W6100.png">
+</p>
 
 
 ---
@@ -238,19 +245,19 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
  2. [`Arduino AVR core 1.8.6+`](https://github.com/arduino/ArduinoCore-avr) for Arduino (Use Arduino Board Manager) AVR boards. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-avr.svg)](https://github.com/arduino/ArduinoCore-avr/releases/latest)
- 3. [`Teensy core v1.57+`](https://www.pjrc.com/teensy/td_download.html) for Teensy (4.1, 4.0, 3.6, 3.5, 3,2, 3.1, 3.0) boards.
+ 3. [`Teensy core v1.57+`](https://github.com/PaulStoffregen/cores) for Teensy (4.1, 4.0, 3.6, 3.5, 3,2, 3.1, 3.0) boards. [![GitHub release](https://img.shields.io/github/release/PaulStoffregen/cores.svg)](https://github.com/PaulStoffregen/cores/releases/latest)
  4. [`Arduino SAM DUE core v1.6.12+`](https://github.com/arduino/ArduinoCore-sam) for SAM DUE ARM Cortex-M3 boards.
  5. [`Arduino SAMD core 1.8.13+`](https://github.com/arduino/ArduinoCore-samd) for SAMD ARM Cortex-M0+ boards. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-samd.svg)](https://github.com/arduino/ArduinoCore-samd/releases/latest)
  6. [`Adafruit SAMD core 1.7.11+`](https://github.com/adafruit/ArduinoCore-samd) for SAMD ARM Cortex-M0+ and M4 boards (Nano 33 IoT, etc.). [![GitHub release](https://img.shields.io/github/release/adafruit/ArduinoCore-samd.svg)](https://github.com/adafruit/ArduinoCore-samd/releases/latest)
  7. [`Seeeduino SAMD core 1.8.3+`](https://github.com/Seeed-Studio/ArduinoCore-samd) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.). [![Latest release](https://img.shields.io/github/release/Seeed-Studio/ArduinoCore-samd.svg)](https://github.com/Seeed-Studio/ArduinoCore-samd/releases/latest/)
  8. [`Adafruit nRF52 v1.3.0+`](https://github.com/adafruit/Adafruit_nRF52_Arduino) for nRF52 boards such as Adafruit NRF52840_FEATHER, NRF52832_FEATHER, NRF52840_FEATHER_SENSE, NRF52840_ITSYBITSY, NRF52840_CIRCUITPLAY, NRF52840_CLUE, NRF52840_METRO, NRF52840_PCA10056, PARTICLE_XENON, **NINA_B302_ublox**, etc. [![GitHub release](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino/releases/latest)
- 9. [`ESP32 Core 2.0.5+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
+ 9. [`ESP32 Core 2.0.6+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
 10. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
 11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 3.4.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
-12. [`Earle Philhower's arduino-pico core v2.6.3+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
+12. [`Earle Philhower's arduino-pico core v2.6.5+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
 13. [`Arduino megaAVR core 1.8.7+`](https://github.com/arduino/ArduinoCore-megaavr/releases) for Arduino megaAVR boards such as **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
-14. [`Arduino Core for STM32 v2.3.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
-15. [`SpenceKonde DxCore core 1.4.10+`](https://github.com/SpenceKonde/DxCore) for Arduino AVRDx boards.  [![GitHub release](https://img.shields.io/github/release/SpenceKonde/DxCore.svg)](https://github.com/SpenceKonde/DxCore/releases/latest). Follow [**DxCore Installation**](https://github.com/SpenceKonde/DxCore/blob/master/Installation.md).
+14. [`Arduino Core for STM32 v2.4.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
+15. [`SpenceKonde DxCore core 1.5.1+`](https://github.com/SpenceKonde/DxCore) for Arduino AVRDx boards.  [![GitHub release](https://img.shields.io/github/release/SpenceKonde/DxCore.svg)](https://github.com/SpenceKonde/DxCore/releases/latest). Follow [**DxCore Installation**](https://github.com/SpenceKonde/DxCore/blob/master/Installation.md).
 16. [`Seeeduino nRF52 core 1.0.0+`](https://github.com/Seeed-Studio/Adafruit_nRF52_Arduino) for Seeed nRF52840-based boards such as **Seeed_XIAO_NRF52840 and Seeed_XIAO_NRF52840_SENSE**. [![GitHub release](https://img.shields.io/github/release/Seeed-Studio/Adafruit_nRF52_Arduino.svg)](https://github.com/Seeed-Studio/Adafruit_nRF52_Arduino/releases/latest)
 17. `Seeeduino mbed core 2.7.2+` for Seeed nRF52840-based boards such as **SEEED_XIAO_NRF52840 and SEEED_XIAO_NRF52840_SENSE**
 
@@ -938,7 +945,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -1019,7 +1026,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -1101,7 +1108,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1179,7 +1186,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1259,7 +1266,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -1339,7 +1346,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1419,7 +1426,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1500,7 +1507,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1532,7 +1539,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1616,7 +1623,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1700,7 +1707,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1789,7 +1796,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1881,7 +1888,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1968,7 +1975,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Start WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -2054,7 +2061,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -2142,7 +2149,7 @@ The following are debug terminal output when running example [SetDHCPHostName](e
 
 ```
 Starting SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2240,7 +2247,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2329,7 +2336,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAMD_FEATHER_M0_EXPRESS with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 29
 [ETG] MISO: 28
@@ -2418,7 +2425,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on SAMD_ZERO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 23
 [ETG] MISO: 22
@@ -2462,7 +2469,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Starting WebClientRepeating on Curiosity AVR_AVR128DA48 with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.7.1
+Ethernet_Generic v2.8.0
 [ETG] Default SPI pinout:
 [ETG] MOSI: 4
 [ETG] MISO: 5
@@ -2553,7 +2560,7 @@ The following is debug terminal output when running example [EthernetWebServer_B
 
 ```
 Start EthernetWebServer_BigData on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library on SPI0/SPI
-EthernetWebServer v2.3.0
+EthernetWebServer v2.4.0
 [ETG] W5100 init, using W5100Class::ss_pin =  5 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 10
 [ETG] Chip is W5500
 [ETG] W5100::init: W5500, SSIZE = 8192
@@ -2605,7 +2612,7 @@ The following is debug terminal output when running example [EthernetWebServer_B
 
 ```
 Start EthernetWebServer_BigData on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library on SPI0/SPI
-EthernetWebServer v2.3.0
+EthernetWebServer v2.4.0
 [ETG] W5100 init, using W5100Class::ss_pin =  17 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 17
 [ETG] Chip is W5100S
 [ETG] W5100::init: W5100S, SSIZE = 4096
@@ -2687,7 +2694,7 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 1. Bug Searching and Killing
 2. Support more types of Ethernet shields.
 3. New W5x00-type library based on LwIP to support Async. operations
-
+4. Add IPv6 support to `WIZNet W6100`.
 
 ### DONE
 
@@ -2729,7 +2736,7 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 32. Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
 33. Add examples [EthernetWebServer_BigData](https://github.com/khoih-prog/Ethernet_Generic/tree/main/examples/EthernetWebServer_BigData) to demo how to send larger data than 2/4/8/16K buffer
 34. Auto-detect `W5x00` and settings (`ETHERNET_LARGE_BUFFERS`, `MAX_SOCK_NUM`) to set `MAX_SIZE` to send
-
+35. Add preliminary support to `WIZNet W6100` using IPv4.
 
 ---
 ---
@@ -2743,6 +2750,7 @@ Many thanks for everyone for bug reporting, new feature suggesting, testing and 
 	- [EthernetLarge](https://github.com/OPEnSLab-OSU/EthernetLarge)
 	- [Ethernet2](https://github.com/adafruit/Ethernet2)
 	- [Ethernet3](https://github.com/sstaub/Ethernet3)
+	- [WIZnet-ArduinoEthernet](https://github.com/WIZnet-ArduinoEthernet/Ethernet)
 2. [Paul Stoffregen](https://github.com/PaulStoffregen) for [Ethernet](https://github.com/arduino-libraries/Ethernet) library
 3. [OPEnSLab-OSU](https://github.com/OPEnSLab-OSU) for [EthernetLarge](hhttps://github.com/OPEnSLab-OSU/EthernetLarge) library
 4. [Adafruit](https://github.com/adafruit) for [Ethernet2](https://github.com/adafruit/Ethernet2) library
@@ -2750,7 +2758,7 @@ Many thanks for everyone for bug reporting, new feature suggesting, testing and 
 6. [proasnet](https://github.com/proasnet) to report issue [AdvancedWebServer example give me wrong ip HTTP EthernetWebServer is @ IP : 0.0.0.0 #62](https://github.com/khoih-prog/EthernetWebServer/issues/62) leading to version v2.5.1 to fix the issue with `SAMD Zero` and `W5100` shield
 7. [victorsonntag](https://github.com/victorsonntag) to report issue [ESP32 - Wiznet W5200 problem #13](https://github.com/khoih-prog/Ethernet_Generic/discussions/13) leading to version v2.6.1 to fix the issue with `Wiznet W5200 / wiz820io` shield
 8. [Andrew Young](https://github.com/vaelen) to report issue ['ETHERNET_SERVER_SEND_MAX_SIZE' was not declared in this scope #16](https://github.com/khoih-prog/Ethernet_Generic/issues/16) leading to version v2.7.1 to fix the issue when not using `ETHERNET_LARGE_BUFFERS`
-
+9. [WIZnet-ArduinoEthernet](https://github.com/WIZnet-ArduinoEthernet) for the library [WIZnet-ArduinoEthernet](https://github.com/WIZnet-ArduinoEthernet/Ethernet), leading to version v2.8.0 to support `WIZNet W6100`
 Many thanks to so many authors as listed in [AUTHORS](AUTHORS)
 
 <table>
@@ -2764,6 +2772,7 @@ Many thanks to so many authors as listed in [AUTHORS](AUTHORS)
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/vaelen"><img src="https://github.com/vaelen.png" width="100px;" alt="vaelen"/><br /><sub><b>Andrew Young</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/WIZnet-ArduinoEthernet"><img src="https://github.com/WIZnet-ArduinoEthernet.png" width="100px;" alt="WIZnet-ArduinoEthernet"/><br /><sub><b>WIZnet</b></sub></a><br /></td>
   </tr> 
 </table>
 

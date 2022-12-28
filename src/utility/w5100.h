@@ -13,26 +13,18 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
 
-  Version: 2.7.1
+  Version: 2.8.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
-  2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
-  2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
-  2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
-  2.3.0   K Hoang      03/05/2022 Add support to custom SPI for RP2040, Portenta_H7, etc. using Arduino-mbed core
-  2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
-  2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
-  2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
-  2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
-  2.5.1   K Hoang      01/09/2022 Slow SPI clock for old W5100 shield using SAMD Zero
-  2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
+  ...
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
   2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
   2.7.1   K Hoang      15/11/2022 Auto-detect W5x00 and settings to set MAX_SIZE to send
+  2.8.0   K Hoang      27/12/2022 Add support to W6100 using IPv4
  *****************************************************************************************************************************/
 
 // w5100.h contains private W5x00 hardware "driver" level definitions
@@ -343,6 +335,168 @@ class W5100Class
 
     ////////////////////////////////////////
 
+    ////////////////////////////////////////
+
+#if USING_W6100
+
+    ////////////////////////////////////////
+
+#define W6100_SPI_FRAME_CTL_BSB_BLK(sn)   ((sn)<<5)
+
+#define W6100_SPI_FRAME_CTL_BSB_COMM      (0<<3)
+#define W6100_SPI_FRAME_CTL_BSB_SOCK      (1<<3)
+#define W6100_SPI_FRAME_CTL_BSB_TXBF      (2<<3)
+#define W6100_SPI_FRAME_CTL_BSB_RXBF      (3<<3)
+
+#define W6100_SPI_FRAME_CTL_RD            (0<<2)
+#define W6100_SPI_FRAME_CTL_WD            (1<<2)
+
+#define W6100_SPI_FRAME_CTL_OPM_VDM       (0<<0)
+#define W6100_SPI_FRAME_CTL_OPM_FDM1      (1<<0)
+#define W6100_SPI_FRAME_CTL_OPM_FDM2      (2<<0)
+#define W6100_SPI_FRAME_CTL_OPM_FDM4      (3<<0)
+
+#define W6100_COMMON_BASE_ADDR            (0x0000)
+#define W6100_SOCKET_BASE_ADDR            (0x6000)
+#define W6100_TX_BASE_ADDR                (0x8000)
+#define W6100_RX_BASE_ADDR                (0xC000)
+#define W6100_SOCKET_NUM(_s)              ((_s)<<10))
+
+#define W6100_CHPLCKR_UNLOCK              0xCE
+#define W6100_NETLCKR_UNLOCK              0x3A
+#define W6100_PHYLCKR_UNLOCK              0x53
+
+#define W6100_SYSR_CHPL_LOCK              (1<<7)
+#define W6100_SYSR_CHPL_ULOCK             (0<<7)
+
+#define W6100_UDP_HEADER_IPV              (1<<7)
+#define W6100_UDP_HEADER_IPV4             (0<<7)
+#define W6100_UDP_HEADER_IPV6             (1<<7)
+#define W6100_UDP_HEADER_ALL              (1<<6)
+#define W6100_UDP_HEADER_MUL              (1<<5)
+#define W6100_UDP_HEADER_GUA              (0<<3)
+#define W6100_UDP_HEADER_LLA              (1<<3)
+
+#define W6100_SLCR_NS                     (1<<2)
+#define W6100_SLCR_RS                     (1<<1)
+#define W6100_SLIR_TIOUT                  (1<<7)
+#define W6100_ICMP6BLK_RA                 (1<<2)
+
+#define W6100_SnESR_TCP4                  (0<<2)
+#define W6100_SnESR_TCP6                  (1<<2)
+
+#define W6100_SnMR_TCP4                   (1<<0)
+#define W6100_SnMR_TCPD                   (13<<0)
+
+#define W6100_SnPSR_AUTO                  (0<<0)
+#define W6100_SnPSR_LLA                   (2<<0)
+#define W6100_SnPSR_GUA                   (3<<0)
+
+    ////////////////////////////////////////
+
+#define __GP_REGISTER8(name, address, adrss_w6100)  \
+  static inline void write##name(uint8_t _data) {   \
+    if(chip == w6100) {                             \
+      write(adrss_w6100, _data);                    \
+    } else {                                        \
+      write(address, _data);                        \
+    }                                               \
+  }                                                 \
+  static inline uint8_t read##name() {              \
+    if(chip == w6100) {                             \
+      return read(adrss_w6100);                     \
+    } else {                                        \
+      return read(address);                         \
+    }                                               \
+  }                                                 \
+
+#define __GP_REGISTER16(name, address, adrss_w6100) \
+  static void write##name(uint16_t _data) {         \
+    uint8_t buf[2];                                 \
+    buf[0] = _data >> 8;                            \
+    buf[1] = _data & 0xFF;                          \
+    if(chip == w6100) {                             \
+      write(adrss_w6100, buf, 2);                   \
+    } else {                                        \
+      write(address, buf, 2);                       \
+    }                                               \
+  }                                                 \
+  static uint16_t read##name() {                    \
+    uint8_t buf[2];                                 \
+    if(chip == w6100) {                             \
+      read(adrss_w6100, buf, 2);                    \
+    } else {                                        \
+      read(address, buf, 2);                        \
+    }                                               \
+    return (buf[0] << 8) | buf[1];                  \
+  }
+
+#define __GP_REGISTER_N(name, address, adrss_w6100, size)  \
+  static uint16_t write##name(const uint8_t *_buff) {      \
+    if(chip == w6100) {                                    \
+      return write(adrss_w6100, _buff, size);              \
+    } else {                                               \
+      return write(address, _buff, size);                  \
+    }                                                      \
+  }                                                        \
+  static uint16_t read##name(uint8_t *_buff) {             \
+    if(chip == w6100) {                                    \
+      return read(adrss_w6100, _buff, size);               \
+    } else {                                               \
+      return read(address, _buff, size);                   \
+    }                                                      \
+  }
+
+    ////////////////////////////////////////
+
+    W5100Linkstatus getLinkStatus();
+
+    ////////////////////////////////////////
+
+  public:
+    __GP_REGISTER8 (MR,     0x0000, 0x4000);            // Mode
+    __GP_REGISTER_N(GAR,    0x0001, 0x4130, 4);         // Gateway IP address
+    __GP_REGISTER_N(SUBR,   0x0005, 0x4134, 4);         // Subnet mask address
+    __GP_REGISTER_N(SHAR,   0x0009, 0x4120, 6);         // Source MAC address
+    __GP_REGISTER_N(SIPR,   0x000F, 0x4138, 4);         // Source IP address
+    __GP_REGISTER8 (IR,     0x0015, 0x2100);            // Interrupt
+    __GP_REGISTER8 (IMR,    0x0016, 0x2104);            // Interrupt Mask
+    __GP_REGISTER16(RTR,    0x0017, 0x2101);            // Timeout address
+    __GP_REGISTER8 (RCR,    0x0019, 0x4200);            // Retry count
+    __GP_REGISTER8 (RMSR,   0x001A, 0x0000);            // Receive memory size (W5100 only)
+    __GP_REGISTER8 (TMSR,   0x001B, 0x0000);            // Transmit memory size (W5100 only)
+    __GP_REGISTER8 (PATR,   0x001C, 0x0000);            // Authentication type address in PPPoE mode
+    __GP_REGISTER8 (PTIMER, 0x0028, 0x4100);            // PPP LCP Request Timer
+    __GP_REGISTER8 (PMAGIC, 0x0029, 0x4104);            // PPP LCP Magic Number
+    __GP_REGISTER_N(UIPR,   0x002A, 0x0000, 4);         // Unreachable IP address in UDP mode (W5100 only)
+    __GP_REGISTER16(UPORT,  0x002E, 0x0000);            // Unreachable Port address in UDP mode (W5100 only)
+    __GP_REGISTER8 (VERSIONR_W5200, 0x001F, 0x0000);    // Chip Version Register (W5200 only)
+    __GP_REGISTER8 (VERSIONR_W5500, 0x0039, 0x0000);    // Chip Version Register (W5500 only)
+    __GP_REGISTER8 (VERSIONR_W5100S, 0x0080, 0x0000);   // Chip Version Register (W5100S only)
+    __GP_REGISTER8 (PSTATUS_W5200, 0x0035, 0x0000);     // PHY Status
+    __GP_REGISTER8 (PHYCFGR_W5500, 0x002E, 0x0000);     // PHY Configuration register, default: 10111xxx
+    __GP_REGISTER8 (PHYCFGR_W5100S, 0x003C, 0x0000);    // PHY Status
+
+    //KH
+    __GP_REGISTER8 (PSTATUS_W5100S,  0x003C, 0x0000);   // PHY Status (W5100S only)
+    //////
+
+    // For W6100
+    __GP_REGISTER8 (SYCR0, 0x0000, 0x2004);             // System Command Register
+    __GP_REGISTER8 (SYSR_W6100, 0x0000, 0x2000);        // System Status Register
+    __GP_REGISTER8 (NETLCKR_W6100, 0x0000, 0x41F5);     // Network Lock Register
+    __GP_REGISTER8 (CHPLCKR_W6100, 0x0000, 0x41F4);     // Chip Lock Register
+    __GP_REGISTER8 (PHYLCKR_W6100, 0x0000, 0x41F6);     // PHY Lock Register
+    __GP_REGISTER8 (PHYCFGR_W6100, 0x0000, 0x3000);     // PHY Status
+    __GP_REGISTER8 (VERSIONR_W6100, 0x0000, 0x0000);    // Chip Version Register
+    __GP_REGISTER8 (CVERSIONR_W6100, 0x0000, 0x0002);   // Chip Version Register
+
+    ////////////////////////////////////////
+
+#else
+
+    ////////////////////////////////////////
+
 #define __GP_REGISTER8(name, address)             \
   static inline void write##name(uint8_t _data) { \
     write(address, _data);                        \
@@ -368,13 +522,15 @@ class W5100Class
 
     ////////////////////////////////////////
 
-#define __GP_REGISTER_N(name, address, size)      \
+#define __GP_REGISTER_N(name, address, size)            \
   static uint16_t write##name(const uint8_t *_buff) {   \
-    return write(address, _buff, size);           \
-  }                                               \
-  static uint16_t read##name(uint8_t *_buff) {    \
-    return read(address, _buff, size);            \
+    return write(address, _buff, size);                 \
+  }                                                     \
+  static uint16_t read##name(uint8_t *_buff) {          \
+    return read(address, _buff, size);                  \
   }
+
+    ////////////////////////////////////////
 
     ////////////////////////////////////////
 
@@ -405,12 +561,17 @@ class W5100Class
     // KH
     __GP_REGISTER8 (VERSIONR_W5100S, 0x0080);     // Chip Version Register (W5100S only)
     __GP_REGISTER8 (PSTATUS_W5100S,  0x003C);     // PHY Status (W5100S only)
+    __GP_REGISTER8 (PHYCFGR_W5100S, 0x003C);      // PHY Status
     //////
 
     __GP_REGISTER8 (PSTATUS_W5200,     0x0035);   // PHY Status
     __GP_REGISTER8 (PHYCFGR_W5500,     0x002E);   // PHY Configuration register, default: 10111xxx
 
+    ////////////////////////////////////////
 
+#endif      // USING_W6100
+
+    ////////////////////////////////////////
     ////////////////////////////////////////
 
 #undef __GP_REGISTER8
@@ -430,13 +591,24 @@ class W5100Class
       //if (chip == w5500) return 0x1000;
       //if (chip == w5200) return 0x4000;
       //return 0x0400;
+
+      // 5500 : 0x10 << 8 = 0x1000
+      // 6100 : 0x60 << 8 = 0x6000 (1000 0000 0000 0000)
+
       return CH_BASE_MSB << 8;
     }
 
     ////////////////////////////////////////
 
     static uint8_t CH_BASE_MSB; // 1 redundant byte, saves ~80 bytes code on AVR
+
+#if USING_W6100
+    // In W6100
+    static uint16_t CH_SIZE;
+#else
     static const uint16_t CH_SIZE = 0x0100;
+#endif
+
 
     ////////////////////////////////////////
 
@@ -465,6 +637,93 @@ class W5100Class
     {
       return write(CH_BASE() + s * CH_SIZE + addr, buf, len);
     }
+
+    ////////////////////////////////////////
+
+    ////////////////////////////////////////
+
+#if USING_W6100
+
+    ////////////////////////////////////////
+
+#define __SOCKET_REGISTER8(name, address, adrss_w6100)       \
+  static inline void write##name(SOCKET _s, uint8_t _data) { \
+    if(chip == w6100) {                                      \
+      writeSn(_s, adrss_w6100, _data);                       \
+    } else {                                                 \
+      writeSn(_s, address, _data);                           \
+    }                                                        \
+  }                                                          \
+  static inline uint8_t read##name(SOCKET _s) {              \
+    if(chip == w6100) {                                      \
+      return readSn(_s, adrss_w6100);                        \
+    } else {                                                 \
+      return readSn(_s, address);                            \
+    }                                                        \
+  }
+
+#define __SOCKET_REGISTER16(name, address, adrss_w6100)      \
+  static void write##name(SOCKET _s, uint16_t _data) {       \
+    uint8_t buf[2];                                          \
+    buf[0] = _data >> 8;                                     \
+    buf[1] = _data & 0xFF;                                   \
+    if(chip == w6100) {                                      \
+      writeSn(_s, adrss_w6100, buf, 2);                      \
+    } else {                                                 \
+      writeSn(_s, address, buf, 2);                          \
+    }                                                        \
+  }                                                          \
+  static uint16_t read##name(SOCKET _s) {                    \
+    uint8_t buf[2];                                          \
+    if(chip == w6100) {                                      \
+      readSn(_s, adrss_w6100, buf, 2);                       \
+    } else {                                                 \
+      readSn(_s, address, buf, 2);                           \
+    }                                                        \
+    return (buf[0] << 8) | buf[1];                           \
+  }
+
+#define __SOCKET_REGISTER_N(name, address, adrss_w6100, size)\
+  static uint16_t write##name(SOCKET _s, uint8_t *_buff) {   \
+    if(chip == w6100) {                                      \
+      return writeSn(_s, adrss_w6100, _buff, size);          \
+    } else {                                                 \
+      return writeSn(_s, address, _buff, size);              \
+    }                                                        \
+  }                                                          \
+  static uint16_t read##name(SOCKET _s, uint8_t *_buff) {    \
+    if(chip == w6100) {                                      \
+      return readSn(_s, adrss_w6100, _buff, size);           \
+    } else {                                                 \
+      return readSn(_s, address, _buff, size);               \
+    }                                                        \
+  }
+
+  public:
+    __SOCKET_REGISTER8(SnMR,        0x0000, 0x0000)        // Mode
+    __SOCKET_REGISTER8(SnCR,        0x0001, 0x0010)        // Command
+    __SOCKET_REGISTER8(SnIR,        0x0002, 0x0020)        // Interrupt
+    __SOCKET_REGISTER8(SnSR,        0x0003, 0x0030)        // Status
+    __SOCKET_REGISTER16(SnPORT,     0x0004, 0x0114)        // Source Port
+    __SOCKET_REGISTER_N(SnDHAR,     0x0006, 0x0118, 6)     // Destination Hardw Addr
+    __SOCKET_REGISTER_N(SnDIPR,     0x000C, 0x0120, 4)     // Destination IP Addr
+    __SOCKET_REGISTER16(SnDPORT,    0x0010, 0x0140)        // Destination Port
+    __SOCKET_REGISTER16(SnMSSR,     0x0012, 0x0110)        // Max Segment Size
+    __SOCKET_REGISTER8(SnPROTO,     0x0014, 0x0000)        // Protocol in IP RAW Mode
+    __SOCKET_REGISTER8(SnTOS,       0x0015, 0x0104)        // IP TOS
+    __SOCKET_REGISTER8(SnTTL,       0x0016, 0x0108)        // IP TTL
+    __SOCKET_REGISTER8(SnRX_SIZE,   0x001E, 0x0220)        // RX Memory Size (W5200 only)
+    __SOCKET_REGISTER8(SnTX_SIZE,   0x001F, 0x0200)        // TX Memory Size (W5200 only)
+    __SOCKET_REGISTER16(SnTX_FSR,   0x0020, 0x0204)        // TX Free Size
+    __SOCKET_REGISTER16(SnTX_RD,    0x0022, 0x0208)        // TX Read Pointer
+    __SOCKET_REGISTER16(SnTX_WR,    0x0024, 0x020C)        // TX Write Pointer
+    __SOCKET_REGISTER16(SnRX_RSR,   0x0026, 0x0224)        // RX Free Size
+    __SOCKET_REGISTER16(SnRX_RD,    0x0028, 0x0228)        // RX Read Pointer
+    __SOCKET_REGISTER16(SnRX_WR,    0x002A, 0x022C)        // RX Write Pointer (supported?)
+
+    ////////////////////////////////////////
+
+#else
 
     ////////////////////////////////////////
 
@@ -527,6 +786,10 @@ class W5100Class
 
     ////////////////////////////////////////
 
+    ////////////////////////////////////////
+#endif    // W6100
+    ////////////////////////////////////////
+
 #undef __SOCKET_REGISTER8
 #undef __SOCKET_REGISTER16
 #undef __SOCKET_REGISTER_N
@@ -549,6 +812,10 @@ class W5100Class
     static uint8_t isW5500();
 
     static uint8_t isW5100S();
+
+#if USING_W6100
+    static uint8_t isW6100();
+#endif
 
   public:
 
@@ -704,6 +971,63 @@ class W5100Class
 
     ////////////////////////////////////////
 
+
+    ////////////////////////////////////////
+
+#if USING_W6100
+
+    ////////////////////////////////////////
+
+    static inline uint16_t SBASE(uint8_t socknum)
+    {
+      if ( (chip == w5100) || (chip == w5100s) )
+      {
+        return socknum * SSIZE + 0x4000;
+      }
+      else if (chip == w6100)
+      {
+        return socknum * SSIZE + W6100_TX_BASE_ADDR;
+      }
+      else
+      {
+        return socknum * SSIZE + 0x8000;
+      }
+    }
+
+    ////////////////////////////////////////
+
+    static inline uint16_t RBASE(uint8_t socknum)
+    {
+      if ( (chip == w5100) )
+      {
+        return socknum * SSIZE + 0x6000;
+      }
+      else if (chip == w6100)
+      {
+        return socknum * SSIZE + W6100_RX_BASE_ADDR;
+      }
+      else
+      {
+        return socknum * SSIZE + 0xC000;
+      }
+    }
+
+    ////////////////////////////////////////
+
+    static inline bool hasOffsetAddressMapping()
+    {
+      if ( (chip == w5500) || (chip == w6100) )
+        return true;
+
+      return false;
+    }
+
+    ////////////////////////////////////////
+
+#else
+
+    ////////////////////////////////////////
+
     static inline uint16_t SBASE(uint8_t socknum)
     {
       if ( (chip == w5100) || (chip == w5100s) )
@@ -739,6 +1063,10 @@ class W5100Class
 
       return false;
     }
+
+    ////////////////////////////////////////
+
+#endif    // W6100
 
     ////////////////////////////////////////
 
@@ -1087,7 +1415,7 @@ extern W5100Class W5100;
 
 // Host to Network long
 #ifndef htonl
-#define htonl(x) ( ((x)<<24 & 0xFF000000UL) | \
+#define htonl(x) ( ((x)<<24 & 0xFF000000UL) |   \
                      ((x)<< 8 & 0x00FF0000UL) | \
                      ((x)>> 8 & 0x0000FF00UL) | \
                      ((x)>>24 & 0x000000FFUL) )

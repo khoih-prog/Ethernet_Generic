@@ -13,26 +13,18 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
 
-  Version: 2.7.1
+  Version: 2.8.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.0.0   K Hoang      31/03/2022 Initial porting and coding to support SPI2, debug, h-only library
-  2.0.1   K Hoang      08/04/2022 Add support to SPI1 for RP2040 using arduino-pico core
-  2.1.0   K Hoang      22/04/2022 Add support to WIZNet W5100S
-  2.2.0   K Hoang      02/05/2022 Add support to custom SPI for any board, such as STM32
-  2.3.0   K Hoang      03/05/2022 Add support to custom SPI for RP2040, Portenta_H7, etc. using Arduino-mbed core
-  2.3.1   K Hoang      21/05/2022 Add setHostname() and related functions
-  2.4.0   K Hoang      31/07/2022 Using raw_address() as default instead of private IPAddress data
-  2.4.1   K Hoang      25/08/2022 Auto-select SPI SS/CS pin according to board package
-  2.5.0   K Hoang      26/08/2022 Using raw_address() as default only for arduino-pico for compatibility
-  2.5.1   K Hoang      01/09/2022 Slow SPI clock for old W5100 shield using SAMD Zero
-  2.5.2   K Hoang      06/09/2022 Slow SPI clock only when necessary. Improve support for SAMD21
+  ...
   2.6.0   K Hoang      11/09/2022 Add support to AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   2.6.1   K Hoang      23/09/2022 Fix bug for W5200
   2.6.2   K Hoang      26/10/2022 Add support to Seeed XIAO_NRF52840 and XIAO_NRF52840_SENSE using `mbed` or `nRF52` core
   2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
   2.7.1   K Hoang      15/11/2022 Auto-detect W5x00 and settings to set MAX_SIZE to send
+  2.8.0   K Hoang      27/12/2022 Add support to W6100 using IPv4
  *****************************************************************************************************************************/
 
 #pragma once
@@ -197,6 +189,11 @@ EthernetChip_t  W5100Class::altChip = noChip;
 //////
 
 uint8_t         W5100Class::CH_BASE_MSB;
+
+#if USING_W6100
+  uint16_t      W5100Class::CH_SIZE;
+#endif
+
 uint8_t         W5100Class::ss_pin = SS_PIN_DEFAULT;
 
 #ifdef ETHERNET_LARGE_BUFFERS
@@ -325,6 +322,8 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
   //              ", W5100Class::ss_pin = ", W5100Class::ss_pin);
   ETG_LOGWARN5("W5100 init, using W5100Class::ss_pin = ", W5100Class::ss_pin, ", whereas new ss_pin = ", new_ss_pin,
                ", SS_PIN_DEFAULT =", SS_PIN_DEFAULT);
+
+  CH_SIZE = 0x0100; // Default except W6100
 
   pCUR_SPI->begin();
 
@@ -476,6 +475,52 @@ uint8_t W5100Class::init(uint8_t socketNumbers, uint8_t new_ss_pin)
     // SPI well with this chip.  It appears to be very resilient,
     // so try it after the fragile W5200
   }
+
+  ////////////////////////////////////////
+
+#if USING_W6100
+
+  else if (isW6100())
+  {
+    CH_BASE_MSB = 0x60;
+    CH_SIZE = 0x0400; // W6100
+
+#ifdef ETHERNET_LARGE_BUFFERS
+
+#if MAX_SOCK_NUM <= 1
+    SSIZE = 16384;
+#elif MAX_SOCK_NUM <= 2
+    SSIZE = 8192;
+#elif MAX_SOCK_NUM <= 4
+    SSIZE = 4096;
+#else
+    SSIZE = 2048;
+#endif
+
+    SMASK = SSIZE - 1;
+
+    for (i = 0; i < MAX_SOCK_NUM; i++)
+    {
+      writeSnRX_SIZE(i, SSIZE >> 10);
+      writeSnTX_SIZE(i, SSIZE >> 10);
+    }
+
+    for (; i < 8; i++)
+    {
+      writeSnRX_SIZE(i, 0);
+      writeSnTX_SIZE(i, 0);
+    }
+
+#endif
+    // No hardware seems to be present.  Or it could be a W5200
+    // that's heard other SPI communication if its chip select
+    // pin wasn't high when a SD card or other SPI chip was used.
+  }
+
+#endif  // USING_W6100
+
+  ////////////////////////////////////////
+
   else
   {
     ETG_LOGERROR("W5100::init: no chip :-(");
@@ -501,6 +546,74 @@ uint8_t W5100Class::softReset()
 {
   uint16_t count = 0;
 
+  ////////////////////////////////////////
+
+#if USING_W6100
+
+  ////////////////////////////////////////
+
+  if (chip == w6100)
+  {
+    ETG_LOGDEBUG("W6100::softReset");
+
+    writeCHPLCKR_W6100(W6100_CHPLCKR_UNLOCK);   // Unlock SYSR[CHPL]
+    count = 0;
+
+    do
+    {
+      // Wait Unlock Complete
+      if (++count > 20)
+      {
+        // Check retry count
+        return 0;               // Over Limit retry count
+      }
+    } while ((readSYSR_W6100() & W6100_SYSR_CHPL_LOCK) ^ W6100_SYSR_CHPL_ULOCK);  // Exit Wait Unlock Complete
+
+    writeSYCR0(0x0);            // Software Reset
+
+    do
+    {
+      // Wait Lock Complete
+      if (++count > 20)
+      {
+        // Check retry count
+        return 0;               // Over Limit retry count
+      }
+
+    } while ((readSYSR_W6100() & W6100_SYSR_CHPL_LOCK) ^ W6100_SYSR_CHPL_LOCK); // Exit Wait Lock Complete
+
+    return 1;
+  }
+  else
+  {
+
+    ETG_LOGDEBUG("W5x00::softReset");
+
+    // write to reset bit
+    writeMR(0x80);
+
+    // then wait for soft reset to complete
+    do
+    {
+      uint8_t mr = readMR();
+
+      ETG_LOGDEBUG1("W5x00::softReset, mr =", mr);
+
+      if (mr == 0)
+        return 1;
+
+      delay(1);
+    } while (++count < 20);
+
+    return 0;
+  }
+
+  ////////////////////////////////////////
+
+#else   // USING_W6100
+
+  ////////////////////////////////////////
+
   ETG_LOGDEBUG("W5x00::softReset");
 
   // write to reset bit
@@ -520,7 +633,53 @@ uint8_t W5100Class::softReset()
   } while (++count < 20);
 
   return 0;
+
+  ////////////////////////////////////////
+
+#endif  // USING_W6100
+
+  ////////////////////////////////////////
+
 }
+
+////////////////////////////////////////
+
+#if USING_W6100
+
+////////////////////////////////////////
+
+uint8_t W5100Class::isW6100()
+{
+  chip = w6100;
+  CH_BASE_MSB = 0x80;
+
+  ETG_LOGDEBUG("isW6100: detect W6100 chip");
+
+  if (!softReset())
+    return 0;
+
+  // Unlock
+  writeCHPLCKR_W6100(W6100_CHPLCKR_UNLOCK);
+  writeNETLCKR_W6100(W6100_NETLCKR_UNLOCK);
+  writePHYLCKR_W6100(W6100_PHYLCKR_UNLOCK);
+
+  // W6100 CIDR0
+  // Version 97(dec) 0x61(hex)
+  int ver = readVERSIONR_W6100();
+
+  ETG_LOGDEBUG1("Version =", ver);
+
+  if (ver != 97)
+    return 0;
+
+  ETG_LOGWARN("Chip is W6100");
+
+  return 1;
+}
+
+////////////////////////////////////////
+
+#endif    // USING_W6100
 
 ////////////////////////////////////////
 
@@ -692,6 +851,16 @@ W5100Linkstatus W5100Class::getLinkStatus()
 
   switch (chip)
   {
+    case w5100s:
+      beginSPITransaction();
+      phystatus = readPHYCFGR_W5100S();
+      endSPITransaction();
+
+      if (phystatus & 0x01)
+        return LINK_ON;
+
+      return LINK_OFF;
+
     case w5200:
       beginSPITransaction();
       phystatus = readPSTATUS_W5200();
@@ -711,6 +880,20 @@ W5100Linkstatus W5100Class::getLinkStatus()
         return LINK_ON;
 
       return LINK_OFF;
+
+#if USING_W6100
+
+    case w6100:
+      beginSPITransaction();
+      phystatus = readPHYCFGR_W6100();
+      endSPITransaction();
+
+      if (phystatus & 0x01)
+        return LINK_ON;
+
+      return LINK_OFF;
+
+#endif    // USING_W6100
 
     default:
       return UNKNOWN;
@@ -780,6 +963,108 @@ uint16_t W5100Class::write(uint16_t addr, const uint8_t *buf, uint16_t len)
 #endif
     resetSS();
   }
+
+  ////////////////////////////////////////
+
+#if USING_W6100
+
+  else if (chip == w6100)
+  {
+    // chip == w6100
+    setSS();
+
+    if (addr < CH_BASE())
+    {
+      // common registers
+
+      cmd[0] = (addr >> 8) & 0x7F;
+      cmd[1] = addr & 0xFF;
+      cmd[2] = W6100_SPI_FRAME_CTL_BSB_BLK(0) | W6100_SPI_FRAME_CTL_BSB_COMM |
+               W6100_SPI_FRAME_CTL_WD         | W6100_SPI_FRAME_CTL_OPM_VDM;
+    }
+    else if (addr < W6100_TX_BASE_ADDR)
+    {
+      // socket registers
+
+      cmd[0] = (addr >> 8) & 0x3;
+      cmd[1] = addr & 0xFF;
+      cmd[2] = W6100_SPI_FRAME_CTL_BSB_BLK((addr >> 10) & 0x7) | W6100_SPI_FRAME_CTL_BSB_SOCK |
+               W6100_SPI_FRAME_CTL_WD | W6100_SPI_FRAME_CTL_OPM_VDM;
+    }
+    else if (addr < W6100_RX_BASE_ADDR)
+    {
+      // transmit buffers
+
+      cmd[0] = addr >> 8;
+      cmd[1] = addr & 0xFF;
+
+#if defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 1
+      cmd[2] = 0;           // 16K buffers
+#elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 2
+      cmd[2] = ((addr >> 8) & 0x20);  // 8K buffers
+#elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 4
+      cmd[2] = ((addr >> 7) & 0x60);  // 4K buffers
+#else
+      cmd[2] = ((addr >> 6) & 0xE0);  // 2K buffers
+#endif
+
+      cmd[2] |= W6100_SPI_FRAME_CTL_BSB_BLK(0) |  W6100_SPI_FRAME_CTL_BSB_TXBF |
+                W6100_SPI_FRAME_CTL_WD         |  W6100_SPI_FRAME_CTL_OPM_VDM;
+    }
+    else
+    {
+      // receive buffers
+
+      cmd[0] = addr >> 8;
+      cmd[1] = addr & 0xFF;
+
+#if defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 1
+      cmd[2] = 0;           // 16K buffers
+#elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 2
+      cmd[2] = ((addr >> 8) & 0x20);  // 8K buffers
+#elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 4
+      cmd[2] = ((addr >> 7) & 0x60);  // 4K buffers
+#else
+      cmd[2] = ((addr >> 6) & 0xE0);  // 2K buffers
+#endif
+
+      cmd[2] |= W6100_SPI_FRAME_CTL_BSB_BLK(0) | W6100_SPI_FRAME_CTL_BSB_RXBF |
+                W6100_SPI_FRAME_CTL_WD         | W6100_SPI_FRAME_CTL_OPM_VDM;
+    }
+
+    if (len <= 5)
+    {
+      for (uint8_t i = 0; i < len; i++)
+      {
+        cmd[i + 3] = buf[i];
+      }
+
+      pCUR_SPI->transfer(cmd, len + 3);
+    }
+    else
+    {
+      pCUR_SPI->transfer(cmd, 3);
+
+#ifdef SPI_HAS_TRANSFER_BUF
+      pCUR_SPI->transfer(buf, NULL, len);
+#else
+
+      // TODO: copy 8 bytes at a time to cmd[] and block transfer
+      for (uint16_t i = 0; i < len; i++)
+      {
+        pCUR_SPI->transfer(buf[i]);
+      }
+
+#endif
+    }
+
+    resetSS();
+  }
+
+#endif    // W6100
+
+  ////////////////////////////////////////
+
   else
   {
     // chip == w5500
@@ -894,6 +1179,7 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
     pCUR_SPI->transfer(cmd, 4);
     memset(buf, 0, len);
     pCUR_SPI->transfer(buf, len);
+
     resetSS();
   }
   else if (chip == w5200)
@@ -906,8 +1192,90 @@ uint16_t W5100Class::read(uint16_t addr, uint8_t *buf, uint16_t len)
     pCUR_SPI->transfer(cmd, 4);
     memset(buf, 0, len);
     pCUR_SPI->transfer(buf, len);
+
     resetSS();
   }
+
+
+  ////////////////////////////////////////
+
+#if USING_W6100
+
+  else if (chip == w6100)
+  {
+    // chip == w6100
+    setSS();
+
+    if (addr < CH_BASE())
+    {
+      // common registers
+
+      cmd[0] = (addr >> 8) & 0x7F;
+      cmd[1] = addr & 0xFF;
+      cmd[2] = W6100_SPI_FRAME_CTL_BSB_BLK(0) | W6100_SPI_FRAME_CTL_BSB_COMM |
+               W6100_SPI_FRAME_CTL_RD         | W6100_SPI_FRAME_CTL_OPM_VDM;
+    }
+    else if (addr < W6100_TX_BASE_ADDR)
+    {
+      // socket registers
+
+      cmd[0] = (addr >> 8) & 0x3;
+      cmd[1] = addr & 0xFF;
+      cmd[2] = W6100_SPI_FRAME_CTL_BSB_BLK((addr >> 10) & 0x7) |  W6100_SPI_FRAME_CTL_BSB_SOCK |
+               W6100_SPI_FRAME_CTL_RD | W6100_SPI_FRAME_CTL_OPM_VDM;
+    }
+    else if (addr < W6100_RX_BASE_ADDR)
+    {
+      // transmit buffers
+
+      cmd[0] = addr >> 8;
+      cmd[1] = addr & 0xFF;
+
+#if defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 1
+      cmd[2] = 0;           // 16K buffers
+#elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 2
+      cmd[2] = ((addr >> 8) & 0x20);  // 8K buffers
+#elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 4
+      cmd[2] = ((addr >> 7) & 0x60);  // 4K buffers
+#else
+      cmd[2] = ((addr >> 6) & 0xE0);  // 2K buffers
+#endif
+
+      cmd[2] |= W6100_SPI_FRAME_CTL_BSB_BLK(0) | W6100_SPI_FRAME_CTL_BSB_TXBF |
+                W6100_SPI_FRAME_CTL_RD         | W6100_SPI_FRAME_CTL_OPM_VDM;
+    }
+    else
+    {
+      // receive buffers
+
+      cmd[0] = addr >> 8;
+      cmd[1] = addr & 0xFF;
+
+#if defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 1
+      cmd[2] = 0;           // 16K buffers
+#elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 2
+      cmd[2] = ((addr >> 8) & 0x20);  // 8K buffers
+#elif defined(ETHERNET_LARGE_BUFFERS) && MAX_SOCK_NUM <= 4
+      cmd[2] = ((addr >> 7) & 0x60);  // 4K buffers
+#else
+      cmd[2] = ((addr >> 6) & 0xE0);  // 2K buffers
+#endif
+
+      cmd[2] |= W6100_SPI_FRAME_CTL_BSB_BLK(0) | W6100_SPI_FRAME_CTL_BSB_RXBF |
+                W6100_SPI_FRAME_CTL_RD         | W6100_SPI_FRAME_CTL_OPM_VDM;
+    }
+
+    pCUR_SPI->transfer(cmd, 3);
+    memset(buf, 0, len);
+    pCUR_SPI->transfer(buf, len);
+
+    resetSS();
+  }
+
+#endif    // USING_W6100
+
+  ////////////////////////////////////////
+
   else
   {
     // chip == w5500
@@ -1057,6 +1425,18 @@ const char* W5100Class::linkReport()
       return "NO LINK";
   }
 
+#if USING_W6100
+  // KH TODO verify for W6100
+  else if (chip == w6100)
+  {
+    if (bitRead(readPHYCFGR_W6100(), 0) == 1)
+      return "LINK";
+    else
+      return "NO LINK";
+  }
+
+#endif
+
   return "NOT SUPPORTED";
 }
 
@@ -1088,6 +1468,23 @@ const char* W5100Class::speedReport()
 
     return "NO LINK";
   }
+
+#if USING_W6100
+  // KH TODO verify for W6100
+  else if (chip == w6100)
+  {
+    if (bitRead(readPHYCFGR_W6100(), 0) == 1)
+    {
+      if (bitRead(readPHYCFGR_W6100(), 1) == 1)
+        return "100 MB";
+      else
+        return "10 MB";
+    }
+
+    return "NO LINK";
+  }
+
+#endif
 
   return "NOT SUPPORTED";
 }
@@ -1121,6 +1518,24 @@ const char* W5100Class::duplexReport()
 
     return "NO LINK";
   }
+
+#if USING_W6100
+  // KH TODO verify for W6100
+  else if (chip == w6100)
+  {
+    if (bitRead(readPHYCFGR_W6100(), 0) == 1)
+    {
+      if (bitRead(readPHYCFGR_W6100(), 2) == 1)
+        return "FULL DUPLEX";
+
+      if (bitRead(getPHYCFGR(), 2) == 0)
+        return "HALF DUPLEX";
+    }
+
+    return "NO LINK";
+  }
+
+#endif
 
   return "NOT SUPPORTED";
 }
