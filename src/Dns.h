@@ -13,7 +13,7 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/EthernetWebServer
 
-  Version: 2.8.0
+  Version: 2.8.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -25,6 +25,7 @@
   2.7.0   K Hoang      14/11/2022 Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
   2.7.1   K Hoang      15/11/2022 Auto-detect W5x00 and settings to set MAX_SIZE to send
   2.8.0   K Hoang      27/12/2022 Add support to W6100 using IPv4
+  2.8.1   K Hoang      06/01/2023 Fix W6100 minor bug
  *****************************************************************************************************************************/
 
 // Arduino DNS client for WizNet5100-based Ethernet shield

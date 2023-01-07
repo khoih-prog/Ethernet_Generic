@@ -100,6 +100,7 @@
   * [20. WebClientRepeating on Curiosity AVR_AVR128DA48 with W5x00 using Ethernet_Generic Library with Large Buffer](#20-WebClientRepeating-on-Curiosity-AVR_AVR128DA48-with-W5x00-using-Ethernet_Generic-Library-with-Large-Buffer)
   * [21. EthernetWebServer_BigData on NRF52840_FEATHER](#21-EthernetWebServer_BigData-on-NRF52840_FEATHER)
   * [22. EthernetWebServer_BigData on RASPBERRY_PI_PICO](#22-EthernetWebServer_BigData-on-RASPBERRY_PI_PICO)
+  * [23. WebClient_ESP on ESP32_DEV with W6100 using Ethernet_Generic Library on SPI](#23-WebClient_ESP-on-ESP32_DEV-with-W6100-using-Ethernet_Generic-Library-on-SPI)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -115,7 +116,7 @@
 
 ### Important Note from v2.5.2
 
-The new [Ethernet_Generic v2.8.0+](https://github.com/khoih-prog/Ethernet_Generic/releases/tag/v2.7.0) fixes severe limitation to permit sending much larger data than total than **2/4/8/16K** buffer of **W5x00 Ethernet**.
+The new [Ethernet_Generic v2.8.1+](https://github.com/khoih-prog/Ethernet_Generic/releases/tag/v2.7.0) fixes severe limitation to permit sending much larger data than total than **2/4/8/16K** buffer of **W5x00 Ethernet**.
 
 ---
 
@@ -252,14 +253,14 @@ This [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Gener
  7. [`Seeeduino SAMD core 1.8.3+`](https://github.com/Seeed-Studio/ArduinoCore-samd) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.). [![Latest release](https://img.shields.io/github/release/Seeed-Studio/ArduinoCore-samd.svg)](https://github.com/Seeed-Studio/ArduinoCore-samd/releases/latest/)
  8. [`Adafruit nRF52 v1.3.0+`](https://github.com/adafruit/Adafruit_nRF52_Arduino) for nRF52 boards such as Adafruit NRF52840_FEATHER, NRF52832_FEATHER, NRF52840_FEATHER_SENSE, NRF52840_ITSYBITSY, NRF52840_CIRCUITPLAY, NRF52840_CLUE, NRF52840_METRO, NRF52840_PCA10056, PARTICLE_XENON, **NINA_B302_ublox**, etc. [![GitHub release](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino/releases/latest)
  9. [`ESP32 Core 2.0.6+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
-10. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
+10. [`ESP8266 Core 3.1.0+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
 11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 3.4.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
-12. [`Earle Philhower's arduino-pico core v2.6.5+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
+12. [`Earle Philhower's arduino-pico core v2.7.0+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
 13. [`Arduino megaAVR core 1.8.7+`](https://github.com/arduino/ArduinoCore-megaavr/releases) for Arduino megaAVR boards such as **Arduino UNO WiFi Rev2, AVR_NANO_EVERY, etc.**
 14. [`Arduino Core for STM32 v2.4.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
-15. [`SpenceKonde DxCore core 1.5.1+`](https://github.com/SpenceKonde/DxCore) for Arduino AVRDx boards.  [![GitHub release](https://img.shields.io/github/release/SpenceKonde/DxCore.svg)](https://github.com/SpenceKonde/DxCore/releases/latest). Follow [**DxCore Installation**](https://github.com/SpenceKonde/DxCore/blob/master/Installation.md).
-16. [`Seeeduino nRF52 core 1.0.0+`](https://github.com/Seeed-Studio/Adafruit_nRF52_Arduino) for Seeed nRF52840-based boards such as **Seeed_XIAO_NRF52840 and Seeed_XIAO_NRF52840_SENSE**. [![GitHub release](https://img.shields.io/github/release/Seeed-Studio/Adafruit_nRF52_Arduino.svg)](https://github.com/Seeed-Studio/Adafruit_nRF52_Arduino/releases/latest)
-17. `Seeeduino mbed core 2.7.2+` for Seeed nRF52840-based boards such as **SEEED_XIAO_NRF52840 and SEEED_XIAO_NRF52840_SENSE**
+15. [`SpenceKonde DxCore core 1.5.2+`](https://github.com/SpenceKonde/DxCore) for Arduino AVRDx boards.  [![GitHub release](https://img.shields.io/github/release/SpenceKonde/DxCore.svg)](https://github.com/SpenceKonde/DxCore/releases/latest). Follow [**DxCore Installation**](https://github.com/SpenceKonde/DxCore/blob/master/Installation.md).
+16. [`Seeeduino nRF52 core 1.1.0+`](https://github.com/Seeed-Studio/Adafruit_nRF52_Arduino) for Seeed nRF52840-based boards such as **Seeed_XIAO_NRF52840 and Seeed_XIAO_NRF52840_SENSE**. [![GitHub release](https://img.shields.io/github/release/Seeed-Studio/Adafruit_nRF52_Arduino.svg)](https://github.com/Seeed-Studio/Adafruit_nRF52_Arduino/releases/latest)
+17. [`Seeeduino mbed core 2.9.0+`](https://github.com/Seeed-Studio/ArduinoCore-mbed) for Seeed nRF52840-based boards such as **SEEED_XIAO_NRF52840 and SEEED_XIAO_NRF52840_SENSE**. [![GitHub release](https://img.shields.io/github/release/Seeed-Studio/ArduinoCore-mbed.svg)](https://github.com/Seeed-Studio/ArduinoCore-mbed/releases/latest)
 
 
 ---
@@ -878,7 +879,7 @@ After drag-and-drop the `Change_Interval.ino.hex` into `CURIOSITY` virtual drive
 
 ##### How to connect W5x00 to AVDDx
 
-This is example to demo how to connect W5x00 to Curiosity `AVR128DA48` or `AVR128DB48`
+This is example to demo how to connect W5x00/W6100 to Curiosity `AVR128DA48` or `AVR128DB48`
 
 <p align="center">
     <img src="https://github.com/khoih-prog/Ethernet_Generic/raw/main/pics/Curiosity_Dx48_pinout.png">
@@ -925,14 +926,14 @@ This is example to demo how to connect W5x00 to Curiosity `AVR128DA48` or `AVR12
 
 #### 1. File [WebClientRepeating.ino](examples/WebClientRepeating/WebClientRepeating.ino)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/61ede0494d377d16177b119599542dfb55a35ff8/examples/WebClientRepeating/WebClientRepeating.ino#L15-L234
+https://github.com/khoih-prog/Ethernet_Generic/blob/ace435be24e180562c3012664d458ab512d45b71/examples/WebClientRepeating/WebClientRepeating.ino#L15-L241
 
 
 ---
 
 #### 2. File [defines.h](examples/WebClientRepeating/defines.h)
 
-https://github.com/khoih-prog/Ethernet_Generic/blob/61ede0494d377d16177b119599542dfb55a35ff8/examples/WebClientRepeating/defines.h#L10-L466
+https://github.com/khoih-prog/Ethernet_Generic/blob/ace435be24e180562c3012664d458ab512d45b71/examples/WebClientRepeating/defines.h#L10-L466
 
 ---
 ---
@@ -945,7 +946,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:23
@@ -955,7 +956,7 @@ SS:5
 =========================
 Using mac index = 19
 Connected! IP address: 192.168.2.95
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Starting connection to server...
 
@@ -1026,7 +1027,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_ESP_SPI2 on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI2
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:13
@@ -1036,7 +1037,7 @@ SS:5
 =========================
 Using mac index = 19
 Connected! IP address: 192.168.2.95
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Starting connection to server...
 
@@ -1108,7 +1109,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1186,7 +1187,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1196,7 +1197,7 @@ SS:5
 =========================
 Using mac index = 12
 Connected! IP address: 192.168.2.115
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
@@ -1266,7 +1267,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAM DUE with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:75
@@ -1346,7 +1347,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on ITSYBITSY_M4 with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:25
@@ -1356,7 +1357,7 @@ SS:16
 =========================
 Using mac index = 0
 Connected! IP address: 192.168.2.102
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
@@ -1426,7 +1427,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:11
@@ -1436,7 +1437,7 @@ SS:10
 =========================
 Using mac index = 5
 Connected! IP address: 192.168.2.94
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
@@ -1502,12 +1503,12 @@ alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
 #### 8. UdpNTPClient on AVR Mega
 
 
-The following are debug terminal output when running example [UdpNTPClient](examples/UdpNTPClient) on AVR Mega with `W5100` using Ethernet_Generic Library
+The following are debug terminal output when running example [UdpNTPClient](examples/UdpNTPClient) on AVR Mega with `W5500` using Ethernet_Generic Library
 
 
 ```
 Start UdpNTPClient on AVR Mega with W5x00 using Ethernet_Generic Library
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:51
@@ -1517,7 +1518,7 @@ SS:53
 =========================
 Using mac index = 2
 Connected! IP address: 192.168.2.103
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 UDP Packet received, size 48
 From 132.163.97.3, port 123
@@ -1539,7 +1540,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1549,7 +1550,7 @@ SS:17
 =========================
 Using mac index = 16
 Connected! IP address: 192.168.2.80
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Starting connection to server...
 Connected to server
@@ -1623,7 +1624,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 =========================
 Currently Used SPI pinout:
 MOSI:19
@@ -1633,7 +1634,7 @@ SS:17
 =========================
 Using mac index = 3
 Connected! IP address: 192.168.2.79
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Starting connection to server...
 Connected to server
@@ -1707,7 +1708,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -1726,7 +1727,7 @@ Ethernet_Generic v2.8.0
 [ETG] =========================
 Using mac index = 3
 Connected! IP address: 192.168.2.131
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
@@ -1796,7 +1797,7 @@ The following are debug terminal output when running example [WebClient](example
 
 ```
 Starting WebClient on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -1815,7 +1816,7 @@ Ethernet_Generic v2.8.0
 [ETG] =========================
 Using mac index = 17
 Connected! IP address: 192.168.2.88
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5100S => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Starting connection to server...
 Connected to server
@@ -1888,7 +1889,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on NUCLEO_L552ZE_Q with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1907,6 +1908,8 @@ Ethernet_Generic v2.8.0
 [ETG] =========================
 Using mac index = 2
 Connected! IP address: 192.168.2.87
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+
 Connecting...
 HTTP/1.1 200 OK
 Date: Tue, 03 May 2022 03:29:23 GMT
@@ -1975,7 +1978,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Start WebClientRepeating on NUCLEO_F767ZI with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 22
 [ETG] MISO: 25
@@ -1993,6 +1996,8 @@ Ethernet_Generic v2.8.0
 [ETG] SS: 24
 [ETG] =========================
 Connected! IP address: 192.168.2.123
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+
 Connecting...
 HTTP/1.1 200 OK
 Date: Tue, 03 May 2022 02:21:30 GMT
@@ -2061,7 +2066,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating_RP2040_SPI1 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 15
 [ETG] MISO: 12
@@ -2080,7 +2085,7 @@ Ethernet_Generic v2.8.0
 [ETG] =========================
 Using mac index = 18
 Connected! IP address: 192.168.2.85
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
@@ -2149,7 +2154,7 @@ The following are debug terminal output when running example [SetDHCPHostName](e
 
 ```
 Starting SetDHCPHostName on WIZNET_5100S_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2168,7 +2173,7 @@ Ethernet_Generic v2.8.0
 [ETG] =========================
 Using mac index = 17
 Connected! IP address: 192.168.2.98
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5100S => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 DHCP Hostname is My_DHCP_Hostname
 Starting connection to server...
 Connected to server
@@ -2247,7 +2252,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on WIZNET_5500_EVB_PICO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 19
 [ETG] MISO: 16
@@ -2266,7 +2271,7 @@ Ethernet_Generic v2.8.0
 [ETG] =========================
 Using mac index = 9
 Connected! IP address: 192.168.2.108
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5100S => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
@@ -2336,7 +2341,7 @@ The following are debug terminal output when running example [WebClientRepeating
 
 ```
 Starting WebClientRepeating on SAMD_FEATHER_M0_EXPRESS with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 29
 [ETG] MISO: 28
@@ -2425,7 +2430,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Start UdpNTPClient on SAMD_ZERO with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 23
 [ETG] MISO: 22
@@ -2469,7 +2474,7 @@ The following are debug terminal output when running example [UdpNTPClient](exam
 
 ```
 Starting WebClientRepeating on Curiosity AVR_AVR128DA48 with W5x00 using Ethernet_Generic Library with Large Buffer
-Ethernet_Generic v2.8.0
+Ethernet_Generic v2.8.1
 [ETG] Default SPI pinout:
 [ETG] MOSI: 4
 [ETG] MISO: 5
@@ -2488,7 +2493,7 @@ Ethernet_Generic v2.8.0
 [ETG] =========================
 Using mac index = 2
 Connected! IP address: 192.168.2.92
-Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+W5500 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
 
 Connecting...
 HTTP/1.1 200 OK
@@ -2660,6 +2665,93 @@ String Len = 23722
 
 
 ---
+
+#### 23. WebClient_ESP on ESP32_DEV with W6100 using Ethernet_Generic Library on SPI
+
+The following are debug terminal output when running example [UdpNTPClient](examples/UdpNTPClient) on Curiosity `AVR_AVR128DA48` with `W5100` using Ethernet_Generic Library
+
+```
+Starting WebClient_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
+Ethernet_Generic v2.8.1
+[ETG] ESP32 setCsPin: 5
+[ETG] W5100 init, using W5100Class::ss_pin =  5 , whereas new ss_pin =  10 , SS_PIN_DEFAULT = 22
+[ETG] Chip is W6100
+=========================
+Currently Used SPI pinout:
+MOSI:23
+MISO:19
+SCK:18
+SS:5
+=========================
+Using mac index = 17
+Connected! IP address: 192.168.2.103
+W6100 => Speed: 100 MB, Duplex: FULL DUPLEX, Link status: LINK
+
+Starting connection to server...
+Connected to server
+HTTP/1.1 200 OK
+Date: Fri, 06 Jan 2023 21:08:49 GMT
+Content-Type: text/plain
+Content-Length: 2263
+Connection: close
+x-amz-id-2: gSiQxfSbydmQ3LOJHNGiIT2KBRhRao5Gtv+dXJBZK7Q5UxuHS8yiHS1UEmALfwqe/SCMQ5qD0bA=
+x-amz-request-id: 5V12HDVQVKSPW9SB
+Last-Modified: Wed, 23 Feb 2022 14:56:42 GMT
+ETag: "667cf48afcc12c38c8c1637947a04224"
+CF-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=C7WNRLdYTBHqy6x2q9VOFmWQsGXLOaHtzznTQNmBRyM0oYmDiuXeKfDRZYrAqc488qp2QPfz4tOWE6PFDzXsw9OYH6Tn10aui7dtUOUPwYambdLu%2FwW8bzKAqcpYOHE%3D"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 78576e623f61638c-ORD
+alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400
+
+
+           `:;;;,`                      .:;;:.           
+        .;;;;;;;;;;;`                :;;;;;;;;;;:     TM 
+      `;;;;;;;;;;;;;;;`            :;;;;;;;;;;;;;;;      
+     :;;;;;;;;;;;;;;;;;;         `;;;;;;;;;;;;;;;;;;     
+    ;;;;;;;;;;;;;;;;;;;;;       .;;;;;;;;;;;;;;;;;;;;    
+   ;;;;;;;;:`   `;;;;;;;;;     ,;;;;;;;;.`   .;;;;;;;;   
+  .;;;;;;,         :;;;;;;;   .;;;;;;;          ;;;;;;;  
+  ;;;;;;             ;;;;;;;  ;;;;;;,            ;;;;;;. 
+ ,;;;;;               ;;;;;;.;;;;;;`              ;;;;;; 
+ ;;;;;.                ;;;;;;;;;;;`      ```       ;;;;;`
+ ;;;;;                  ;;;;;;;;;,       ;;;       .;;;;;
+`;;;;:                  `;;;;;;;;        ;;;        ;;;;;
+,;;;;`    `,,,,,,,,      ;;;;;;;      .,,;;;,,,     ;;;;;
+:;;;;`    .;;;;;;;;       ;;;;;,      :;;;;;;;;     ;;;;;
+:;;;;`    .;;;;;;;;      `;;;;;;      :;;;;;;;;     ;;;;;
+.;;;;.                   ;;;;;;;.        ;;;        ;;;;;
+ ;;;;;                  ;;;;;;;;;        ;;;        ;;;;;
+ ;;;;;                 .;;;;;;;;;;       ;;;       ;;;;;,
+ ;;;;;;               `;;;;;;;;;;;;                ;;;;; 
+ `;;;;;,             .;;;;;; ;;;;;;;              ;;;;;; 
+  ;;;;;;:           :;;;;;;.  ;;;;;;;            ;;;;;;  
+   ;;;;;;;`       .;;;;;;;,    ;;;;;;;;        ;;;;;;;:  
+    ;;;;;;;;;:,:;;;;;;;;;:      ;;;;;;;;;;:,;;;;;;;;;;   
+    `;;;;;;;;;;;;;;;;;;;.        ;;;;;;;;;;;;;;;;;;;;    
+      ;;;;;;;;;;;;;;;;;           :;;;;;;;;;;;;;;;;:     
+       ,;;;;;;;;;;;;;,              ;;;;;;;;;;;;;;       
+         .;;;;;;;;;`                  ,;;;;;;;;:         
+                                                         
+                                                         
+                                                         
+                                                         
+    ;;;   ;;;;;`  ;;;;:  .;;  ;; ,;;;;;, ;;. `;,  ;;;;   
+    ;;;   ;;:;;;  ;;;;;; .;;  ;; ,;;;;;: ;;; `;, ;;;:;;  
+   ,;:;   ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;,`;, ;;  ;;  
+   ;; ;:  ;;  ;;  ;;  ;; .;;  ;;   ,;,   ;;;;`;, ;;  ;;. 
+   ;: ;;  ;;;;;:  ;;  ;; .;;  ;;   ,;,   ;;`;;;, ;;  ;;` 
+  ,;;;;;  ;;`;;   ;;  ;; .;;  ;;   ,;,   ;; ;;;, ;;  ;;  
+  ;;  ,;, ;; .;;  ;;;;;:  ;;;;;: ,;;;;;: ;;  ;;, ;;;;;;  
+  ;;   ;; ;;  ;;` ;;;;.   `;;;:  ,;;;;;, ;;  ;;,  ;;;;   
+
+Disconnecting from server...
+```
+
+
+
+---
 ---
 
 ### Debug
@@ -2694,7 +2786,7 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 1. Bug Searching and Killing
 2. Support more types of Ethernet shields.
 3. New W5x00-type library based on LwIP to support Async. operations
-4. Add IPv6 support to `WIZNet W6100`.
+4. Add IPv6 support to `WIZNet W6100`
 
 ### DONE
 
@@ -2736,7 +2828,7 @@ Submit issues to: [Ethernet_Generic issues](https://github.com/khoih-prog/Ethern
 32. Fix severe limitation to permit sending larger data than 2/4/8/16K buffer
 33. Add examples [EthernetWebServer_BigData](https://github.com/khoih-prog/Ethernet_Generic/tree/main/examples/EthernetWebServer_BigData) to demo how to send larger data than 2/4/8/16K buffer
 34. Auto-detect `W5x00` and settings (`ETHERNET_LARGE_BUFFERS`, `MAX_SOCK_NUM`) to set `MAX_SIZE` to send
-35. Add preliminary support to `WIZNet W6100` using IPv4.
+35. Add support to `WIZNet W6100` using IPv4
 
 ---
 ---

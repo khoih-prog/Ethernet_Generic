@@ -16,6 +16,7 @@
 
 
 * [Changelog](#changelog)
+	* [Releases v2.8.1](#releases-v281)
 	* [Releases v2.8.0](#releases-v280)
 	* [Releases v2.7.1](#releases-v271)
 	* [Releases v2.7.0](#releases-v270)
@@ -39,9 +40,13 @@
 
 ## Changelog
 
+### Releases v2.8.1
+
+1. Fix minor `speed-link-duplex` bug for `WIZNet W6100`
+
 ### Releases v2.8.0
 
-1. Add preliminary support to `WIZNet W6100` using IPv4. IPv6 will be supported in the future.
+1. Add preliminary support to `WIZNet W6100` using IPv4. IPv6 will be supported in the future
 
 ### Releases v2.7.1
 
