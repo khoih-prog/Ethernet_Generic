@@ -2668,7 +2668,7 @@ String Len = 23722
 
 #### 23. WebClient_ESP on ESP32_DEV with W6100 using Ethernet_Generic Library on SPI
 
-The following are debug terminal output when running example [UdpNTPClient](examples/UdpNTPClient) on Curiosity `AVR_AVR128DA48` with `W5100` using Ethernet_Generic Library
+The following are debug terminal output when running example [UdpNTPClient](examples/UdpNTPClient) on Curiosity `AVR_AVR128DA48` with `W6100` using Ethernet_Generic Library
 
 ```
 Starting WebClient_ESP on ESP32_DEV with W5x00 using Ethernet_Generic Library on SPI
