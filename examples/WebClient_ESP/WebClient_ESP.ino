@@ -100,8 +100,15 @@ void setup()
   Serial.print(F("Connected! IP address: "));
   Serial.println(Ethernet.localIP());
 
-  if ( (Ethernet.getChip() == w5500) || (Ethernet.getAltChip() == w5100s) )
+  if ( (Ethernet.getChip() == w5500) || (Ethernet.getChip() == w6100) || (Ethernet.getAltChip() == w5100s) )
   {
+    if (Ethernet.getChip() == w6100)
+      Serial.print(F("W6100 => "));
+    else if (Ethernet.getChip() == w5500)
+      Serial.print(F("W6100 => "));
+    else
+      Serial.print(F("W5100S => "));
+    
     Serial.print(F("Speed: "));
     Serial.print(Ethernet.speedReport());
     Serial.print(F(", Duplex: "));
